@@ -4,13 +4,13 @@ import android.Manifest.permission.*
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
-import java.nio.charset.Charset
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,12 +20,17 @@ class MainActivity : AppCompatActivity() {
 
     private var isHost = true
 
+    private val handler = Handler()
+
     private val payloadCallback = object : PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
+            val byteArray = payload.asBytes() ?: return
+
             Log.i(
                 this@MainActivity.localClassName,
-                "received:" + payload.asBytes()?.toString(Charset.defaultCharset())
+                "received: " + String(byteArray)
             )
+            handler.postDelayed({ sendData((endpointId)) }, 3000)
         }
 
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
@@ -66,6 +71,10 @@ class MainActivity : AppCompatActivity() {
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
 
         override fun onEndpointFound(endpointId: String, p1: DiscoveredEndpointInfo) {
+            if (p1.serviceId != serviceId) {
+                Log.i(this@MainActivity.localClassName, "wrong service id: $endpointId")
+                return
+            }
             Nearby.getConnectionsClient(this@MainActivity)
                 .requestConnection(nickname, endpointId, connectionLifecycleCallback)
                 .addOnSuccessListener {
@@ -85,15 +94,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startAdvertising()
-
         findViewById<View>(R.id.button).setOnClickListener {
             isHost = false
             startDiscovery()
         }
 
-        checkAndRequestPermission()
+        if (!isEnableBle()) {
+            finish()
+        }
+
+        if (!hasPermissions()) {
+            requestPermissionsCompat(needsPermissions, PERMISSION_REQUEST_CODE)
+        }
+
+        startAdvertising()
     }
+
 
     private fun startAdvertising() {
         val advertisingOptions = AdvertisingOptions
@@ -131,8 +147,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendData(endpointId: String) {
         val bytesPayload =
-            if (isHost) Payload.fromBytes(byteArrayOf("host".toByte()))
-            else Payload.fromBytes(byteArrayOf("not host".toByte()))
+            if (isHost) Payload.fromBytes("host".toByteArray())
+            else Payload.fromBytes("client".toByteArray())
 
         Nearby.getConnectionsClient(this).sendPayload(endpointId, bytesPayload)
     }
@@ -167,13 +183,6 @@ class MainActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST_CODE = 1001
 
-    private fun checkAndRequestPermission() {
-        if (!hasPermissions()) {
-            requestPermissionsCompat(needsPermissions, PERMISSION_REQUEST_CODE)
-        }
-    }
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
@@ -191,13 +200,14 @@ class MainActivity : AppCompatActivity() {
     private fun AppCompatActivity.checkSelfPermissionCompat(permission: String) =
         ActivityCompat.checkSelfPermission(this, permission)
 
-    private fun AppCompatActivity.shouldShowRequestPermissionRationaleCompat(permission: String) =
-        ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
-
     private fun AppCompatActivity.requestPermissionsCompat(
         permissionsArray: Array<String>,
         requestCode: Int
     ) {
         ActivityCompat.requestPermissions(this, permissionsArray, requestCode)
     }
+
+    private fun isEnableBle() =
+        packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+
 }
