@@ -59,6 +59,9 @@ dependencies {
 
     // LifeCycle components
     implementation "android.arch.lifecycle:extensions:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$runtimeKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelKtxVersion"
+
 
     // FCM
     implementation "com.google.firebase:firebase-messaging:$fcmMessageVersion"
