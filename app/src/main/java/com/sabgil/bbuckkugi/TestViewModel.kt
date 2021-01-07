@@ -1,10 +1,10 @@
 package com.sabgil.bbuckkugi
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
+import com.sabgil.bbuckkugi.base.BaseViewModel
 
 
-class TestViewModel @ViewModelInject constructor(): ViewModel() {
+class TestViewModel @ViewModelInject constructor() : BaseViewModel() {
 
     fun test() {
         print("")
