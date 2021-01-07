@@ -1,6 +1,7 @@
 package com.sabgil.bbuckkugi
 
 import android.Manifest.permission.*
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -97,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.button).setOnClickListener {
             isHost = false
             startDiscovery()
+            startActivity(Intent(this, TestActivity::class.java))
         }
 
         if (!isEnableBle()) {

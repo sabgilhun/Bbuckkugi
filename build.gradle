@@ -3,7 +3,7 @@ buildscript {
 
     ext {
         kotlinVersion = '1.4.10'
-        gradleVersion = '3.5.3'
+        gradleVersion = '4.1.1'
 
         appcompatVersion = '1.1.0'
         constraintLayoutVersion = '2.0.4'
@@ -16,6 +16,7 @@ buildscript {
         espressoVersion = '3.3.0'
 
         coreKtxVersion = '1.3.2'
+        fragmentVersion = '1.2.5'
         runtimeKtxVersion = '2.2.0'
         viewModelKtxVersion = '2.2.0'
         lifeCycleVersion = '2.2.0'
@@ -23,7 +24,8 @@ buildscript {
         fcmMessageVersion = '21.0.1'
         roomVersion = '2.2.6'
         nearbyVersion = '17.0.0'
-        hiltVersion = '2.30.1-alpha'
+        hiltCoreVersion = '2.30.1-alpha'
+        hiltVersion = '1.0.0-alpha02'
     }
 
     repositories {
@@ -34,6 +36,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltCoreVersion"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

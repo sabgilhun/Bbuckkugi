@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+
 }
 
 android {
@@ -56,12 +58,12 @@ dependencies {
 
     // KTX
     implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
     // LifeCycle components
-    implementation "android.arch.lifecycle:extensions:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$runtimeKtxVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelKtxVersion"
-
 
     // FCM
     implementation "com.google.firebase:firebase-messaging:$fcmMessageVersion"
@@ -78,6 +80,9 @@ dependencies {
     implementation "com.google.android.gms:play-services-nearby:$nearbyVersion"
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation "com.google.dagger:hilt-android:$hiltCoreVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltCoreVersion"
+    implementation "androidx.hilt:hilt-common:$hiltVersion"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltVersion"
+    kapt "androidx.hilt:hilt-compiler:$hiltVersion"
 }
