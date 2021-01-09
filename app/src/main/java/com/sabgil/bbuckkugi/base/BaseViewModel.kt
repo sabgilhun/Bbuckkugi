@@ -34,6 +34,4 @@ abstract class BaseViewModel : ViewModel() {
             _isLoading.value = false
         }
     }
-
-
 }
