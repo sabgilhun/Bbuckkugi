@@ -1,10 +1,10 @@
 package com.sabgil.bbuckkugi.common
 
-sealed class Result<T> {
+sealed class Result<out T> {
 
     data class Success<T>(val result: T) : Result<T>()
 
-    object Loading : Result<Nothing>()
+    data class Failure(val exception: Throwable) : Result<Nothing>()
 
-    data class Error<T : Exception>(val exception: T) : Result<T>()
+    object Loading : Result<Nothing>()
 }

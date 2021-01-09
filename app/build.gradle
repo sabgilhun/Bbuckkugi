@@ -42,6 +42,10 @@ android {
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"]
+}
+
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
