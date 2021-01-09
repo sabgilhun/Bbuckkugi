@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.sabgil.bbuckkugi.R
+import com.sabgil.bbuckkugi.common.ext.showPopupDialog
 import kotlin.reflect.KClass
 
 abstract class BaseActivity<B : ViewDataBinding>(
@@ -50,7 +51,14 @@ abstract class BaseActivity<B : ViewDataBinding>(
         viewModel.showErrorMessage.observe {}
     }
 
-    protected fun showErrorMessage(message: String) {}
+    protected fun showErrorMessage(message: String) {
+        showPopupDialog {
+            title = "일시적인 에러가 발생했습니다."
+            content = message
+            isCancelable = false
+            isVisibleCancelButton = false
+        }
+    }
 
     private inner class ViewModelHolder<VM : BaseViewModel>(
         private val viewModelClass: KClass<VM>,
