@@ -23,8 +23,6 @@ sealed class Data {
     abstract val byteValue: ByteArray
 
     companion object {
-        val startSymbolBytes = byteArrayOf(0x10, 0x11)
-
         private const val MESSAGE_PREFIX_BYTE: Byte = 0x01
         private const val PROGRESS_PREFIX_BYTE: Byte = 0x02
 
