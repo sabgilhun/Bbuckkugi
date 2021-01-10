@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ConnectionManager {
 
-    fun startAdvertise(hostName: String): Flow<Result<ConnectionRequest>>
+    fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>>
 
     fun startDiscovery(): Flow<Result<DiscoveredEndpoint>>
 
