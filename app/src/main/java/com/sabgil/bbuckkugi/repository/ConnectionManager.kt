@@ -15,4 +15,6 @@ interface ConnectionManager {
     fun connectRemote(clientName: String, endpointId: String): Flow<Result<Data>>
 
     fun acceptRemote(endpointId: String): Flow<Result<Data>>
+
+    fun sendData(endpointId: String, data: Data): Flow<Result<Nothing>>
 }

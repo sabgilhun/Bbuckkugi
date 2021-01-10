@@ -6,10 +6,7 @@ import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
-import com.sabgil.bbuckkugi.nearbycallback.AdvertisingResultEmitter
-import com.sabgil.bbuckkugi.nearbycallback.ClientConnectionResultEmitter
-import com.sabgil.bbuckkugi.nearbycallback.DiscoveryResultEmitter
-import com.sabgil.bbuckkugi.nearbycallback.HostConnectionResultEmitter
+import com.sabgil.bbuckkugi.nearbycallback.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
@@ -40,6 +37,12 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
         callbackFlow {
             offer(Result.Loading)
             HostConnectionResultEmitter(endpointId, connectionsClient, this).emit()
+        }
+
+    override fun sendData(endpointId: String, data: Data): Flow<Result<Nothing>> =
+        callbackFlow {
+            offer(Result.Loading)
+            SendResultEmitter(endpointId, data, connectionsClient, this).emit()
         }
 
     companion object {
