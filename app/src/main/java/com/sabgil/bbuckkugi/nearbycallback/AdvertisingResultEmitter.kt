@@ -4,7 +4,6 @@ import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.isActive
 
 class AdvertisingResultEmitter(
     private val hostName: String,
@@ -26,15 +25,11 @@ class AdvertisingResultEmitter(
             endpointId: String,
             resolution: ConnectionResolution
         ) {
-            if (producerScope.isActive) {
-                producerScope.close()
-            }
+            producerScope.close()
         }
 
         override fun onDisconnected(endpointId: String) {
-            if (producerScope.isActive) {
-                producerScope.close()
-            }
+            producerScope.close()
         }
     }
 
