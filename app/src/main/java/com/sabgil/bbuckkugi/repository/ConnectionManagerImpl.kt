@@ -9,8 +9,10 @@ import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
-import com.sabgil.bbuckkugi.nearbycallback.ConnectionCallback
+import com.sabgil.bbuckkugi.nearbycallback.ClientConnectionCallback
 import com.sabgil.bbuckkugi.nearbycallback.DiscoveryCallback
+import com.sabgil.bbuckkugi.nearbycallback.HostConnectionCallback
+import com.sabgil.bbuckkugi.nearbycallback.HostPayloadCallback
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
@@ -34,13 +36,13 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
             connectionsClient.startAdvertising(
                 hostName,
                 SERVICED_ID,
-                ConnectionCallback(connectionsClient, this),
+                HostConnectionCallback(this),
                 advertisingOptions
             )
         }
 
-    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> {
-        return callbackFlow {
+    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> =
+        callbackFlow {
             offer(Result.Loading)
             connectionsClient.startDiscovery(
                 SERVICED_ID,
@@ -48,18 +50,23 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
                 discoveryOptions
             )
         }
-    }
 
-    override fun connectRemote(clientName: String, endpointId: String): Flow<Result<Data>> {
-        TODO("Not yet implemented")
-    }
+    override fun connectRemote(clientName: String, endpointId: String): Flow<Result<Data>> =
+        callbackFlow {
+            connectionsClient.requestConnection(
+                endpointId,
+                SERVICED_ID,
+                ClientConnectionCallback(connectionsClient, this)
+            )
+        }
 
-    override fun acceptRemote(endpointId: String): Flow<Result<Data>> {
-        TODO("Not yet implemented")
-    }
+    override fun acceptRemote(endpointId: String): Flow<Result<Data>> =
+        callbackFlow {
+            offer(Result.Loading)
+            connectionsClient.acceptConnection(endpointId, HostPayloadCallback(this))
+        }
 
     companion object {
-
         private const val SERVICED_ID = "BBUCKKUGI"
     }
 }
