@@ -6,7 +6,7 @@ import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
-import com.sabgil.bbuckkugi.nearbycallback.*
+import com.sabgil.bbuckkugi.nearbyemitter.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject

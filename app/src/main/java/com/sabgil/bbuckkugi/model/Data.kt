@@ -1,6 +1,6 @@
 package com.sabgil.bbuckkugi.model
 
-import com.sabgil.bbuckkugi.eception.IllegalDataException
+import com.sabgil.bbuckkugi.exception.IllegalDataException
 
 sealed class Data {
 

@@ -1,4 +1,4 @@
-package com.sabgil.bbuckkugi.nearbycallback
+package com.sabgil.bbuckkugi.nearbyemitter
 
 import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Result
