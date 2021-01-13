@@ -12,21 +12,31 @@
 			android:id="@+id/nickName"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			app:layout_constraintBottom_toTopOf="@id/button"
+			app:layout_constraintBottom_toTopOf="@id/advertise"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_chainStyle="packed" />
 		
 		<Button
-			android:id="@+id/button"
+			android:id="@+id/advertise"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="start!"
-			app:layout_constraintBottom_toBottomOf="parent"
+			android:text="advertise"
+			app:layout_constraintBottom_toTopOf="@id/discovery"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/nickName" />
+		
+		<Button
+			android:id="@+id/discovery"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="discovery"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/advertise" />
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

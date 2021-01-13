@@ -7,6 +7,7 @@ import com.sabgil.bbuckkugi.model.ConnectionRequest
 import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.nearbyemitter.*
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
@@ -19,30 +20,35 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
         callbackFlow {
             offer(Result.Loading)
             AdvertisingResultEmitter(hostName, SERVICED_ID, connectionsClient, this).emit()
+            awaitClose()
         }
 
     override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> =
         callbackFlow {
             offer(Result.Loading)
             DiscoveryResultEmitter(SERVICED_ID, connectionsClient, this).emit()
+            awaitClose()
         }
 
     override fun connectRemote(clientName: String, endpointId: String): Flow<Result<Data>> =
         callbackFlow {
             offer(Result.Loading)
             ClientConnectionResultEmitter(endpointId, SERVICED_ID, connectionsClient, this).emit()
+            awaitClose()
         }
 
     override fun acceptRemote(endpointId: String): Flow<Result<Data>> =
         callbackFlow {
             offer(Result.Loading)
             HostConnectionResultEmitter(endpointId, connectionsClient, this).emit()
+            awaitClose()
         }
 
     override fun sendData(endpointId: String, data: Data): Flow<Result<Nothing>> =
         callbackFlow {
             offer(Result.Loading)
             SendResultEmitter(endpointId, data, connectionsClient, this).emit()
+            awaitClose()
         }
 
     companion object {

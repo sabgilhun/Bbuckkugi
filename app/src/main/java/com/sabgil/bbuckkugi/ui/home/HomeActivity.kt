@@ -10,7 +10,9 @@ import com.sabgil.bbuckkugi.common.ext.checkSelfPermissionCompat
 import com.sabgil.bbuckkugi.common.ext.requestPermissionsCompat
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
     private val viewModel: HomeViewModel by viewModelOf()
@@ -18,8 +20,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.button.setOnClickListener {
-            viewModel.startDiscovery(binding.nickName.text.toString())
+        binding.discovery.setOnClickListener {
+            viewModel.startDiscovery()
+        }
+
+        binding.advertise.setOnClickListener {
+            viewModel.startAdvertising(binding.nickName.text.toString())
         }
 
         if (!isEnableBle()) {
@@ -29,8 +35,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         if (!hasPermissions()) {
             requestPermissionsCompat(needsPermissions, PERMISSION_REQUEST_CODE)
         }
-
-        viewModel.startAdvertising()
     }
 
     private fun isEnableBle() =
