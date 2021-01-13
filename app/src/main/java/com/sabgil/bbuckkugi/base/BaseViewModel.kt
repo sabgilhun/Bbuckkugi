@@ -30,19 +30,44 @@ abstract class BaseViewModel : ViewModel() {
         block: suspend CoroutineScope.() -> Unit
     ) = viewModelScope.launch(context = context, block = block)
 
-    protected fun <T> Flow<Result<T>>.collectResult(block: FlowResultScope<T>.() -> Unit) {
-        val flowResultScope = FlowResultScope(this, viewModelScope + ioErrorHandler, _isLoading)
+    protected fun <T> Flow<Result<T>>.collectResult(
+        context: CoroutineContext = ioErrorHandler,
+        block: FlowResultScope<T>.() -> Unit
+    ) {
+        val flowResultScope = FlowResultScope<T>()
         flowResultScope.block()
-        flowResultScope.internalLaunch()
+
+        collectOnMain(context) {
+            when (it) {
+                is Result.Success -> {
+                    _isLoading.value = false
+                    flowResultScope.onSuccess(it.result)
+                }
+                is Result.Failure -> {
+                    _isLoading.value = false
+                    flowResultScope.onError(it.exception)
+                }
+                Result.Loading -> {
+                    _isLoading.value = true
+                }
+            }
+        }
     }
 
-    class FlowResultScope<T>(
-        private val flow: Flow<Result<T>>,
-        private val scope: CoroutineScope,
-        private val loading: MutableLiveData<Boolean>
+    private fun <T> Flow<T>.collectOnMain(
+        context: CoroutineContext,
+        block: suspend CoroutineScope.(T) -> Unit
     ) {
-        private var onSuccess: suspend (T) -> Unit = {}
-        private var onError: suspend (Throwable) -> Unit = {}
+        viewModelScope.launch(context) {
+            this@collectOnMain.collect {
+                withContext(Dispatchers.Main) { block(it) }
+            }
+        }
+    }
+
+    class FlowResultScope<T> {
+        var onSuccess: suspend (T) -> Unit = {}
+        var onError: suspend (Throwable) -> Unit = {}
 
         fun success(onSuccess: suspend (T) -> Unit) {
             this.onSuccess = onSuccess
@@ -50,28 +75,6 @@ abstract class BaseViewModel : ViewModel() {
 
         fun error(onError: suspend (Throwable) -> Unit) {
             this.onError = onError
-        }
-
-        fun internalLaunch() {
-            scope.launch {
-                flow.collect {
-                    withContext(Dispatchers.Main) {
-                        when (it) {
-                            is Result.Success -> {
-                                loading.value = false
-                                onSuccess(it.result)
-                            }
-                            is Result.Failure -> {
-                                loading.value = false
-                                onError(it.exception)
-                            }
-                            Result.Loading -> {
-                                loading.value = true
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }
