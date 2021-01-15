@@ -20,12 +20,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding.viewModel = viewModel
+
+        binding.advertise.setOnClickListener {
+            viewModel.startAdvertising()
+        }
+
         binding.discovery.setOnClickListener {
             viewModel.startDiscovery()
         }
 
-        binding.advertise.setOnClickListener {
-            viewModel.startAdvertising(binding.nickName.text.toString())
+        binding.send.setOnClickListener {
+            viewModel.sendData()
         }
 
         if (!isEnableBle()) {

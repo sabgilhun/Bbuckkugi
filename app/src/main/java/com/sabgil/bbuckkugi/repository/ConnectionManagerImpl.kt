@@ -30,23 +30,20 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
             awaitClose()
         }
 
-    override fun connectRemote(clientName: String, endpointId: String): Flow<Result<Data>> =
+    override fun connectRemote(endpointId: String): Flow<Result<Data>> =
         callbackFlow {
-            offer(Result.Loading)
             ClientConnectionResultEmitter(endpointId, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
         }
 
     override fun acceptRemote(endpointId: String): Flow<Result<Data>> =
         callbackFlow {
-            offer(Result.Loading)
             HostConnectionResultEmitter(endpointId, connectionsClient, this).emit()
             awaitClose()
         }
 
     override fun sendData(endpointId: String, data: Data): Flow<Result<Nothing>> =
         callbackFlow {
-            offer(Result.Loading)
             SendResultEmitter(endpointId, data, connectionsClient, this).emit()
             awaitClose()
         }

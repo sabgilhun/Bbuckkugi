@@ -3,6 +3,13 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 	
+	<data>
+		
+		<variable
+			name="viewModel"
+			type="com.sabgil.bbuckkugi.ui.home.HomeViewModel" />
+	</data>
+	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -12,6 +19,7 @@
 			android:id="@+id/nickName"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:text="@={viewModel.inputData}"
 			app:layout_constraintBottom_toTopOf="@id/advertise"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -33,10 +41,30 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="discovery"
-			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/send"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/advertise" />
+		
+		<Button
+			android:id="@+id/send"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="send"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/discovery" />
+		
+		<TextView
+			android:id="@+id/receiveData"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{viewModel.receiveData}"
+			android:layout_marginBottom="60dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

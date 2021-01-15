@@ -47,8 +47,8 @@ class ClientConnectionResultEmitter(
 
     fun emit() {
         connectionClient.requestConnection(
-            endpointId,
             serviceId,
+            endpointId,
             connectionLifecycleCallback
         ).addOnFailureListener {
             producerScope.offer(Result.Failure(it))

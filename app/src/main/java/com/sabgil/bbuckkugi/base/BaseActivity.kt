@@ -48,7 +48,7 @@ abstract class BaseActivity<B : ViewDataBinding>(
 
     private fun observingBaseViewModel(viewModel: BaseViewModel) {
         viewModel.isLoading.observe { if (it) loadingDialog.show() else loadingDialog.hide() }
-        viewModel.showErrorMessage.observe {}
+        viewModel.showErrorMessage.observe {showErrorMessage(it)}
     }
 
     protected fun showErrorMessage(message: String) {

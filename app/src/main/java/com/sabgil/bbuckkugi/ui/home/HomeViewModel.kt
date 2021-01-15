@@ -2,37 +2,86 @@ package com.sabgil.bbuckkugi.ui.home
 
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sabgil.bbuckkugi.base.BaseViewModel
+import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.repository.ConnectionManager
-import kotlinx.coroutines.currentCoroutineContext
+import kotlin.random.Random
 
 class HomeViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager
 ) : BaseViewModel() {
 
-    fun startAdvertising(hostName: String) {
-        connectionManager.startAdvertising(hostName)
+    private val _receiveData = MutableLiveData<String>()
+    val receiveData: LiveData<String> get() = _receiveData
+
+    val inputData = MutableLiveData<String>()
+
+    fun startAdvertising() {
+        val name = inputData.value ?: "default host name"
+        connectionManager.startAdvertising(name)
             .collectResult {
                 success {
-                    Log.i("coroutine test", currentCoroutineContext().toString())
+                    Log.i("ConnectionTestTag", "advertise s")
+                    acceptRemote(it.endpointId)
                 }
                 error {
-                    Log.i("coroutine test", currentCoroutineContext().toString())
+                    Log.i("ConnectionTestTag", "advertise e")
+                    showErrorMessage(it)
                 }
             }
     }
 
     fun startDiscovery() {
-        ioScopeLaunch {
-            connectionManager.startDiscovery()
-                .collectResult {
-                    success {
-                        Log.i("coroutine test", currentCoroutineContext().toString())
-                    }
-                    error {
-                        Log.i("coroutine test", currentCoroutineContext().toString())
-                    }
+        connectionManager.startDiscovery()
+            .collectResult {
+                success {
+                    Log.i("ConnectionTestTag", "discovery s")
+                    connectRemote(it.endpointId)
                 }
-        }
+                error {
+                    Log.i("ConnectionTestTag", "discovery e")
+                    showErrorMessage(it)
+                }
+            }
+    }
+
+    private var endpointId: String? = null
+
+    fun sendData() {
+        val id = endpointId ?: return
+        connectionManager.sendData(id, Data.Message(Random.nextInt().rem(10)))
+            .collectResult { }
+    }
+
+    private fun acceptRemote(endpointId: String) {
+        this.endpointId = endpointId
+        connectionManager.acceptRemote(endpointId)
+            .collectResult {
+                success {
+                    Log.i("ConnectionTestTag", "accept s")
+                    _receiveData.value = it.byteValue.toString()
+                }
+                error {
+                    Log.i("ConnectionTestTag", "accept e")
+                    showErrorMessage(it)
+                }
+            }
+    }
+
+    private fun connectRemote(endpointId: String) {
+        this.endpointId = endpointId
+        connectionManager.connectRemote(endpointId)
+            .collectResult {
+                success {
+                    Log.i("ConnectionTestTag", "connect s")
+                    _receiveData.value = it.byteValue.toString()
+                }
+                error {
+                    Log.i("ConnectionTestTag", "connect e")
+                    showErrorMessage(it)
+                }
+            }
     }
 }

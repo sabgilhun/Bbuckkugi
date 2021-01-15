@@ -12,7 +12,7 @@ interface ConnectionManager {
 
     fun startDiscovery(): Flow<Result<DiscoveredEndpoint>>
 
-    fun connectRemote(clientName: String, endpointId: String): Flow<Result<Data>>
+    fun connectRemote(endpointId: String): Flow<Result<Data>>
 
     fun acceptRemote(endpointId: String): Flow<Result<Data>>
 

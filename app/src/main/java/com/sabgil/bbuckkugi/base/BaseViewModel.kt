@@ -25,10 +25,9 @@ abstract class BaseViewModel : ViewModel() {
     private val _showErrorMessage = SingleLiveEvent<String>()
     val showErrorMessage: LiveData<String> = _showErrorMessage
 
-    fun ioScopeLaunch(
-        context: CoroutineContext = ioErrorHandler,
-        block: suspend CoroutineScope.() -> Unit
-    ) = viewModelScope.launch(context = context, block = block)
+    protected fun showErrorMessage(throwable: Throwable) {
+        _showErrorMessage.setValue(throwable.message ?: "일시적인 문제가 발생했습니다.")
+    }
 
     protected fun <T> Flow<Result<T>>.collectResult(
         context: CoroutineContext = ioErrorHandler,
