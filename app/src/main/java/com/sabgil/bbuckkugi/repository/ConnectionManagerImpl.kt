@@ -19,7 +19,6 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
 
     override fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>> {
         val flow = callbackFlow {
-            offer(Result.Loading)
             AdvertisingResultEmitter(hostName, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
         }
@@ -29,7 +28,6 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
 
     override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> {
         val flow = callbackFlow {
-            offer(Result.Loading)
             DiscoveryResultEmitter(SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
         }

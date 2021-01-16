@@ -14,21 +14,23 @@ class HomeViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager
 ) : BaseViewModel() {
 
+    private var discoveryJob: Job? = null
+    private var advertiseJob: Job? = null
+    private var endpointId: String? = null
+
     private val _receiveData = MutableLiveData<String>()
     val receiveData: LiveData<String> get() = _receiveData
 
     val inputData = MutableLiveData<String>()
 
-    private var discoveryJob: Job? = null
-
-    private var endpointId: String? = null
-    
     fun startAdvertising() {
         val name = inputData.value ?: "default host name"
-        connectionManager.startAdvertising(name)
+        advertiseJob = connectionManager.startAdvertising(name)
+            .loading()
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "advertise s")
+                    advertiseJob?.cancel()
                     acceptRemote(it.endpointId)
                 }
                 error {
@@ -40,6 +42,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun startDiscovery() {
         discoveryJob = connectionManager.startDiscovery()
+            .loading()
             .collectResult {
                 success {
                     discoveryJob?.cancel()
@@ -55,12 +58,18 @@ class HomeViewModel @ViewModelInject constructor(
     fun sendData() {
         val id = endpointId ?: return
         connectionManager.sendData(id, Data.Message(Random.nextInt().rem(10)))
-            .collectResult { }
+            .loading()
+            .collectResult {
+                error {
+                    showErrorMessage(it)
+                }
+            }
     }
 
     private fun acceptRemote(endpointId: String) {
         this.endpointId = endpointId
         connectionManager.acceptRemote(endpointId)
+            .loading()
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "accept s")
@@ -76,6 +85,7 @@ class HomeViewModel @ViewModelInject constructor(
     private fun connectRemote(endpointId: String) {
         this.endpointId = endpointId
         connectionManager.connectRemote(endpointId)
+            .loading()
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "connect s")

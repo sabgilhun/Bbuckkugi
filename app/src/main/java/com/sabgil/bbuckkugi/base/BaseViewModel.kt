@@ -7,8 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel() {
@@ -29,6 +28,17 @@ abstract class BaseViewModel : ViewModel() {
         _showErrorMessage.setValue(throwable.message ?: "일시적인 문제가 발생했습니다.")
     }
 
+    protected fun <T> Flow<T>.loading(): Flow<T> = flow {
+        onStart {
+            _isLoading.value = true
+        }.onCompletion {
+            _isLoading.value = false
+        }.collectIndexed { i, value ->
+            if (i == 0) _isLoading.value = false
+            emit(value)
+        }
+    }
+
     protected fun <T> Flow<Result<T>>.collectResult(
         context: CoroutineContext = ioErrorHandler,
         block: FlowResultScope<T>.() -> Unit
@@ -38,17 +48,8 @@ abstract class BaseViewModel : ViewModel() {
 
         return collectOnMain(context) {
             when (it) {
-                is Result.Success -> {
-                    _isLoading.value = false
-                    flowResultScope.onSuccess(it.result)
-                }
-                is Result.Failure -> {
-                    _isLoading.value = false
-                    flowResultScope.onError(it.exception)
-                }
-                Result.Loading -> {
-                    _isLoading.value = true
-                }
+                is Result.Success -> flowResultScope.onSuccess(it.result)
+                is Result.Failure -> flowResultScope.onError(it.exception)
             }
         }
     }
@@ -57,7 +58,7 @@ abstract class BaseViewModel : ViewModel() {
         context: CoroutineContext,
         block: suspend CoroutineScope.(T) -> Unit
     ) = viewModelScope.launch(context) {
-        this@collectOnMain.collect {
+        collect {
             withContext(Dispatchers.Main) { block(it) }
         }
     }
