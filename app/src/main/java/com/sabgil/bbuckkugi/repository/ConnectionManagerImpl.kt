@@ -10,25 +10,32 @@ import com.sabgil.bbuckkugi.nearbyemitter.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.onCompletion
 import javax.inject.Inject
 
 class ConnectionManagerImpl @Inject constructor(val context: Context) : ConnectionManager {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
 
-    override fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>> =
-        callbackFlow {
+    override fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>> {
+        val flow = callbackFlow {
             offer(Result.Loading)
             AdvertisingResultEmitter(hostName, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
         }
+        flow.onCompletion { connectionsClient.stopAdvertising() }
+        return flow
+    }
 
-    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> =
-        callbackFlow {
+    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> {
+        val flow = callbackFlow {
             offer(Result.Loading)
             DiscoveryResultEmitter(SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
         }
+        flow.onCompletion { connectionsClient.stopDiscovery() }
+        return flow
+    }
 
     override fun connectRemote(endpointId: String): Flow<Result<Data>> =
         callbackFlow {

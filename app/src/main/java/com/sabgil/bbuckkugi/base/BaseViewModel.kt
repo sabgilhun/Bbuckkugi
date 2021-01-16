@@ -32,11 +32,11 @@ abstract class BaseViewModel : ViewModel() {
     protected fun <T> Flow<Result<T>>.collectResult(
         context: CoroutineContext = ioErrorHandler,
         block: FlowResultScope<T>.() -> Unit
-    ) {
+    ): Job {
         val flowResultScope = FlowResultScope<T>()
         flowResultScope.block()
 
-        collectOnMain(context) {
+        return collectOnMain(context) {
             when (it) {
                 is Result.Success -> {
                     _isLoading.value = false
@@ -56,11 +56,9 @@ abstract class BaseViewModel : ViewModel() {
     private fun <T> Flow<T>.collectOnMain(
         context: CoroutineContext,
         block: suspend CoroutineScope.(T) -> Unit
-    ) {
-        viewModelScope.launch(context) {
-            this@collectOnMain.collect {
-                withContext(Dispatchers.Main) { block(it) }
-            }
+    ) = viewModelScope.launch(context) {
+        this@collectOnMain.collect {
+            withContext(Dispatchers.Main) { block(it) }
         }
     }
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.sabgil.bbuckkugi.base.BaseViewModel
 import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.repository.ConnectionManager
+import kotlinx.coroutines.Job
 import kotlin.random.Random
 
 class HomeViewModel @ViewModelInject constructor(
@@ -18,6 +19,10 @@ class HomeViewModel @ViewModelInject constructor(
 
     val inputData = MutableLiveData<String>()
 
+    private var discoveryJob: Job? = null
+
+    private var endpointId: String? = null
+    
     fun startAdvertising() {
         val name = inputData.value ?: "default host name"
         connectionManager.startAdvertising(name)
@@ -34,10 +39,10 @@ class HomeViewModel @ViewModelInject constructor(
     }
 
     fun startDiscovery() {
-        connectionManager.startDiscovery()
+        discoveryJob = connectionManager.startDiscovery()
             .collectResult {
                 success {
-                    Log.i("ConnectionTestTag", "discovery s")
+                    discoveryJob?.cancel()
                     connectRemote(it.endpointId)
                 }
                 error {
@@ -46,8 +51,6 @@ class HomeViewModel @ViewModelInject constructor(
                 }
             }
     }
-
-    private var endpointId: String? = null
 
     fun sendData() {
         val id = endpointId ?: return
