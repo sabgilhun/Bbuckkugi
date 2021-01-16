@@ -18,6 +18,10 @@ class ClientConnectionResultEmitter(
             connectionInfo: ConnectionInfo
         ) {
             connectionClient.acceptConnection(endpointId, payloadCallback)
+                .addOnFailureListener {
+                    producerScope.offer(Result.Failure(it))
+                    producerScope.close()
+                }
         }
 
         override fun onConnectionResult(
