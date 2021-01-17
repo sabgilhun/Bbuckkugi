@@ -66,6 +66,7 @@ dependencies {
 
     // LifeCycle components
     implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-service:$lifeCycleServiceVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$runtimeKtxVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelKtxVersion"
 

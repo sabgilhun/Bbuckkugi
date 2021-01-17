@@ -26,7 +26,6 @@ class HomeViewModel @ViewModelInject constructor(
     fun startAdvertising() {
         val name = inputData.value ?: "default host name"
         advertiseJob = connectionManager.startAdvertising(name)
-            .loading()
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "advertise s")
@@ -42,7 +41,6 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun startDiscovery() {
         discoveryJob = connectionManager.startDiscovery()
-            .loading()
             .collectResult {
                 success {
                     discoveryJob?.cancel()
@@ -58,7 +56,6 @@ class HomeViewModel @ViewModelInject constructor(
     fun sendData() {
         val id = endpointId ?: return
         connectionManager.sendData(id, Data.Message(Random.nextInt().rem(10)))
-            .loading()
             .collectResult {
                 error {
                     showErrorMessage(it)
@@ -69,7 +66,6 @@ class HomeViewModel @ViewModelInject constructor(
     private fun acceptRemote(endpointId: String) {
         this.endpointId = endpointId
         connectionManager.acceptRemote(endpointId)
-            .loading()
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "accept s")
@@ -85,7 +81,6 @@ class HomeViewModel @ViewModelInject constructor(
     private fun connectRemote(endpointId: String) {
         this.endpointId = endpointId
         connectionManager.connectRemote(endpointId)
-            .loading()
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "connect s")

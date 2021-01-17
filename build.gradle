@@ -20,6 +20,7 @@ buildscript {
         runtimeKtxVersion = '2.2.0'
         viewModelKtxVersion = '2.2.0'
         lifeCycleVersion = '2.2.0'
+        lifeCycleServiceVersion = '2.2.0'
 
         fcmMessageVersion = '21.0.1'
         roomVersion = '2.2.6'

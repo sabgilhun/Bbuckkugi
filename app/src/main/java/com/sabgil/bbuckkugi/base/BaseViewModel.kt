@@ -28,17 +28,6 @@ abstract class BaseViewModel : ViewModel() {
         _showErrorMessage.setValue(throwable.message ?: "일시적인 문제가 발생했습니다.")
     }
 
-    protected fun <T> Flow<T>.loading(): Flow<T> = flow {
-        onStart {
-            _isLoading.value = true
-        }.onCompletion {
-            _isLoading.value = false
-        }.collectIndexed { i, value ->
-            if (i == 0) _isLoading.value = false
-            emit(value)
-        }
-    }
-
     protected fun <T> Flow<Result<T>>.collectResult(
         context: CoroutineContext = ioErrorHandler,
         block: FlowResultScope<T>.() -> Unit

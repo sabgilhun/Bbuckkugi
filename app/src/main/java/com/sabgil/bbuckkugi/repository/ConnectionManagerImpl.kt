@@ -17,14 +17,14 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
 
-    override fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>> {
-        val flow = callbackFlow {
+    override fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>> =
+        callbackFlow {
             AdvertisingResultEmitter(hostName, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
+        }.onCompletion {
+            connectionsClient.stopAdvertising()
         }
-        flow.onCompletion { connectionsClient.stopAdvertising() }
-        return flow
-    }
+
 
     override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> {
         val flow = callbackFlow {
