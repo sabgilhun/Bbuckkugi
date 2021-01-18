@@ -34,7 +34,7 @@ abstract class BaseActivity<B : ViewDataBinding>(
     fun <VM : BaseViewModel> getViewModelLazy(viewModelClass: KClass<VM>): Lazy<VM> =
         ViewModelHolder(viewModelClass, { viewModelStore }, { defaultViewModelProviderFactory })
 
-    protected fun <V> LiveData<V>.observe(onChange: (V) -> Unit) {
+    protected fun <V> LiveData<V>.observe(onChange: (V?) -> Unit) {
         this.observe(this@BaseActivity, onChange)
     }
 
@@ -47,8 +47,8 @@ abstract class BaseActivity<B : ViewDataBinding>(
     }
 
     private fun observingBaseViewModel(viewModel: BaseViewModel) {
-        viewModel.isLoading.observe { if (it) loadingDialog.show() else loadingDialog.hide() }
-        viewModel.showErrorMessage.observe {showErrorMessage(it)}
+        viewModel.isLoading.observeNonNull { if (it) loadingDialog.show() else loadingDialog.hide() }
+        viewModel.showErrorMessage.observeNonNull { showErrorMessage(it) }
     }
 
     protected fun showErrorMessage(message: String) {

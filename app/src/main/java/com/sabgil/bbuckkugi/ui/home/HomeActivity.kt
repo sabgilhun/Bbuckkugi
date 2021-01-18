@@ -1,11 +1,11 @@
 package com.sabgil.bbuckkugi.ui.home
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
@@ -84,5 +84,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
         private val needsPermissions =
             if (Build.VERSION.SDK_INT < 29) needPermissionsUnderQ else needPermissionsOverQ
+
+        fun startOnTop(context: Context) {
+            val intent = Intent(context, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            context.startActivity(intent)
+        }
     }
 }

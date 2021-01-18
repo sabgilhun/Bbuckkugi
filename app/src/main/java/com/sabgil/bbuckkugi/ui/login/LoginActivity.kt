@@ -5,6 +5,8 @@ import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityLoginBinding
+import com.sabgil.bbuckkugi.ui.home.HomeActivity
+import com.sabgil.bbuckkugi.ui.namesetting.NameSettingActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -16,8 +18,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.loginButton.setOnClickListener {
-            // TODO 이미 있는지 확인
+        binding.viewModel = viewModel
+
+        viewModel.needNicknameSetting.observeNonNull {
+            if (it) {
+                NameSettingActivity.startOnTop(this)
+            } else {
+                HomeActivity.startOnTop(this)
+            }
         }
     }
 }
