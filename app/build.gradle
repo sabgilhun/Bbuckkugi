@@ -90,4 +90,7 @@ dependencies {
     implementation "androidx.hilt:hilt-common:$hiltVersion"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltVersion"
     kapt "androidx.hilt:hilt-compiler:$hiltVersion"
+
+    // MultiViewType
+    implementation "com.sabgil.mutiviewtype:mutiviewtype:$multiViewTypeVersion"
 }

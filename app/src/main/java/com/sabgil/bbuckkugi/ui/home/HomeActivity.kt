@@ -14,6 +14,7 @@ import com.sabgil.bbuckkugi.common.ext.requestPermissionsCompat
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityHomeBinding
 import com.sabgil.bbuckkugi.service.AdvertisingService
+import com.sabgil.bbuckkugi.ui.discovery.DiscoveryActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +34,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         }
 
         binding.discovery.setOnClickListener {
-            viewModel.startDiscovery()
+            DiscoveryActivity.start(this)
         }
 
         binding.send.setOnClickListener {
