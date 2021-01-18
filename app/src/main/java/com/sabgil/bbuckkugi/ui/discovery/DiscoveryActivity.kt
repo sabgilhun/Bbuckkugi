@@ -41,7 +41,7 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         viewModel.discoveredRemotes.observeNonNull {
             adapter.update(it)
         }
-        
+
         viewModel.discoveryRemote()
     }
 

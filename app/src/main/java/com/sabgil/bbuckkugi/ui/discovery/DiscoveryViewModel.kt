@@ -28,7 +28,15 @@ class DiscoveryViewModel @ViewModelInject constructor(
     }
 
     fun connectRemote(endpointId: String) {
-
+        connectionManager.connectRemote(endpointId)
+            .collectResult {
+                success {
+                    // TODO: 추가 처리 필요
+                }
+                error {
+                    showErrorMessage(it)
+                }
+            }
     }
 
 }
