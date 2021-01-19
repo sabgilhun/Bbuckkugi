@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.common.ext.showPopupDialog
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 abstract class BaseActivity<B : ViewDataBinding>(
@@ -28,7 +29,13 @@ abstract class BaseActivity<B : ViewDataBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.i("onCreate :${this.javaClass}")
         binding.lifecycleOwner = this
+    }
+
+    override fun onDestroy() {
+        Timber.i("onDestroy :${this.javaClass}")
+        super.onDestroy()
     }
 
     fun <VM : BaseViewModel> getViewModelLazy(viewModelClass: KClass<VM>): Lazy<VM> =

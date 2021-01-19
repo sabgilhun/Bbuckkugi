@@ -29,6 +29,7 @@ buildscript {
         hiltVersion = '1.0.0-alpha02'
 
         multiViewTypeVersion = '1.0.2'
+        timberVersion = '4.7.1'
     }
 
     repositories {
