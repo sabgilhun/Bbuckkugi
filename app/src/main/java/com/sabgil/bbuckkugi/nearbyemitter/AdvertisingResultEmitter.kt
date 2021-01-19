@@ -4,6 +4,7 @@ import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import kotlinx.coroutines.channels.ProducerScope
+import timber.log.Timber
 
 class AdvertisingResultEmitter(
     private val hostName: String,
@@ -16,6 +17,7 @@ class AdvertisingResultEmitter(
             endpointId: String,
             connectionInfo: ConnectionInfo
         ) {
+            Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
             producerScope.offer(
                 Result.Success(ConnectionRequest(endpointId, connectionInfo.endpointName))
             )
@@ -25,10 +27,12 @@ class AdvertisingResultEmitter(
             endpointId: String,
             resolution: ConnectionResolution
         ) {
+            Timber.i("nearby: onConnectionResult $endpointId, $resolution")
             producerScope.close()
         }
 
         override fun onDisconnected(endpointId: String) {
+            Timber.i("nearby: onDisconnected $endpointId")
             producerScope.close()
         }
     }
@@ -39,7 +43,10 @@ class AdvertisingResultEmitter(
             serviceId,
             connectionLifecycleCallback,
             advertisingOptions
-        ).addOnFailureListener {
+        ).addOnSuccessListener {
+            Timber.i("nearby: addOnSuccessListener")
+        }.addOnFailureListener {
+            Timber.i("nearby: addOnFailureListener $it")
             producerScope.offer(Result.Failure(it))
             producerScope.close()
         }

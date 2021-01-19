@@ -4,6 +4,7 @@ import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import kotlinx.coroutines.channels.ProducerScope
+import timber.log.Timber
 
 class DiscoveryResultEmitter(
     private val serviceId: String,
@@ -13,12 +14,14 @@ class DiscoveryResultEmitter(
 
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
+            Timber.i("nearby: onEndpointFound $endpointId, $info")
             producerScope.offer(
                 Result.Success(DiscoveredEndpoint(endpointId, info.endpointName, info.serviceId))
             )
         }
 
         override fun onEndpointLost(endpointId: String) {
+            Timber.i("nearby: onEndpointLost $endpointId")
             producerScope.close()
         }
     }
@@ -28,7 +31,10 @@ class DiscoveryResultEmitter(
             serviceId,
             endpointDiscoveryCallback,
             discoveryOptions
-        ).addOnFailureListener {
+        ).addOnSuccessListener {
+            Timber.i("nearby: addOnSuccessListener")
+        }.addOnFailureListener {
+            Timber.i("nearby: addOnFailureListener $it")
             producerScope.offer(Result.Failure(it))
             producerScope.close()
         }
