@@ -28,9 +28,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         binding.viewModel = viewModel
 
         binding.advertise.setOnClickListener {
-            LocalBroadcastManager
-                .getInstance(this)
-                .sendBroadcast(Intent(ConnectionService.RE_START_ADVERTISING_ACTION))
+
         }
 
         binding.discovery.setOnClickListener {

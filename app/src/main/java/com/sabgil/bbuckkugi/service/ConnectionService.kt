@@ -10,6 +10,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.TestActivity
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.common.ext.collectOnMain
+import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
 import com.sabgil.bbuckkugi.service.ConnectionService.Status.*
@@ -37,7 +38,7 @@ class ConnectionService : LifecycleService() {
 
     private val broadcastReceiver = ControlBroadCastReceiver()
 
-    private var status: Status = NONE
+    private var status: Status = None
         set(value) {
             field = value
             clearPreviousJob()
@@ -48,7 +49,7 @@ class ConnectionService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        status = ADVERTISING
+        status = Advertising
         registerLocalBroadCast()
     }
 
@@ -79,23 +80,13 @@ class ConnectionService : LifecycleService() {
     }
 
     private fun startJob(toBe: Status) {
-        if (toBe == NONE) return
-
         lifecycleScope.launch(backgroundDispatcher) {
             when (toBe) {
-                NONE -> {
-                    // do not anything
+                None -> {
                 }
-                ADVERTISING -> {
-                    startAdvertising()
-                }
-                DISCOVERING -> {
-                    startDiscovering()
-                }
-                CONNECTING -> {
-                    // TODO: 인텐트에서 값 꺼내서 쓰기
-                    startConnecting("")
-                }
+                Advertising -> startAdvertising()
+                Discovering -> startDiscovering()
+                is Connecting -> startConnecting(toBe.endpointId)
             }
         }
     }
@@ -107,7 +98,7 @@ class ConnectionService : LifecycleService() {
                     is Result.Success -> {
                     }
                     is Result.Failure -> {
-                        status = ADVERTISING
+                        status = Advertising
                     }
                 }
             }
@@ -117,11 +108,10 @@ class ConnectionService : LifecycleService() {
         connectionManager.startDiscovery()
             .collectOnMain {
                 when (it) {
-                    is Result.Success -> {
-                    }
+                    is Result.Success -> sendDiscoveredEndpoint(it.result)
                     is Result.Failure -> {
                         // TODO: 연결 종료 브로드캐스트 필요
-                        status = ADVERTISING
+                        status = Advertising
                     }
                 }
             }
@@ -135,7 +125,7 @@ class ConnectionService : LifecycleService() {
                     }
                     is Result.Failure -> {
                         // TODO: 연결 종료 브로드캐스트 필요
-                        status = ADVERTISING
+                        status = Advertising
                     }
                 }
             }
@@ -146,25 +136,60 @@ class ConnectionService : LifecycleService() {
         startActivity(Intent(this, TestActivity::class.java))
     }
 
+    private fun sendDiscoveredEndpoint(discoveredEndpoint: DiscoveredEndpoint) {
+        val intent = Intent(DISCOVERED_ENDPOINT).apply {
+            putExtra("discoveredEndpoint", discoveredEndpoint)
+        }
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .sendBroadcast(intent)
+    }
+
     private inner class ControlBroadCastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                START_DISCOVERING -> status = DISCOVERING
-                STOP_DISCOVERING -> status = ADVERTISING
-                START_CONNECTION -> status = CONNECTING
+                START_DISCOVERING -> status = Discovering
+                STOP_DISCOVERING -> status = Advertising
+                START_CONNECTION -> status =
+                    Connecting(requireNotNull(intent.getStringExtra("endpointId")))
             }
         }
     }
 
-    private enum class Status {
-        NONE, ADVERTISING, DISCOVERING, CONNECTING
+    private sealed class Status {
+        object None : Status()
+        object Advertising : Status()
+        object Discovering : Status()
+        class Connecting(val endpointId: String) : Status()
     }
 
     companion object {
 
-        const val RE_START_ADVERTISING_ACTION = "RE_START_ADVERTISING_ACTION"
-        const val START_DISCOVERING = "START_DISCOVERING"
-        const val STOP_DISCOVERING = "STOP_DISCOVERING"
-        const val START_CONNECTION = "START_CONNECTION"
+        const val DISCOVERED_ENDPOINT = "DISCOVERED_ENDPOINT"
+
+        private const val START_DISCOVERING = "START_DISCOVERING"
+        private const val STOP_DISCOVERING = "STOP_DISCOVERING"
+        private const val START_CONNECTION = "START_CONNECTION"
+
+        fun sendStartDiscoveringAction(context: Context) {
+            LocalBroadcastManager
+                .getInstance(context)
+                .sendBroadcast(Intent(START_DISCOVERING))
+        }
+
+        fun sendStopDiscoveringAction(context: Context) {
+            LocalBroadcastManager
+                .getInstance(context)
+                .sendBroadcast(Intent(START_DISCOVERING))
+        }
+
+        fun sendStartConnection(context: Context, endpointId: String) {
+            LocalBroadcastManager
+                .getInstance(context)
+                .sendBroadcast(
+                    Intent(START_DISCOVERING).apply { putExtra("endpointId", endpointId) }
+                )
+        }
     }
 }
