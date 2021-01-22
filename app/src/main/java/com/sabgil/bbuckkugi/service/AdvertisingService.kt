@@ -9,14 +9,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.TestActivity
 import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.ext.collectOnMain
+import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
+import com.sabgil.bbuckkugi.service.AdvertisingService.Status.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AdvertisingService : LifecycleService() {
+
+    enum class Status {
+        NONE, ADVERTISING, DISCOVERING, CONNECTING
+    }
 
     private val errorHandler = CoroutineExceptionHandler { _, _ ->
 
@@ -27,21 +36,32 @@ class AdvertisingService : LifecycleService() {
     @Inject
     lateinit var connectionManager: ConnectionManager
 
-    private var advertisingJob: Job? = null
+    @Inject
+    lateinit var appSharedPreference: AppSharedPreference
+
+    private var status: Status = ADVERTISING
+        set(value) {
+            field = value
+            clearPreviousJob()
+            startJob(status)
+        }
+
+    private var previousJob: Job? = null
 
     private var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            advertisingJob?.let {
-                it.cancel()
-                startAdvertising()
+            when (intent.action) {
+                START_DISCOVERING -> status = DISCOVERING
+                STOP_DISCOVERING -> status = ADVERTISING
+                START_CONNECTION -> status = CONNECTING
             }
         }
     }
 
     override fun onCreate() {
         super.onCreate()
+        status = ADVERTISING
         registerLocalBroadCast()
-        startAdvertising()
     }
 
     override fun onDestroy() {
@@ -49,33 +69,88 @@ class AdvertisingService : LifecycleService() {
         super.onDestroy()
     }
 
-    private fun startAdvertising() {
-        advertisingJob = lifecycleScope.launch(backgroundDispatcher) {
-            delay(1000)
-            // TODO: 저장된 이름 사용하도록 수정 필요
-            connectionManager.startAdvertising("test")
-                .collect {
-                    withContext(Dispatchers.Main) {
-                        when (it) {
-                            is Result.Success -> startActivity()
-                            is Result.Failure -> startAdvertising()
-                        }
-                    }
-                }
-        }
-    }
-
     private fun registerLocalBroadCast() {
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(
                 broadcastReceiver,
-                IntentFilter().apply { addAction(RE_START_ADVERTISING_ACTION) }
+                IntentFilter().apply {
+                    addAction(START_DISCOVERING)
+                    addAction(STOP_DISCOVERING)
+                    addAction(START_CONNECTION)
+                }
             )
     }
 
     private fun unregisterLocalBroadCast() {
         LocalBroadcastManager.getInstance(this)
             .unregisterReceiver(broadcastReceiver)
+    }
+
+    private fun clearPreviousJob() {
+        previousJob?.cancel()
+    }
+
+    private fun startJob(toBe: Status) {
+        if (toBe == NONE) return
+
+        lifecycleScope.launch(backgroundDispatcher) {
+            when (toBe) {
+                NONE -> {
+                    // do not anything
+                }
+                ADVERTISING -> {
+                    startAdvertising()
+                }
+                DISCOVERING -> {
+                    startDiscovering()
+                }
+                CONNECTING -> {
+                    // TODO: 인텐트에서 값 꺼내서 쓰기
+                    startConnecting("")
+                }
+            }
+        }
+    }
+
+    private suspend fun startAdvertising() {
+        connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
+            .collectOnMain {
+                when (it) {
+                    is Result.Success -> {
+                    }
+                    is Result.Failure -> {
+                        status = ADVERTISING
+                    }
+                }
+            }
+    }
+
+    private suspend fun startDiscovering() {
+        connectionManager.startDiscovery()
+            .collectOnMain {
+                when (it) {
+                    is Result.Success -> {
+                    }
+                    is Result.Failure -> {
+                        // TODO: 연결 종료 브로드캐스트 필요
+                        status = ADVERTISING
+                    }
+                }
+            }
+    }
+
+    private suspend fun startConnecting(endpointId: String) {
+        connectionManager.connectRemote(endpointId)
+            .collectOnMain {
+                when (it) {
+                    is Result.Success -> {
+                    }
+                    is Result.Failure -> {
+                        // TODO: 연결 종료 브로드캐스트 필요
+                        status = ADVERTISING
+                    }
+                }
+            }
     }
 
     // TODO: activity 변경 필요
@@ -86,5 +161,8 @@ class AdvertisingService : LifecycleService() {
     companion object {
 
         const val RE_START_ADVERTISING_ACTION = "RE_START_ADVERTISING_ACTION"
+        const val START_DISCOVERING = "START_DISCOVERING"
+        const val STOP_DISCOVERING = "STOP_DISCOVERING"
+        const val START_CONNECTION = "START_CONNECTION"
     }
 }
