@@ -12,7 +12,7 @@ import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.common.ext.collectOnMain
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
-import com.sabgil.bbuckkugi.service.AdvertisingService.Status.*
+import com.sabgil.bbuckkugi.service.ConnectionService.Status.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -21,17 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AdvertisingService : LifecycleService() {
-
-    enum class Status {
-        NONE, ADVERTISING, DISCOVERING, CONNECTING
-    }
-
-    private val errorHandler = CoroutineExceptionHandler { _, _ ->
-
-    }
-
-    private val backgroundDispatcher = errorHandler + Dispatchers.Default
+class ConnectionService : LifecycleService() {
 
     @Inject
     lateinit var connectionManager: ConnectionManager
@@ -39,7 +29,15 @@ class AdvertisingService : LifecycleService() {
     @Inject
     lateinit var appSharedPreference: AppSharedPreference
 
-    private var status: Status = ADVERTISING
+    private val errorHandler = CoroutineExceptionHandler { _, _ ->
+
+    }
+
+    private val backgroundDispatcher = errorHandler + Dispatchers.Default
+
+    private val broadcastReceiver = ControlBroadCastReceiver()
+
+    private var status: Status = NONE
         set(value) {
             field = value
             clearPreviousJob()
@@ -47,16 +45,6 @@ class AdvertisingService : LifecycleService() {
         }
 
     private var previousJob: Job? = null
-
-    private var broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                START_DISCOVERING -> status = DISCOVERING
-                STOP_DISCOVERING -> status = ADVERTISING
-                START_CONNECTION -> status = CONNECTING
-            }
-        }
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -156,6 +144,20 @@ class AdvertisingService : LifecycleService() {
     // TODO: activity 변경 필요
     private fun startActivity() {
         startActivity(Intent(this, TestActivity::class.java))
+    }
+
+    private inner class ControlBroadCastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                START_DISCOVERING -> status = DISCOVERING
+                STOP_DISCOVERING -> status = ADVERTISING
+                START_CONNECTION -> status = CONNECTING
+            }
+        }
+    }
+
+    private enum class Status {
+        NONE, ADVERTISING, DISCOVERING, CONNECTING
     }
 
     companion object {

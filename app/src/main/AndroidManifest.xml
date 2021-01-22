@@ -30,7 +30,7 @@
 		<activity android:name=".ui.discovery.DiscoveryActivity" />
 		<activity android:name=".ui.namesetting.NameSettingActivity" />
 		
-		<service android:name=".service.AdvertisingService" />
+		<service android:name=".service.ConnectionService" />
 	</application>
 
 </manifest>

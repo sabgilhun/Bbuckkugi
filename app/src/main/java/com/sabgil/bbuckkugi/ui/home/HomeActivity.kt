@@ -13,7 +13,7 @@ import com.sabgil.bbuckkugi.common.ext.checkSelfPermissionCompat
 import com.sabgil.bbuckkugi.common.ext.requestPermissionsCompat
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityHomeBinding
-import com.sabgil.bbuckkugi.service.AdvertisingService
+import com.sabgil.bbuckkugi.service.ConnectionService
 import com.sabgil.bbuckkugi.ui.discovery.DiscoveryActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +30,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         binding.advertise.setOnClickListener {
             LocalBroadcastManager
                 .getInstance(this)
-                .sendBroadcast(Intent(AdvertisingService.RE_START_ADVERTISING_ACTION))
+                .sendBroadcast(Intent(ConnectionService.RE_START_ADVERTISING_ACTION))
         }
 
         binding.discovery.setOnClickListener {
@@ -49,7 +49,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
             requestPermissionsCompat(needsPermissions, PERMISSION_REQUEST_CODE)
         }
 
-        startService(Intent(this, AdvertisingService::class.java))
+        startService(Intent(this, ConnectionService::class.java))
     }
 
     private fun isEnableBle() =
