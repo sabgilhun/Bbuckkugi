@@ -11,8 +11,8 @@ class CommunicationChannel @Inject constructor(context: Context) : BaseChannel(c
     fun registerClient(
         lifecycleOwner: LifecycleOwner,
         onReceive: (Result<Data>) -> Unit
-    ) = lifeCycleSafetyRegister(lifecycleOwner, RECEIVE_RESULT) { _, intent ->
-        val result = intent.getSerializableExtra(RECEIVE_RESULT_INTENT_TAG)
+    ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_RX_DATA) { _, intent ->
+        val result = intent.getSerializableExtra(ACTION_RX_DATA_INTENT_TAG)
         @Suppress("UNCHECKED_CAST")
         onReceive(result as Result<Data>)
     }
@@ -20,19 +20,24 @@ class CommunicationChannel @Inject constructor(context: Context) : BaseChannel(c
     fun registerHost(
         lifecycleOwner: LifecycleOwner,
         onReceive: (Data) -> Unit
-    ) = lifeCycleSafetyRegister(lifecycleOwner, RECEIVE_ACTION) { _, intent ->
-        val data = intent.getSerializableExtra(RECEIVE_ACTION_INTENT_TAG) as Data
+    ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_TX_DATA) { _, intent ->
+        val data = intent.getSerializableExtra(ACTION_TX_DATA_INTENT_TAG) as Data
         onReceive(data)
     }
 
-    fun sendData(data: Data) =
-        sendBroadCast(RECEIVE_ACTION) { putExtra(RECEIVE_ACTION_INTENT_TAG, data) }
+    fun sendTxData(data: Data) =
+        sendBroadCast(ACTION_TX_DATA) { putExtra(ACTION_TX_DATA_INTENT_TAG, data) }
 
+    fun sendRxData(data: Result<Data>) =
+        sendBroadCast(ACTION_RX_DATA) { putExtra(ACTION_RX_DATA_INTENT_TAG, data) }
+
+    // TODO 연결 종료 기능 필요
+    
     companion object {
-        private const val RECEIVE_RESULT = "RECEIVE_RESULT"
-        private const val RECEIVE_RESULT_INTENT_TAG = "RECEIVE_RESULT_INTENT_TAG"
+        private const val ACTION_RX_DATA = "ACTION_RX_DATA"
+        private const val ACTION_RX_DATA_INTENT_TAG = "ACTION_RX_DATA_INTENT_TAG"
 
-        private const val RECEIVE_ACTION = "RECEIVE_ACTION"
-        private const val RECEIVE_ACTION_INTENT_TAG = "RECEIVE_ACTION_INTENT_TAG"
+        private const val ACTION_TX_DATA = "ACTION_TX_DATA"
+        private const val ACTION_TX_DATA_INTENT_TAG = "ACTION_TX_DATA_INTENT_TAG"
     }
 }

@@ -10,8 +10,8 @@ class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChann
     fun registerClient(
         lifecycleOwner: LifecycleOwner,
         onReceive: (Result<Nothing>) -> Unit
-    ) = lifeCycleSafetyRegister(lifecycleOwner, RECEIVE_RESULT) { _, intent ->
-        val result = intent.getSerializableExtra(RECEIVE_RESULT_INTENT_TAG)
+    ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_CONNECTION_RESULT) { _, intent ->
+        val result = intent.getSerializableExtra(ACTION_CONNECTION_RESULT_INTENT_TAG)
         @Suppress("UNCHECKED_CAST")
         onReceive(result as Result<Nothing>)
     }
@@ -19,26 +19,30 @@ class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChann
     fun registerHost(
         lifecycleOwner: LifecycleOwner,
         onReceive: (String) -> Unit
-    ) = lifeCycleSafetyRegister(lifecycleOwner, RECEIVE_ACTION) { _, intent ->
-        val endpoint = requireNotNull(intent.getStringExtra(RECEIVE_ACTION_INTENT_TAG))
+    ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_REQUEST_CONNECTION) { _, intent ->
+        val endpoint = requireNotNull(intent.getStringExtra(ACTION_REQUEST_CONNECTION_INTENT_TAG))
         onReceive(endpoint)
     }
 
     fun sendActionForConnection(endpointId: String) =
-        sendBroadCast(RECEIVE_ACTION) {
-            putExtra(RECEIVE_ACTION_INTENT_TAG, endpointId)
+        sendBroadCast(ACTION_REQUEST_CONNECTION) {
+            putExtra(ACTION_REQUEST_CONNECTION_INTENT_TAG, endpointId)
         }
 
     fun sendResult(result: Result<Nothing>) =
-        sendBroadCast(RECEIVE_RESULT) {
-            putExtra(RECEIVE_RESULT_INTENT_TAG, result)
+        sendBroadCast(ACTION_CONNECTION_RESULT) {
+            putExtra(ACTION_CONNECTION_RESULT_INTENT_TAG, result)
         }
 
     companion object {
-        private const val RECEIVE_RESULT = "RECEIVE_RESULT"
-        private const val RECEIVE_RESULT_INTENT_TAG = "RECEIVE_RESULT_INTENT_TAG"
+        private const val ACTION_CONNECTION_RESULT =
+            "ACTION_CONNECTION_RESULT"
+        private const val ACTION_CONNECTION_RESULT_INTENT_TAG =
+            "ACTION_CONNECTION_RESULT_INTENT_TAG"
 
-        private const val RECEIVE_ACTION = "RECEIVE_ACTION"
-        private const val RECEIVE_ACTION_INTENT_TAG = "RECEIVE_ACTION_INTENT_TAG"
+        private const val ACTION_REQUEST_CONNECTION =
+            "ACTION_REQUEST_CONNECTION"
+        private const val ACTION_REQUEST_CONNECTION_INTENT_TAG =
+            "ACTION_REQUEST_CONNECTION_INTENT_TAG"
     }
 }
