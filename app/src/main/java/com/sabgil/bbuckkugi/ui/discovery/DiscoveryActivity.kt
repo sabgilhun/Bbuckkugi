@@ -50,6 +50,13 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         setupViews()
         setupObserver()
         setupChannel()
+
+        discoveryChannel.sendActionForStartDiscovery()
+    }
+
+    override fun onDestroy() {
+        discoveryChannel.sendActionForStopDiscovery()
+        super.onDestroy()
     }
 
     private fun setupViews() {

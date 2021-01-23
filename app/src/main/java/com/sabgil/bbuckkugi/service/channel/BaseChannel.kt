@@ -18,7 +18,7 @@ abstract class BaseChannel(context: Context) {
         filteringAction: String,
         onReceive: (Context, Intent) -> Unit
     ) {
-        if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+        if (lifecycleOwner.lifecycle.currentState != Lifecycle.State.DESTROYED) {
             val receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     onReceive(context, intent)

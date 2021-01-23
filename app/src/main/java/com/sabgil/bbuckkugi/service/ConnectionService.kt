@@ -17,11 +17,8 @@ import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_START
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_STOP
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -96,6 +93,7 @@ class ConnectionService : LifecycleService() {
 
     private fun startJob(toBe: Status) {
         previousJob = lifecycleScope.launch(backgroundDispatcher) {
+            delay(500)
             when (toBe) {
                 None -> doNotAnything()
                 Advertising -> startAdvertising()

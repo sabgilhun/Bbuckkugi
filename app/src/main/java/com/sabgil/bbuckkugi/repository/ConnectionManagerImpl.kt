@@ -26,25 +26,28 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
         }
 
 
-    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> {
-        val flow = callbackFlow {
+    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> =
+        callbackFlow {
             DiscoveryResultEmitter(SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
+        }.onCompletion {
+            connectionsClient.stopDiscovery()
         }
-        flow.onCompletion { connectionsClient.stopDiscovery() }
-        return flow
-    }
 
     override fun connectRemote(endpointId: String): Flow<Result<Data>> =
         callbackFlow {
             ClientConnectionResultEmitter(endpointId, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
+        }.onCompletion {
+            connectionsClient.stopAllEndpoints()
         }
 
     override fun acceptRemote(endpointId: String): Flow<Result<Data>> =
         callbackFlow {
             HostConnectionResultEmitter(endpointId, connectionsClient, this).emit()
             awaitClose()
+        }.onCompletion {
+            connectionsClient.stopAllEndpoints()
         }
 
     override fun sendData(endpointId: String, data: Data): Flow<Result<Nothing>> =
