@@ -15,6 +15,7 @@ import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
 import com.sabgil.bbuckkugi.service.ConnectionService.Status.*
+import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,9 @@ class ConnectionService : LifecycleService() {
 
     @Inject
     lateinit var appSharedPreference: AppSharedPreference
+
+    @Inject
+    lateinit var communicationChannel: CommunicationChannel
 
     private val errorHandler = CoroutineExceptionHandler { _, _ ->
 
@@ -51,6 +55,9 @@ class ConnectionService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         status = Advertising
+        communicationChannel.registerClient(this) {
+
+        }
         registerLocalBroadCast()
     }
 
