@@ -1,8 +1,8 @@
 package com.sabgil.bbuckkugi.ui.discovery
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.R
@@ -10,6 +10,7 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
 import com.sabgil.bbuckkugi.databinding.ItemDiscoveryRemoteBinding
+import com.sabgil.bbuckkugi.receiver.DataReceiver
 import com.sabgil.bbuckkugi.receiver.DiscoveredEndpointReceiver
 import com.sabgil.bbuckkugi.service.ConnectionService
 import com.sabgil.mutiviewtype.multiViewTypeAdapter
@@ -27,7 +28,10 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
                 onCreate { binding, _, itemSupplier ->
                     binding.nameTextView.setOnClickListener {
                         val item = itemSupplier() ?: return@setOnClickListener
-                        viewModel.connectRemote(item.endpointId)
+                        ConnectionService.sendStartConnection(
+                            this@DiscoveryActivity,
+                            item.endpointId
+                        )
                     }
                 }
 
@@ -38,33 +42,31 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         }
     }
 
+    private var discoveredEndpointReceiver: BroadcastReceiver? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.discoveredRemoteRecyclerView.adapter = adapter
 
         setupObserver()
-        registerReceiver()
+        discoveredEndpointReceiver = DiscoveredEndpointReceiver.register(this) {
+            viewModel.discoveryRemote(it)
+        }
         ConnectionService.sendStartDiscoveringAction(this)
+    }
+
+    override fun onDestroy() {
+        discoveredEndpointReceiver?.let {
+            LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(it)
+        }
+        super.onDestroy()
     }
 
     private fun setupObserver() {
         viewModel.discoveredRemotes.observeNonNull {
             adapter.update(it)
         }
-    }
-
-    private fun registerReceiver() {
-        val receiver = DiscoveredEndpointReceiver {
-            viewModel.discoveryRemote(it)
-        }
-
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(
-                receiver,
-                IntentFilter().apply {
-                    addAction(ConnectionService.DISCOVERED_ENDPOINT)
-                }
-            )
     }
 
     companion object {

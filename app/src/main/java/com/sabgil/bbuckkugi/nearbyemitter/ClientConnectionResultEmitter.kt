@@ -61,6 +61,7 @@ class ClientConnectionResultEmitter(
             connectionLifecycleCallback
         ).addOnSuccessListener {
             Timber.i("nearby: addOnSuccessListener")
+            producerScope.offer(Result.Success(Data.Start))
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
             producerScope.offer(Result.Failure(it))

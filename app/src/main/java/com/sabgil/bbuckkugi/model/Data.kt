@@ -1,8 +1,13 @@
 package com.sabgil.bbuckkugi.model
 
 import com.sabgil.bbuckkugi.exception.IllegalDataException
+import java.io.Serializable
 
-sealed class Data {
+sealed class Data : Serializable {
+
+    object Start : Data() {
+        override val byteValue: ByteArray = byteArrayOf(0x00, 0x00)
+    }
 
     object Accept : Data() {
         override val byteValue: ByteArray = byteArrayOf(0x00, 0x01)

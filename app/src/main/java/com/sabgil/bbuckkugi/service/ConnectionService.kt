@@ -10,6 +10,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.TestActivity
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.common.ext.collectOnMain
+import com.sabgil.bbuckkugi.model.Data
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
@@ -122,6 +123,7 @@ class ConnectionService : LifecycleService() {
             .collectOnMain {
                 when (it) {
                     is Result.Success -> {
+                        sendReceivedData(it.result)
                     }
                     is Result.Failure -> {
                         // TODO: 연결 종료 브로드캐스트 필요
@@ -139,6 +141,16 @@ class ConnectionService : LifecycleService() {
     private fun sendDiscoveredEndpoint(discoveredEndpoint: DiscoveredEndpoint) {
         val intent = Intent(DISCOVERED_ENDPOINT).apply {
             putExtra("discoveredEndpoint", discoveredEndpoint)
+        }
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .sendBroadcast(intent)
+    }
+
+    private fun sendReceivedData(data: Data) {
+        val intent = Intent(RECEIVED_DATA).apply {
+            putExtra("data", data)
         }
 
         LocalBroadcastManager
@@ -167,6 +179,7 @@ class ConnectionService : LifecycleService() {
     companion object {
 
         const val DISCOVERED_ENDPOINT = "DISCOVERED_ENDPOINT"
+        const val RECEIVED_DATA = "RECEIVED_DATA"
 
         private const val START_DISCOVERING = "START_DISCOVERING"
         private const val STOP_DISCOVERING = "STOP_DISCOVERING"
