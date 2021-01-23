@@ -10,8 +10,7 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
 import com.sabgil.bbuckkugi.databinding.ItemDiscoveryRemoteBinding
-import com.sabgil.bbuckkugi.receiver.DataReceiver
-import com.sabgil.bbuckkugi.receiver.DiscoveredEndpointReceiver
+import com.sabgil.bbuckkugi.service.channel.DiscoveredEndpointReceiver
 import com.sabgil.bbuckkugi.service.ConnectionService
 import com.sabgil.mutiviewtype.multiViewTypeAdapter
 import com.sabgil.mutiviewtype.type

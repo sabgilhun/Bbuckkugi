@@ -1,34 +1,34 @@
-package com.sabgil.bbuckkugi.receiver
+package com.sabgil.bbuckkugi.service.channel
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.sabgil.bbuckkugi.model.Data
-import com.sabgil.bbuckkugi.service.ConnectionService.Companion.RECEIVED_DATA
+import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
+import com.sabgil.bbuckkugi.service.ConnectionService.Companion.DISCOVERED_ENDPOINT
 
-class DataReceiver(
-    private val onReceive: (Data) -> Unit
+class DiscoveredEndpointReceiver(
+    private val onReceive: (DiscoveredEndpoint) -> Unit
 ) : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == RECEIVED_DATA) {
+        if (intent.action == DISCOVERED_ENDPOINT) {
             val discoveredEndpoint =
-                intent.getSerializableExtra("data") as Data
+                intent.getSerializableExtra("discoveredEndpoint") as DiscoveredEndpoint
             onReceive(discoveredEndpoint)
         }
     }
 
     companion object {
 
-        fun register(context: Context, onReceive: (Data) -> Unit): BroadcastReceiver {
-            val receiver = DataReceiver(onReceive)
+        fun register(context: Context, onReceive: (DiscoveredEndpoint) -> Unit): BroadcastReceiver {
+            val receiver = DiscoveredEndpointReceiver(onReceive)
             LocalBroadcastManager.getInstance(context)
                 .registerReceiver(
                     receiver,
                     IntentFilter().apply {
-                        addAction(RECEIVED_DATA)
+                        addAction(DISCOVERED_ENDPOINT)
                     }
                 )
             return receiver
