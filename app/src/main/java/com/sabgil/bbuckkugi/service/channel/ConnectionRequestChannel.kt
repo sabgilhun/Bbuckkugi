@@ -9,9 +9,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.common.Result
-import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 
-object DiscoveryChannel {
+object ConnectionRequestChannel {
     private const val RECEIVE_RESULT = "RECEIVE_RESULT"
     private const val RECEIVE_RESULT_INTENT_TAG = "RECEIVE_RESULT_INTENT_TAG"
 
@@ -21,14 +20,14 @@ object DiscoveryChannel {
     fun registerClient(
         context: Context,
         lifecycleOwner: LifecycleOwner,
-        onReceive: (Result<DiscoveredEndpoint>) -> Unit
+        onReceive: (Result<Nothing>) -> Unit
     ) {
         if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             val receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     val result = intent.getSerializableExtra(RECEIVE_RESULT_INTENT_TAG)
                     @Suppress("UNCHECKED_CAST")
-                    onReceive(result as Result<DiscoveredEndpoint>)
+                    onReceive(result as Result<Nothing>)
                 }
             }
 
@@ -51,13 +50,13 @@ object DiscoveryChannel {
     fun registerHost(
         context: Context,
         lifecycleOwner: LifecycleOwner,
-        onReceive: (Action) -> Unit
+        onReceive: (String) -> Unit
     ) {
         if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             val receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
-                    val result = intent.getSerializableExtra(RECEIVE_ACTION_INTENT_TAG)
-                    onReceive(result as Action)
+                    val endpoint = requireNotNull(intent.getStringExtra(RECEIVE_ACTION_INTENT_TAG))
+                    onReceive(endpoint)
                 }
             }
 
@@ -77,31 +76,19 @@ object DiscoveryChannel {
         }
     }
 
-    fun sendActionForStartDiscovery(context: Context) {
+    fun sendActionForConnection(context: Context, endpointId: String) {
         LocalBroadcastManager
             .getInstance(context)
             .sendBroadcast(Intent(RECEIVE_ACTION).apply {
-                putExtra(RECEIVE_ACTION_INTENT_TAG, Action.DISCOVERY_START)
+                putExtra(RECEIVE_ACTION_INTENT_TAG, endpointId)
             })
     }
 
-    fun sendActionForStopDiscovery(context: Context) {
-        LocalBroadcastManager
-            .getInstance(context)
-            .sendBroadcast(Intent(RECEIVE_ACTION).apply {
-                putExtra(RECEIVE_ACTION_INTENT_TAG, Action.DISCOVERY_STOP)
-            })
-    }
-
-    fun sendResult(context: Context, result: Result<DiscoveredEndpoint>) {
+    fun sendResult(context: Context, result: Result<Nothing>) {
         LocalBroadcastManager
             .getInstance(context)
             .sendBroadcast(Intent(RECEIVE_RESULT).apply {
                 putExtra(RECEIVE_RESULT_INTENT_TAG, result)
             })
-    }
-
-    enum class Action {
-        DISCOVERY_START, DISCOVERY_STOP
     }
 }

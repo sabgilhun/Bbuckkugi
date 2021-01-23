@@ -1,8 +1,10 @@
 package com.sabgil.bbuckkugi.common
 
-sealed class Result<out T> {
+import java.io.Serializable
 
-    data class Success<T>(val result: T) : Result<T>()
+sealed class Result<out T>: Serializable{
 
-    data class Failure(val exception: Throwable) : Result<Nothing>()
+    data class Success<T>(val result: T) : Result<T>(), Serializable
+
+    data class Failure(val exception: Throwable) : Result<Nothing>(), Serializable
 }
