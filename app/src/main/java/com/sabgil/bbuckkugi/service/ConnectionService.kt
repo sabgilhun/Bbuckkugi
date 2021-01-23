@@ -1,25 +1,26 @@
 package com.sabgil.bbuckkugi.service
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sabgil.bbuckkugi.TestActivity
 import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.doNotAnything
 import com.sabgil.bbuckkugi.common.ext.collectOnMain
 import com.sabgil.bbuckkugi.model.Data
-import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
 import com.sabgil.bbuckkugi.service.ConnectionService.Status.*
 import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
+import com.sabgil.bbuckkugi.service.channel.ConnectionRequestChannel
+import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
+import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_START
+import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_STOP
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,6 +34,12 @@ class ConnectionService : LifecycleService() {
     lateinit var appSharedPreference: AppSharedPreference
 
     @Inject
+    lateinit var discoveryChannel: DiscoveryChannel
+
+    @Inject
+    lateinit var connectionRequestChannel: ConnectionRequestChannel
+
+    @Inject
     lateinit var communicationChannel: CommunicationChannel
 
     private val errorHandler = CoroutineExceptionHandler { _, _ ->
@@ -40,8 +47,6 @@ class ConnectionService : LifecycleService() {
     }
 
     private val backgroundDispatcher = errorHandler + Dispatchers.Default
-
-    private val broadcastReceiver = ControlBroadCastReceiver()
 
     private var status: Status = None
         set(value) {
@@ -55,32 +60,34 @@ class ConnectionService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         status = Advertising
-        communicationChannel.registerClient(this) {
+        registerToChannel()
+    }
 
+    private fun registerToChannel() {
+        discoveryChannel.registerHost(this) {
+            status = when (it) {
+                DISCOVERY_START -> Discovering
+                DISCOVERY_STOP -> Advertising
+            }
         }
-        registerLocalBroadCast()
+
+        connectionRequestChannel.registerHost(this) {
+            status = Connecting(it)
+        }
+
+        communicationChannel.registerHost(this) {
+            sendDataToEndpoint(it)
+        }
     }
 
-    override fun onDestroy() {
-        unregisterLocalBroadCast()
-        super.onDestroy()
-    }
-
-    private fun registerLocalBroadCast() {
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(
-                broadcastReceiver,
-                IntentFilter().apply {
-                    addAction(START_DISCOVERING)
-                    addAction(STOP_DISCOVERING)
-                    addAction(START_CONNECTION)
-                }
-            )
-    }
-
-    private fun unregisterLocalBroadCast() {
-        LocalBroadcastManager.getInstance(this)
-            .unregisterReceiver(broadcastReceiver)
+    private fun sendDataToEndpoint(data: Data) {
+        val currentStatus = status
+        if (currentStatus is Connecting) {
+            lifecycleScope.launch(backgroundDispatcher) {
+                connectionManager.sendData(currentStatus.endpointId, data)
+                    .collect()
+            }
+        }
     }
 
     private fun clearPreviousJob() {
@@ -88,10 +95,9 @@ class ConnectionService : LifecycleService() {
     }
 
     private fun startJob(toBe: Status) {
-        lifecycleScope.launch(backgroundDispatcher) {
+        previousJob = lifecycleScope.launch(backgroundDispatcher) {
             when (toBe) {
-                None -> {
-                }
+                None -> doNotAnything()
                 Advertising -> startAdvertising()
                 Discovering -> startDiscovering()
                 is Connecting -> startConnecting(toBe.endpointId)
@@ -103,11 +109,8 @@ class ConnectionService : LifecycleService() {
         connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
             .collectOnMain {
                 when (it) {
-                    is Result.Success -> {
-                    }
-                    is Result.Failure -> {
-                        status = Advertising
-                    }
+                    is Result.Success -> startActivity()
+                    is Result.Failure -> status = Advertising
                 }
             }
     }
@@ -116,9 +119,9 @@ class ConnectionService : LifecycleService() {
         connectionManager.startDiscovery()
             .collectOnMain {
                 when (it) {
-                    is Result.Success -> sendDiscoveredEndpoint(it.result)
+                    is Result.Success -> discoveryChannel.sendResult(it)
                     is Result.Failure -> {
-                        // TODO: 연결 종료 브로드캐스트 필요
+                        discoveryChannel.sendResult(it)
                         status = Advertising
                     }
                 }
@@ -130,10 +133,15 @@ class ConnectionService : LifecycleService() {
             .collectOnMain {
                 when (it) {
                     is Result.Success -> {
-                        sendReceivedData(it.result)
+                        if (it.result is Data.Start) {
+                            connectionRequestChannel.sendResult(it)
+                        } else {
+                            communicationChannel.sendRxData(it)
+                        }
                     }
                     is Result.Failure -> {
-                        // TODO: 연결 종료 브로드캐스트 필요
+                        connectionRequestChannel.sendResult(it)
+                        communicationChannel.sendRxData(it)
                         status = Advertising
                     }
                 }
@@ -145,71 +153,10 @@ class ConnectionService : LifecycleService() {
         startActivity(Intent(this, TestActivity::class.java))
     }
 
-    private fun sendDiscoveredEndpoint(discoveredEndpoint: DiscoveredEndpoint) {
-        val intent = Intent(DISCOVERED_ENDPOINT).apply {
-            putExtra("discoveredEndpoint", discoveredEndpoint)
-        }
-
-        LocalBroadcastManager
-            .getInstance(this)
-            .sendBroadcast(intent)
-    }
-
-    private fun sendReceivedData(data: Data) {
-        val intent = Intent(RECEIVED_DATA).apply {
-            putExtra("data", data)
-        }
-
-        LocalBroadcastManager
-            .getInstance(this)
-            .sendBroadcast(intent)
-    }
-
-    private inner class ControlBroadCastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                START_DISCOVERING -> status = Discovering
-                STOP_DISCOVERING -> status = Advertising
-                START_CONNECTION -> status =
-                    Connecting(requireNotNull(intent.getStringExtra("endpointId")))
-            }
-        }
-    }
-
     private sealed class Status {
         object None : Status()
         object Advertising : Status()
         object Discovering : Status()
         class Connecting(val endpointId: String) : Status()
-    }
-
-    companion object {
-
-        const val DISCOVERED_ENDPOINT = "DISCOVERED_ENDPOINT"
-        const val RECEIVED_DATA = "RECEIVED_DATA"
-
-        private const val START_DISCOVERING = "START_DISCOVERING"
-        private const val STOP_DISCOVERING = "STOP_DISCOVERING"
-        private const val START_CONNECTION = "START_CONNECTION"
-
-        fun sendStartDiscoveringAction(context: Context) {
-            LocalBroadcastManager
-                .getInstance(context)
-                .sendBroadcast(Intent(START_DISCOVERING))
-        }
-
-        fun sendStopDiscoveringAction(context: Context) {
-            LocalBroadcastManager
-                .getInstance(context)
-                .sendBroadcast(Intent(START_DISCOVERING))
-        }
-
-        fun sendStartConnection(context: Context, endpointId: String) {
-            LocalBroadcastManager
-                .getInstance(context)
-                .sendBroadcast(
-                    Intent(START_DISCOVERING).apply { putExtra("endpointId", endpointId) }
-                )
-        }
     }
 }

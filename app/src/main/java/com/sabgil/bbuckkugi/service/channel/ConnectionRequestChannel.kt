@@ -3,6 +3,7 @@ package com.sabgil.bbuckkugi.service.channel
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.model.Data
 import javax.inject.Inject
 
 class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChannel(context) {
@@ -29,7 +30,7 @@ class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChann
             putExtra(ACTION_REQUEST_CONNECTION_INTENT_TAG, endpointId)
         }
 
-    fun sendResult(result: Result<Nothing>) =
+    fun sendResult(result: Result<Data>) =
         sendBroadCast(ACTION_CONNECTION_RESULT) {
             putExtra(ACTION_CONNECTION_RESULT_INTENT_TAG, result)
         }
