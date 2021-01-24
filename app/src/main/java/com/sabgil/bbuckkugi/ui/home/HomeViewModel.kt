@@ -5,7 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sabgil.bbuckkugi.base.BaseViewModel
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.repository.ConnectionManager
 import kotlinx.coroutines.Job
 import kotlin.random.Random
@@ -55,7 +55,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun sendData() {
         val id = endpointId ?: return
-        connectionManager.sendData(id, Data.Message(Random.nextInt().rem(10)))
+        connectionManager.sendData(id, Message.MessageCard(Random.nextInt().rem(10)))
             .collectResult {
                 error {
                     showErrorMessage(it)

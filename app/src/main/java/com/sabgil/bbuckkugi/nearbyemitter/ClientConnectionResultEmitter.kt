@@ -1,8 +1,8 @@
 package com.sabgil.bbuckkugi.nearbyemitter
 
 import com.google.android.gms.nearby.connection.*
-import com.sabgil.bbuckkugi.common.Result
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
@@ -10,7 +10,7 @@ class ClientConnectionResultEmitter(
     private val endpointId: String,
     private val serviceId: String,
     private val connectionClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Result<Data>>
+    private val producerScope: ProducerScope<Data<Message>>
 ) {
 
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
@@ -25,7 +25,7 @@ class ClientConnectionResultEmitter(
                 }
                 .addOnFailureListener {
                     Timber.i("nearby: addOnFailureListener $it")
-                    producerScope.offer(Result.Failure(it))
+                    producerScope.offer(Data.Failure(it))
                     producerScope.close()
                 }
         }
@@ -50,7 +50,7 @@ class ClientConnectionResultEmitter(
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             Timber.i("nearby: onPayloadReceived $endpointId, $payload")
             val receivedBytes = payload.asBytes() ?: return
-            producerScope.offer(Result.Success(Data.fromBytes(receivedBytes)))
+            producerScope.offer(Data.Success(Message.fromBytes(receivedBytes)))
         }
 
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
@@ -65,10 +65,10 @@ class ClientConnectionResultEmitter(
             connectionLifecycleCallback
         ).addOnSuccessListener {
             Timber.i("nearby: addOnSuccessListener")
-            producerScope.offer(Result.Success(Data.Start))
+            producerScope.offer(Data.Success(Message.Start))
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
-            producerScope.offer(Result.Failure(it))
+            producerScope.offer(Data.Failure(it))
             producerScope.close()
         }
     }

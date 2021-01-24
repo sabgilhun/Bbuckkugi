@@ -2,10 +2,10 @@ package com.sabgil.bbuckkugi.service
 
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.common.doNotAnything
 import com.sabgil.bbuckkugi.common.ext.collectOnMain
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.ConnectionManager
 import com.sabgil.bbuckkugi.service.ConnectionService.Status.*
@@ -94,8 +94,8 @@ class ConnectionService : LifecycleService() {
         connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
             .collectOnMain {
                 status = when (it) {
-                    is Result.Success -> Connecting(true, it.result.endpointId)
-                    is Result.Failure -> Advertising
+                    is Data.Success -> Connecting(true, it.result.endpointId)
+                    is Data.Failure -> Advertising
                 }
             }
     }
@@ -104,8 +104,8 @@ class ConnectionService : LifecycleService() {
         connectionManager.startDiscovery()
             .collectOnMain {
                 when (it) {
-                    is Result.Success -> discoveryChannel.sendResult(it)
-                    is Result.Failure -> {
+                    is Data.Success -> discoveryChannel.sendResult(it)
+                    is Data.Failure -> {
                         discoveryChannel.sendResult(it)
                         status = Advertising
                     }
@@ -118,26 +118,26 @@ class ConnectionService : LifecycleService() {
             connectionManager.acceptRemote(connecting.endpointId)
                 .collectOnMain {
                     when (it) {
-                        is Result.Success -> if (it.result is Data.Message) {
+                        is Data.Success -> if (it.result is Message.MessageCard) {
                             ReceiveActivity.start(this, it.result)
                         } else {
                             connectionRequestChannel.sendResult(it)
                         }
-                        is Result.Failure -> status = Advertising
+                        is Data.Failure -> status = Advertising
                     }
                 }
         } else {
             connectionManager.connectRemote(connecting.endpointId)
                 .collectOnMain {
                     when (it) {
-                        is Result.Success -> {
-                            if (it.result is Data.Start) {
+                        is Data.Success -> {
+                            if (it.result is Message.Start) {
                                 connectionRequestChannel.sendResult(it)
                             } else {
                                 communicationChannel.sendRxData(it)
                             }
                         }
-                        is Result.Failure -> {
+                        is Data.Failure -> {
                             connectionRequestChannel.sendResult(it)
                             communicationChannel.sendRxData(it)
                             status = Advertising
@@ -147,11 +147,11 @@ class ConnectionService : LifecycleService() {
         }
     }
 
-    private fun sendDataToEndpoint(data: Data) {
+    private fun sendDataToEndpoint(message: Message) {
         val currentStatus = status
         if (currentStatus is Connecting) {
             lifecycleScope.launch(backgroundDispatcher) {
-                connectionManager.sendData(currentStatus.endpointId, data).collect()
+                connectionManager.sendData(currentStatus.endpointId, message).collect()
             }
         }
     }

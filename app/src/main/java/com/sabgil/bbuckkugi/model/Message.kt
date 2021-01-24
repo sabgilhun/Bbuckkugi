@@ -3,25 +3,25 @@ package com.sabgil.bbuckkugi.model
 import com.sabgil.bbuckkugi.exception.IllegalDataException
 import java.io.Serializable
 
-sealed class Data : Serializable {
+sealed class Message : Serializable {
 
-    object Start : Data() {
+    object Start : Message() {
         override val byteValue: ByteArray = byteArrayOf(0x00, 0x00)
     }
 
-    object Accept : Data() {
+    object Accept : Message() {
         override val byteValue: ByteArray = byteArrayOf(0x00, 0x01)
     }
 
-    object Reject : Data() {
+    object Reject : Message() {
         override val byteValue: ByteArray = byteArrayOf(0x00, 0x02)
     }
 
-    class Message(messageType: Int) : Data() {
+    class MessageCard(messageType: Int) : Message() {
         override val byteValue: ByteArray = byteArrayOf(MESSAGE_PREFIX_BYTE, messageType.toByte())
     }
 
-    class Progress(value: Int) : Data() {
+    class Progress(value: Int) : Message() {
         override val byteValue: ByteArray = byteArrayOf(PROGRESS_PREFIX_BYTE, value.toByte())
     }
 
@@ -36,7 +36,7 @@ sealed class Data : Serializable {
                 byteArray contentEquals Accept.byteValue -> Accept
                 byteArray contentEquals Reject.byteValue -> Reject
                 byteArray.size == 2 && byteArray[0] == MESSAGE_PREFIX_BYTE ->
-                    Message(byteArray[1].toInt())
+                    MessageCard(byteArray[1].toInt())
                 byteArray.size == 2 && byteArray[0] == PROGRESS_PREFIX_BYTE ->
                     Progress(byteArray[1].toInt())
                 else -> throw IllegalDataException()

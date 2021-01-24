@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
 import com.sabgil.bbuckkugi.databinding.ItemDiscoveryRemoteBinding
@@ -73,15 +73,15 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
     private fun setupChannel() {
         discoveryChannel.registerClient(this) {
             when (it) {
-                is Result.Success -> viewModel.discoveryRemote(it.result)
-                is Result.Failure -> showErrorMessage(it.exception.message.orEmpty())
+                is Data.Success -> viewModel.discoveryRemote(it.result)
+                is Data.Failure -> showErrorMessage(it.exception.message.orEmpty())
             }
         }
 
         connectionRequestChannel.registerClient(this) {
             when (it) {
-                is Result.Success -> SendActivity.startOnHome(this)
-                is Result.Failure -> finish() // TODO error popup
+                is Data.Success -> SendActivity.startOnHome(this)
+                is Data.Failure -> finish() // TODO error popup
             }
         }
     }

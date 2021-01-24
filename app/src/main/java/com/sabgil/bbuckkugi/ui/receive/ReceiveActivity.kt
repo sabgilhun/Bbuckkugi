@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.databinding.ActivityReceiveBinding
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,14 +26,14 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
     private fun setupChannel() {
         communicationChannel.registerClient(this) {
             when (it) {
-                is Result.Success -> binding.receiveText.text = it.result.byteValue.toString()
-                is Result.Failure -> finish() // TODO error popup
+                is Data.Success -> binding.receiveText.text = it.result.byteValue.toString()
+                is Data.Failure -> finish() // TODO error popup
             }
         }
     }
 
     companion object {
-        fun start(context: Context, message: Data.Message) {
+        fun start(context: Context, message: Message.MessageCard) {
             context.startActivity(
                 Intent(context, ReceiveActivity::class.java).apply { putExtra("message", message) }
             )

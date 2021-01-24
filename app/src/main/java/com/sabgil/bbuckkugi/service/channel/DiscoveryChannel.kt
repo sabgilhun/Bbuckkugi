@@ -2,7 +2,7 @@ package com.sabgil.bbuckkugi.service.channel
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import javax.inject.Inject
 
@@ -10,11 +10,11 @@ class DiscoveryChannel @Inject constructor(context: Context) : BaseChannel(conte
 
     fun registerClient(
         lifecycleOwner: LifecycleOwner,
-        onReceive: (Result<DiscoveredEndpoint>) -> Unit
+        onReceive: (Data<DiscoveredEndpoint>) -> Unit
     ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_DISCOVERED_RESULT) { _, intent ->
         val result = intent.getSerializableExtra(ACTION_DISCOVERED_RESULT_INTENT_TAG)
         @Suppress("UNCHECKED_CAST")
-        onReceive(result as Result<DiscoveredEndpoint>)
+        onReceive(result as Data<DiscoveredEndpoint>)
     }
 
     fun registerHost(
@@ -36,9 +36,9 @@ class DiscoveryChannel @Inject constructor(context: Context) : BaseChannel(conte
         }
 
 
-    fun sendResult(result: Result<DiscoveredEndpoint>) =
+    fun sendResult(data: Data<DiscoveredEndpoint>) =
         sendBroadCast(ACTION_DISCOVERED_RESULT) {
-            putExtra(ACTION_DISCOVERED_RESULT_INTENT_TAG, result)
+            putExtra(ACTION_DISCOVERED_RESULT_INTENT_TAG, data)
         }
 
 

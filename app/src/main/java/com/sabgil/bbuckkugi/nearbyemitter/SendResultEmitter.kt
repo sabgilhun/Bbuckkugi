@@ -2,27 +2,27 @@ package com.sabgil.bbuckkugi.nearbyemitter
 
 import com.google.android.gms.nearby.connection.ConnectionsClient
 import com.google.android.gms.nearby.connection.Payload
-import com.sabgil.bbuckkugi.common.Result
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
 class SendResultEmitter(
     private val endpointId: String,
-    private val data: Data,
+    private val message: Message,
     private val connectionsClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Result<Nothing>>
+    private val producerScope: ProducerScope<Data<Nothing>>
 ) {
 
     fun emit() {
-        connectionsClient.sendPayload(endpointId, Payload.fromBytes(data.byteValue))
+        connectionsClient.sendPayload(endpointId, Payload.fromBytes(message.byteValue))
             .addOnSuccessListener {
                 Timber.i("nearby: addOnSuccessListener")
                 producerScope.close()
             }
             .addOnFailureListener {
                 Timber.i("nearby: addOnFailureListener $it")
-                producerScope.offer(Result.Failure(it))
+                producerScope.offer(Data.Failure(it))
                 producerScope.close()
             }
     }

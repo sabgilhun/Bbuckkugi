@@ -1,7 +1,7 @@
 package com.sabgil.bbuckkugi.nearbyemitter
 
 import com.google.android.gms.nearby.connection.*
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
@@ -10,7 +10,7 @@ class AdvertisingResultEmitter(
     private val hostName: String,
     private val serviceId: String,
     private val connectionsClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Result<ConnectionRequest>>
+    private val producerScope: ProducerScope<Data<ConnectionRequest>>
 ) {
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(
@@ -19,7 +19,7 @@ class AdvertisingResultEmitter(
         ) {
             Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
             producerScope.offer(
-                Result.Success(ConnectionRequest(endpointId, connectionInfo.endpointName))
+                Data.Success(ConnectionRequest(endpointId, connectionInfo.endpointName))
             )
         }
 
@@ -49,7 +49,7 @@ class AdvertisingResultEmitter(
             Timber.i("nearby: addOnSuccessListener")
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
-            producerScope.offer(Result.Failure(it))
+            producerScope.offer(Data.Failure(it))
             producerScope.close()
         }
     }

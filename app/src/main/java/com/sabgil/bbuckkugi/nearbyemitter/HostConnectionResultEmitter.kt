@@ -4,15 +4,15 @@ import com.google.android.gms.nearby.connection.ConnectionsClient
 import com.google.android.gms.nearby.connection.Payload
 import com.google.android.gms.nearby.connection.PayloadCallback
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate
-import com.sabgil.bbuckkugi.common.Result
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
 class HostConnectionResultEmitter(
     private val endpointId: String,
     private val connectionsClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Result<Data>>
+    private val producerScope: ProducerScope<Data<Message>>
 ) {
 
     private val payloadCallback = object : PayloadCallback() {
@@ -20,7 +20,7 @@ class HostConnectionResultEmitter(
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             Timber.i("nearby: onPayloadReceived $endpointId, $payload")
             val receivedBytes = payload.asBytes() ?: return
-            producerScope.offer(Result.Success(Data.fromBytes(receivedBytes)))
+            producerScope.offer(Data.Success(Message.fromBytes(receivedBytes)))
         }
 
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
@@ -36,7 +36,7 @@ class HostConnectionResultEmitter(
             Timber.i("nearby: addOnSuccessListener")
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
-            producerScope.offer(Result.Failure(it))
+            producerScope.offer(Data.Failure(it))
             producerScope.close()
         }
     }

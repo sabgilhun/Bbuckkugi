@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -28,7 +28,7 @@ abstract class BaseViewModel : ViewModel() {
         _showErrorMessage.setValue(throwable.message ?: "일시적인 문제가 발생했습니다.")
     }
 
-    protected fun <T> Flow<Result<T>>.collectResult(
+    protected fun <T> Flow<Data<T>>.collectResult(
         context: CoroutineContext = ioErrorHandler,
         block: FlowResultScope<T>.() -> Unit
     ): Job {
@@ -37,8 +37,8 @@ abstract class BaseViewModel : ViewModel() {
 
         return collectOnMain(context) {
             when (it) {
-                is Result.Success -> flowResultScope.onSuccess(it.result)
-                is Result.Failure -> flowResultScope.onError(it.exception)
+                is Data.Success -> flowResultScope.onSuccess(it.result)
+                is Data.Failure -> flowResultScope.onError(it.exception)
             }
         }
     }

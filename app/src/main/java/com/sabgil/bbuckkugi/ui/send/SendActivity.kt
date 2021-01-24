@@ -7,7 +7,7 @@ import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.databinding.ActivitySendBinding
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,19 +26,19 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
     private fun setupViews() {
         with(binding) {
             button1.setOnClickListener {
-                communicationChannel.sendTxData(Data.Message(0))
+                communicationChannel.sendTxData(Message.MessageCard(0))
             }
             button2.setOnClickListener {
-                communicationChannel.sendTxData(Data.Accept)
+                communicationChannel.sendTxData(Message.Accept)
             }
             button3.setOnClickListener {
-                communicationChannel.sendTxData(Data.Reject)
+                communicationChannel.sendTxData(Message.Reject)
             }
             button4.setOnClickListener {
-                communicationChannel.sendTxData(Data.Progress(0x04))
+                communicationChannel.sendTxData(Message.Progress(0x04))
             }
             button5.setOnClickListener {
-                communicationChannel.sendTxData(Data.Progress(0x08))
+                communicationChannel.sendTxData(Message.Progress(0x08))
             }
         }
     }

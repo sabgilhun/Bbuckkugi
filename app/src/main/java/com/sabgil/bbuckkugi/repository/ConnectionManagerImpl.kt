@@ -2,9 +2,9 @@ package com.sabgil.bbuckkugi.repository
 
 import android.content.Context
 import com.google.android.gms.nearby.Nearby
-import com.sabgil.bbuckkugi.common.Result
+import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.model.ConnectionRequest
-import com.sabgil.bbuckkugi.model.Data
+import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.nearbyemitter.*
 import kotlinx.coroutines.channels.awaitClose
@@ -17,7 +17,7 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
 
-    override fun startAdvertising(hostName: String): Flow<Result<ConnectionRequest>> =
+    override fun startAdvertising(hostName: String): Flow<Data<ConnectionRequest>> =
         callbackFlow {
             AdvertisingResultEmitter(hostName, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
@@ -25,7 +25,7 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
             connectionsClient.stopAdvertising()
         }
 
-    override fun startDiscovery(): Flow<Result<DiscoveredEndpoint>> =
+    override fun startDiscovery(): Flow<Data<DiscoveredEndpoint>> =
         callbackFlow {
             DiscoveryResultEmitter(SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
@@ -33,7 +33,7 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
             connectionsClient.stopDiscovery()
         }
 
-    override fun connectRemote(endpointId: String): Flow<Result<Data>> =
+    override fun connectRemote(endpointId: String): Flow<Data<Message>> =
         callbackFlow {
             ClientConnectionResultEmitter(endpointId, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()
@@ -41,7 +41,7 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
             connectionsClient.stopAllEndpoints()
         }
 
-    override fun acceptRemote(endpointId: String): Flow<Result<Data>> =
+    override fun acceptRemote(endpointId: String): Flow<Data<Message>> =
         callbackFlow {
             HostConnectionResultEmitter(endpointId, connectionsClient, this).emit()
             awaitClose()
@@ -49,9 +49,9 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
             connectionsClient.stopAllEndpoints()
         }
 
-    override fun sendData(endpointId: String, data: Data): Flow<Result<Nothing>> =
+    override fun sendData(endpointId: String, message: Message): Flow<Data<Nothing>> =
         callbackFlow {
-            SendResultEmitter(endpointId, data, connectionsClient, this).emit()
+            SendResultEmitter(endpointId, message, connectionsClient, this).emit()
             awaitClose()
         }
 
