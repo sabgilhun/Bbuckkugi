@@ -151,7 +151,7 @@ class ConnectionService : LifecycleService() {
         val currentStatus = status
         if (currentStatus is Connecting) {
             lifecycleScope.launch(backgroundDispatcher) {
-                connectionManager.sendData(currentStatus.endpointId, message).collect()
+                connectionManager.sendMessage(currentStatus.endpointId, message).collect()
             }
         }
     }

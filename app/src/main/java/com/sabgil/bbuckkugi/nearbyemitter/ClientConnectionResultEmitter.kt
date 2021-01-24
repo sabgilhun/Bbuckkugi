@@ -2,9 +2,8 @@ package com.sabgil.bbuckkugi.nearbyemitter
 
 import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.common.ext.offerEmptySuccess
 import com.sabgil.bbuckkugi.common.ext.offerFailure
-import com.sabgil.bbuckkugi.common.ext.offerSuccess
-import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
@@ -12,8 +11,9 @@ class ClientConnectionResultEmitter(
     private val endpointId: String,
     private val serviceId: String,
     private val connectionClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Data<Message>>
+    private val producerScope: ProducerScope<Data<Nothing>>
 ) {
+    private val payloadEmitter = PayloadEmitter()
 
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(
@@ -21,9 +21,10 @@ class ClientConnectionResultEmitter(
             connectionInfo: ConnectionInfo
         ) {
             Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
-            connectionClient.acceptConnection(endpointId, payloadCallback)
+            connectionClient.acceptConnection(endpointId, payloadEmitter)
                 .addOnSuccessListener {
                     Timber.i("nearby: addOnSuccessListener")
+                    producerScope.offerEmptySuccess()
                 }
                 .addOnFailureListener {
                     Timber.i("nearby: addOnFailureListener $it")
@@ -48,30 +49,18 @@ class ClientConnectionResultEmitter(
         }
     }
 
-    private val payloadCallback = object : PayloadCallback() {
-        override fun onPayloadReceived(endpointId: String, payload: Payload) {
-            Timber.i("nearby: onPayloadReceived $endpointId, $payload")
-            val receivedBytes = payload.asBytes() ?: return
-            producerScope.offerSuccess(Message.fromBytes(receivedBytes))
-        }
-
-        override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
-            Timber.i("nearby: onPayloadTransferUpdate $endpointId, $update")
-        }
-    }
-
-    fun emit() {
+    fun emit(): PayloadEmitter {
         connectionClient.requestConnection(
             serviceId,
             endpointId,
             connectionLifecycleCallback
         ).addOnSuccessListener {
             Timber.i("nearby: addOnSuccessListener")
-            producerScope.offerSuccess(Message.Start)
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
             producerScope.offerFailure(it)
             producerScope.close()
         }
+        return payloadEmitter
     }
 }

@@ -2,9 +2,8 @@ package com.sabgil.bbuckkugi.repository
 
 import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.model.AdvertisingResult
-import com.sabgil.bbuckkugi.model.ConnectionRequest
-import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
+import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ConnectionManager {
@@ -13,9 +12,11 @@ interface ConnectionManager {
 
     fun startDiscovery(): Flow<Data<DiscoveredEndpoint>>
 
-    fun connectRemote(endpointId: String): Flow<Data<Message>>
+    fun connectRemote(endpointId: String): Flow<Data<Nothing>>
 
-    fun acceptRemote(endpointId: String): Flow<Data<Message>>
+    fun acceptRemote(endpointId: String): Flow<Data<Nothing>>
 
-    fun sendData(endpointId: String, message: Message): Flow<Data<Nothing>>
+    fun listenMessage(): Flow<Data<Message>>
+
+    fun sendMessage(endpointId: String, message: Message): Flow<Data<Nothing>>
 }

@@ -54,7 +54,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun sendData() {
         val id = endpointId ?: return
-        connectionManager.sendData(id, Message.MessageCard(Random.nextInt().rem(10)))
+        connectionManager.sendMessage(id, Message.MessageCard(Random.nextInt().rem(10)))
             .collectResult {
                 error {
                     showErrorMessage(it)
@@ -68,7 +68,7 @@ class HomeViewModel @ViewModelInject constructor(
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "accept s")
-                    _receiveData.value = it.byteValue.toString()
+//                    _receiveData.value = it.byteValue.toString()
                 }
                 error {
                     Log.i("ConnectionTestTag", "accept e")
@@ -83,7 +83,7 @@ class HomeViewModel @ViewModelInject constructor(
             .collectResult {
                 success {
                     Log.i("ConnectionTestTag", "connect s")
-                    _receiveData.value = it.byteValue.toString()
+//                    _receiveData.value = it.byteValue.toString()
                 }
                 error {
                     Log.i("ConnectionTestTag", "connect e")

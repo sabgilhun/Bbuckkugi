@@ -3,6 +3,7 @@ package com.sabgil.bbuckkugi.nearbyemitter
 import com.google.android.gms.nearby.connection.ConnectionsClient
 import com.google.android.gms.nearby.connection.Payload
 import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.common.ext.offerEmptySuccess
 import com.sabgil.bbuckkugi.common.ext.offerFailure
 import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.channels.ProducerScope
@@ -19,6 +20,7 @@ class SendResultEmitter(
         connectionsClient.sendPayload(endpointId, Payload.fromBytes(message.byteValue))
             .addOnSuccessListener {
                 Timber.i("nearby: addOnSuccessListener")
+                producerScope.offerEmptySuccess()
                 producerScope.close()
             }
             .addOnFailureListener {
