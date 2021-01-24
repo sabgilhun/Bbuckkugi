@@ -10,11 +10,11 @@ class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChann
 
     fun registerClient(
         lifecycleOwner: LifecycleOwner,
-        onReceive: (Result<Nothing>) -> Unit
+        onReceive: (Result<Data>) -> Unit
     ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_CONNECTION_RESULT) { _, intent ->
         val result = intent.getSerializableExtra(ACTION_CONNECTION_RESULT_INTENT_TAG)
         @Suppress("UNCHECKED_CAST")
-        onReceive(result as Result<Nothing>)
+        onReceive(result as Result<Data>)
     }
 
     fun registerHost(

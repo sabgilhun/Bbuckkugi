@@ -29,6 +29,10 @@
 		<activity android:name=".ui.home.HomeActivity" />
 		<activity android:name=".ui.discovery.DiscoveryActivity" />
 		<activity android:name=".ui.namesetting.NameSettingActivity" />
+		<activity
+			android:name=".ui.send.SendActivity"
+			android:parentActivityName="com.sabgil.bbuckkugi.ui.home.HomeActivity" />
+		<activity android:name=".ui.receive.ReceiveActivity" />
 		
 		<service android:name=".service.ConnectionService" />
 	</application>

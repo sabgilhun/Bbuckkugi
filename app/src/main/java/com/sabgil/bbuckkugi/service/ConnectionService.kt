@@ -1,9 +1,7 @@
 package com.sabgil.bbuckkugi.service
 
-import android.content.Intent
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.sabgil.bbuckkugi.TestActivity
 import com.sabgil.bbuckkugi.common.Result
 import com.sabgil.bbuckkugi.common.doNotAnything
 import com.sabgil.bbuckkugi.common.ext.collectOnMain
@@ -16,9 +14,11 @@ import com.sabgil.bbuckkugi.service.channel.ConnectionRequestChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_START
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_STOP
+import com.sabgil.bbuckkugi.ui.receive.ReceiveActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,9 +47,10 @@ class ConnectionService : LifecycleService() {
 
     private var status: Status = None
         set(value) {
+            Timber.i(field.toString())
+            previousJob?.cancel()
+            startJob(value)
             field = value
-            clearPreviousJob()
-            startJob(status)
         }
 
     private var previousJob: Job? = null
@@ -69,26 +70,12 @@ class ConnectionService : LifecycleService() {
         }
 
         connectionRequestChannel.registerHost(this) {
-            status = Connecting(it)
+            status = Connecting(false, it)
         }
 
         communicationChannel.registerHost(this) {
             sendDataToEndpoint(it)
         }
-    }
-
-    private fun sendDataToEndpoint(data: Data) {
-        val currentStatus = status
-        if (currentStatus is Connecting) {
-            lifecycleScope.launch(backgroundDispatcher) {
-                connectionManager.sendData(currentStatus.endpointId, data)
-                    .collect()
-            }
-        }
-    }
-
-    private fun clearPreviousJob() {
-        previousJob?.cancel()
     }
 
     private fun startJob(toBe: Status) {
@@ -98,7 +85,7 @@ class ConnectionService : LifecycleService() {
                 None -> doNotAnything()
                 Advertising -> startAdvertising()
                 Discovering -> startDiscovering()
-                is Connecting -> startConnecting(toBe.endpointId)
+                is Connecting -> startConnecting(toBe)
             }
         }
     }
@@ -106,9 +93,9 @@ class ConnectionService : LifecycleService() {
     private suspend fun startAdvertising() {
         connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
             .collectOnMain {
-                when (it) {
-                    is Result.Success -> startActivity()
-                    is Result.Failure -> status = Advertising
+                status = when (it) {
+                    is Result.Success -> Connecting(true, it.result.endpointId)
+                    is Result.Failure -> Advertising
                 }
             }
     }
@@ -126,35 +113,53 @@ class ConnectionService : LifecycleService() {
             }
     }
 
-    private suspend fun startConnecting(endpointId: String) {
-        connectionManager.connectRemote(endpointId)
-            .collectOnMain {
-                when (it) {
-                    is Result.Success -> {
-                        if (it.result is Data.Start) {
-                            connectionRequestChannel.sendResult(it)
+    private suspend fun startConnecting(connecting: Connecting) {
+        if (connecting.isFromRemote) {
+            connectionManager.acceptRemote(connecting.endpointId)
+                .collectOnMain {
+                    when (it) {
+                        is Result.Success -> if (it.result is Data.Message) {
+                            ReceiveActivity.start(this, it.result)
                         } else {
-                            communicationChannel.sendRxData(it)
+                            connectionRequestChannel.sendResult(it)
                         }
-                    }
-                    is Result.Failure -> {
-                        connectionRequestChannel.sendResult(it)
-                        communicationChannel.sendRxData(it)
-                        status = Advertising
+                        is Result.Failure -> status = Advertising
                     }
                 }
-            }
+        } else {
+            connectionManager.connectRemote(connecting.endpointId)
+                .collectOnMain {
+                    when (it) {
+                        is Result.Success -> {
+                            if (it.result is Data.Start) {
+                                connectionRequestChannel.sendResult(it)
+                            } else {
+                                communicationChannel.sendRxData(it)
+                            }
+                        }
+                        is Result.Failure -> {
+                            connectionRequestChannel.sendResult(it)
+                            communicationChannel.sendRxData(it)
+                            status = Advertising
+                        }
+                    }
+                }
+        }
     }
 
-    // TODO: activity 변경 필요
-    private fun startActivity() {
-        startActivity(Intent(this, TestActivity::class.java))
+    private fun sendDataToEndpoint(data: Data) {
+        val currentStatus = status
+        if (currentStatus is Connecting) {
+            lifecycleScope.launch(backgroundDispatcher) {
+                connectionManager.sendData(currentStatus.endpointId, data).collect()
+            }
+        }
     }
 
     private sealed class Status {
         object None : Status()
         object Advertising : Status()
         object Discovering : Status()
-        class Connecting(val endpointId: String) : Status()
+        class Connecting(val isFromRemote: Boolean, val endpointId: String) : Status()
     }
 }

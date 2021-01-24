@@ -20,7 +20,11 @@ class ClientConnectionResultEmitter(
         ) {
             Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
             connectionClient.acceptConnection(endpointId, payloadCallback)
+                .addOnSuccessListener {
+                    Timber.i("nearby: addOnSuccessListener")
+                }
                 .addOnFailureListener {
+                    Timber.i("nearby: addOnFailureListener $it")
                     producerScope.offer(Result.Failure(it))
                     producerScope.close()
                 }
@@ -30,7 +34,7 @@ class ClientConnectionResultEmitter(
             endpointId: String,
             resolution: ConnectionResolution
         ) {
-            Timber.i("nearby: onConnectionResult $endpointId, $resolution")
+            Timber.i("nearby: onConnectionResult $endpointId, ${resolution.status}")
             if (resolution.status.statusCode != ConnectionsStatusCodes.STATUS_OK) {
                 producerScope.close()
             }

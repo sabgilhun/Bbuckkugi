@@ -27,8 +27,10 @@ class AdvertisingResultEmitter(
             endpointId: String,
             resolution: ConnectionResolution
         ) {
-            Timber.i("nearby: onConnectionResult $endpointId, $resolution")
-            producerScope.close()
+            Timber.i("nearby: onConnectionResult $endpointId, ${resolution.status}")
+            if (resolution.status.statusCode != ConnectionsStatusCodes.STATUS_OK) {
+                producerScope.close()
+            }
         }
 
         override fun onDisconnected(endpointId: String) {

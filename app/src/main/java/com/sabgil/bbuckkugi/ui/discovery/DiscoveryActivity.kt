@@ -11,6 +11,7 @@ import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
 import com.sabgil.bbuckkugi.databinding.ItemDiscoveryRemoteBinding
 import com.sabgil.bbuckkugi.service.channel.ConnectionRequestChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
+import com.sabgil.bbuckkugi.ui.send.SendActivity
 import com.sabgil.mutiviewtype.multiViewTypeAdapter
 import com.sabgil.mutiviewtype.type
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,6 +75,13 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
             when (it) {
                 is Result.Success -> viewModel.discoveryRemote(it.result)
                 is Result.Failure -> showErrorMessage(it.exception.message.orEmpty())
+            }
+        }
+
+        connectionRequestChannel.registerClient(this) {
+            when (it) {
+                is Result.Success -> SendActivity.startOnHome(this)
+                is Result.Failure -> finish() // TODO error popup
             }
         }
     }
