@@ -93,10 +93,10 @@ class ConnectionService : LifecycleService() {
     private suspend fun startAdvertising() {
         connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
             .collectOnMain {
-                status = when (it) {
-                    is Data.Success -> Connecting(true, it.data.endpointId)
-                    is Data.Failure -> Advertising
-                }
+//                status = when (it) {
+//                    is Data.Success -> Connecting(true, it.data.endpointId)
+//                    is Data.Failure -> Advertising
+//                }
             }
     }
 

@@ -1,6 +1,7 @@
 package com.sabgil.bbuckkugi.repository
 
 import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.model.AdvertisingResult
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ConnectionManager {
 
-    fun startAdvertising(hostName: String): Flow<Data<ConnectionRequest>>
+    fun startAdvertising(hostName: String): Flow<Data<AdvertisingResult>>
 
     fun startDiscovery(): Flow<Data<DiscoveredEndpoint>>
 

@@ -4,7 +4,7 @@ import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.common.ext.offerFailure
 import com.sabgil.bbuckkugi.common.ext.offerSuccess
-import com.sabgil.bbuckkugi.model.ConnectionRequest
+import com.sabgil.bbuckkugi.model.AdvertisingResult
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
@@ -12,7 +12,7 @@ class AdvertisingResultEmitter(
     private val hostName: String,
     private val serviceId: String,
     private val connectionsClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Data<ConnectionRequest>>
+    private val producerScope: ProducerScope<Data<AdvertisingResult>>
 ) {
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(
@@ -20,7 +20,9 @@ class AdvertisingResultEmitter(
             connectionInfo: ConnectionInfo
         ) {
             Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
-            producerScope.offerSuccess(ConnectionRequest(endpointId, connectionInfo.endpointName))
+            producerScope.offerSuccess(
+                AdvertisingResult.ConnectionInitiated(endpointId, connectionInfo)
+            )
         }
 
         override fun onConnectionResult(
@@ -28,14 +30,16 @@ class AdvertisingResultEmitter(
             resolution: ConnectionResolution
         ) {
             Timber.i("nearby: onConnectionResult $endpointId, ${resolution.status}")
-            if (resolution.status.statusCode != ConnectionsStatusCodes.STATUS_OK) {
-                producerScope.close()
-            }
+            producerScope.offerSuccess(
+                AdvertisingResult.ConnectionResult(endpointId, resolution)
+            )
         }
 
         override fun onDisconnected(endpointId: String) {
             Timber.i("nearby: onDisconnected $endpointId")
-            producerScope.close()
+            producerScope.offerSuccess(
+                AdvertisingResult.Disconnected(endpointId)
+            )
         }
     }
 

@@ -3,6 +3,7 @@ package com.sabgil.bbuckkugi.repository
 import android.content.Context
 import com.google.android.gms.nearby.Nearby
 import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.model.AdvertisingResult
 import com.sabgil.bbuckkugi.model.ConnectionRequest
 import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
@@ -17,7 +18,7 @@ class ConnectionManagerImpl @Inject constructor(val context: Context) : Connecti
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
 
-    override fun startAdvertising(hostName: String): Flow<Data<ConnectionRequest>> =
+    override fun startAdvertising(hostName: String): Flow<Data<AdvertisingResult>> =
         callbackFlow {
             AdvertisingResultEmitter(hostName, SERVICED_ID, connectionsClient, this).emit()
             awaitClose()

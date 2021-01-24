@@ -30,7 +30,6 @@ class HomeViewModel @ViewModelInject constructor(
                 success {
                     Log.i("ConnectionTestTag", "advertise s")
                     advertiseJob?.cancel()
-                    acceptRemote(it.endpointId)
                 }
                 error {
                     Log.i("ConnectionTestTag", "advertise e")
