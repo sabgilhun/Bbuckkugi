@@ -2,6 +2,8 @@ package com.sabgil.bbuckkugi.nearbyemitter
 
 import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Data
+import com.sabgil.bbuckkugi.common.ext.offerFailure
+import com.sabgil.bbuckkugi.common.ext.offerSuccess
 import com.sabgil.bbuckkugi.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
@@ -25,7 +27,7 @@ class ClientConnectionResultEmitter(
                 }
                 .addOnFailureListener {
                     Timber.i("nearby: addOnFailureListener $it")
-                    producerScope.offer(Data.Failure(it))
+                    producerScope.offerFailure(it)
                     producerScope.close()
                 }
         }
@@ -50,7 +52,7 @@ class ClientConnectionResultEmitter(
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             Timber.i("nearby: onPayloadReceived $endpointId, $payload")
             val receivedBytes = payload.asBytes() ?: return
-            producerScope.offer(Data.Success(Message.fromBytes(receivedBytes)))
+            producerScope.offerSuccess(Message.fromBytes(receivedBytes))
         }
 
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
@@ -65,10 +67,10 @@ class ClientConnectionResultEmitter(
             connectionLifecycleCallback
         ).addOnSuccessListener {
             Timber.i("nearby: addOnSuccessListener")
-            producerScope.offer(Data.Success(Message.Start))
+            producerScope.offerSuccess(Message.Start)
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
-            producerScope.offer(Data.Failure(it))
+            producerScope.offerFailure(it)
             producerScope.close()
         }
     }

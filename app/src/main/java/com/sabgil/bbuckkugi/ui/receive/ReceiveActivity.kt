@@ -26,14 +26,14 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
     private fun setupChannel() {
         communicationChannel.registerClient(this) {
             when (it) {
-                is Data.Success -> binding.receiveText.text = it.result.byteValue.toString()
+                is Data.Success -> binding.receiveText.text = it.data.byteValue.toString()
                 is Data.Failure -> finish() // TODO error popup
             }
         }
     }
 
     companion object {
-        fun start(context: Context, message: Message.MessageCard) {
+        fun start(context: Context, message: Message) {
             context.startActivity(
                 Intent(context, ReceiveActivity::class.java).apply { putExtra("message", message) }
             )

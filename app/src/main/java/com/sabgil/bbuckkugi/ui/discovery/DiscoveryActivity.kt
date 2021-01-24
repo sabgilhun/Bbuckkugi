@@ -73,7 +73,7 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
     private fun setupChannel() {
         discoveryChannel.registerClient(this) {
             when (it) {
-                is Data.Success -> viewModel.discoveryRemote(it.result)
+                is Data.Success -> viewModel.discoveryRemote(it.data)
                 is Data.Failure -> showErrorMessage(it.exception.message.orEmpty())
             }
         }

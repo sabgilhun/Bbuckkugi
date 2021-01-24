@@ -37,7 +37,7 @@ abstract class BaseViewModel : ViewModel() {
 
         return collectOnMain(context) {
             when (it) {
-                is Data.Success -> flowResultScope.onSuccess(it.result)
+                is Data.Success -> flowResultScope.onSuccess(it.data)
                 is Data.Failure -> flowResultScope.onError(it.exception)
             }
         }

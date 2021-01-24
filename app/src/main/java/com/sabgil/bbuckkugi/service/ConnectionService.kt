@@ -94,7 +94,7 @@ class ConnectionService : LifecycleService() {
         connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
             .collectOnMain {
                 status = when (it) {
-                    is Data.Success -> Connecting(true, it.result.endpointId)
+                    is Data.Success -> Connecting(true, it.data.endpointId)
                     is Data.Failure -> Advertising
                 }
             }
@@ -118,8 +118,8 @@ class ConnectionService : LifecycleService() {
             connectionManager.acceptRemote(connecting.endpointId)
                 .collectOnMain {
                     when (it) {
-                        is Data.Success -> if (it.result is Message.MessageCard) {
-                            ReceiveActivity.start(this, it.result)
+                        is Data.Success -> if (it.data is Message.MessageCard) {
+                            ReceiveActivity.start(this, it.data)
                         } else {
                             connectionRequestChannel.sendResult(it)
                         }
@@ -131,7 +131,7 @@ class ConnectionService : LifecycleService() {
                 .collectOnMain {
                     when (it) {
                         is Data.Success -> {
-                            if (it.result is Message.Start) {
+                            if (it.data is Message.Start) {
                                 connectionRequestChannel.sendResult(it)
                             } else {
                                 communicationChannel.sendRxData(it)
