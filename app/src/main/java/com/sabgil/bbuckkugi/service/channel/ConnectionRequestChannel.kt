@@ -3,18 +3,17 @@ package com.sabgil.bbuckkugi.service.channel
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.sabgil.bbuckkugi.common.Data
-import com.sabgil.bbuckkugi.model.Message
 import javax.inject.Inject
 
 class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChannel(context) {
 
     fun registerClient(
         lifecycleOwner: LifecycleOwner,
-        onReceive: (Data<Message>) -> Unit
+        onReceive: (Data<Nothing>) -> Unit
     ) = lifeCycleSafetyRegister(lifecycleOwner, ACTION_CONNECTION_RESULT) { _, intent ->
         val result = intent.getSerializableExtra(ACTION_CONNECTION_RESULT_INTENT_TAG)
         @Suppress("UNCHECKED_CAST")
-        onReceive(result as Data<Message>)
+        onReceive(result as Data<Nothing>)
     }
 
     fun registerHost(
@@ -30,7 +29,7 @@ class ConnectionRequestChannel @Inject constructor(context: Context) : BaseChann
             putExtra(ACTION_REQUEST_CONNECTION_INTENT_TAG, endpointId)
         }
 
-    fun sendResult(data: Data<Message>) =
+    fun sendResult(data: Data<Nothing>) =
         sendBroadCast(ACTION_CONNECTION_RESULT) {
             putExtra(ACTION_CONNECTION_RESULT_INTENT_TAG, data)
         }
