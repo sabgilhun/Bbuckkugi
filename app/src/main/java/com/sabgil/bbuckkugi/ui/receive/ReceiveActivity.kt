@@ -7,7 +7,6 @@ import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.databinding.ActivityReceiveBinding
-import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,10 +32,7 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
     }
 
     companion object {
-        fun start(context: Context, message: Message) {
-            context.startActivity(
-                Intent(context, ReceiveActivity::class.java).apply { putExtra("message", message) }
-            )
-        }
+        fun start(context: Context) =
+            context.startActivity(Intent(context, ReceiveActivity::class.java))
     }
 }

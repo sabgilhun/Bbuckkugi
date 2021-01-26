@@ -14,6 +14,8 @@ import com.sabgil.bbuckkugi.service.channel.ConnectionRequestChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_START
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_STOP
+import com.sabgil.bbuckkugi.ui.receive.ReceiveActivity
+import com.sabgil.bbuckkugi.ui.send.SendActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -73,13 +75,8 @@ class ConnectionService : LifecycleService() {
             connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
                 .collectOnMain {
                     when (it) {
-                        is Success -> {
-                            val data = it.data
-                            if (data is AdvertisingResult.ConnectionInitiated) {
-                                lifecycleScope.launch(backgroundDispatcher) {
-                                    connectionManager.acceptRemote(data.endpointId).collect()
-                                }
-                            }
+                        is Success -> (it.data as? AdvertisingResult.ConnectionInitiated)?.let { data ->
+                            acceptConnecting(data.endpointId)
                         }
                         is Failure -> startAdvertising()
                     }
@@ -110,7 +107,7 @@ class ConnectionService : LifecycleService() {
 
     private fun startConnecting(endpointId: String) {
         stopDiscovering()
-        discoveryJob = lifecycleScope.launch(backgroundDispatcher) {
+        lifecycleScope.launch(backgroundDispatcher) {
             connectionManager.connectRemote(endpointId)
                 .collectOnMain {
                     when (it) {
@@ -118,6 +115,21 @@ class ConnectionService : LifecycleService() {
                             connectedEndpointId = endpointId
                             startListeningMessage()
                             connectionRequestChannel.sendResult(it)
+                        }
+                        is Failure -> connectionRequestChannel.sendResult(it)
+                    }
+                }
+        }
+    }
+
+    private fun acceptConnecting(endpointId: String) {
+        lifecycleScope.launch(backgroundDispatcher) {
+            connectionManager.acceptRemote(endpointId)
+                .collectOnMain {
+                    when (it) {
+                        is Success -> {
+                            startListeningMessage()
+                            ReceiveActivity.start(this@ConnectionService)
                         }
                         is Failure -> connectionRequestChannel.sendResult(it)
                     }
