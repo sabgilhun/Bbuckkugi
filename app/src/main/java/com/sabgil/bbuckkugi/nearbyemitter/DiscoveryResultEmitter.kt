@@ -28,7 +28,6 @@ class DiscoveryResultEmitter(
 
         override fun onEndpointLost(endpointId: String) {
             Timber.i("nearby: onEndpointLost $endpointId")
-            producerScope.close()
         }
     }
 

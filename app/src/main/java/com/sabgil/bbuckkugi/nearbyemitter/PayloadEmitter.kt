@@ -25,9 +25,5 @@ class PayloadEmitter : PayloadCallback() {
 
     override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
         Timber.i("nearby: onPayloadTransferUpdate $endpointId, $update")
-        val scope = producerScope
-        if (scope?.isActive == true) {
-            scope.close()
-        }
     }
 }
