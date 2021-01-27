@@ -19,6 +19,7 @@ sealed class Message : Serializable {
 
     class MessageCard(messageType: Int) : Message() {
         override val byteValue: ByteArray = byteArrayOf(MESSAGE_PREFIX_BYTE, messageType.toByte())
+        val messageCardIndex = byteValue[1].toInt()
     }
 
     class Progress(value: Int) : Message() {
