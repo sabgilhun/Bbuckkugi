@@ -32,7 +32,9 @@
 		<activity
 			android:name=".ui.send.SendActivity"
 			android:parentActivityName="com.sabgil.bbuckkugi.ui.home.HomeActivity" />
-		<activity android:name=".ui.receive.ReceiveActivity" />
+		<activity
+			android:name=".ui.receive.ReceiveActivity"
+			android:parentActivityName="com.sabgil.bbuckkugi.ui.home.HomeActivity" />
 		
 		<service android:name=".service.ConnectionService" />
 	</application>

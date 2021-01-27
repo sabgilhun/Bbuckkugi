@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -128,7 +129,9 @@ class ConnectionService : LifecycleService() {
                     when (it) {
                         is Success -> {
                             startListeningMessage()
-                            ReceiveActivity.start(this@ConnectionService)
+                            withContext(Dispatchers.Main) {
+                                ReceiveActivity.startOnHome(this@ConnectionService)
+                            }
                         }
                         is Failure -> connectionRequestChannel.sendResult(it)
                     }

@@ -1,5 +1,6 @@
 package com.sabgil.bbuckkugi.ui.receive
 
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.databinding.ActivityReceiveBinding
 import com.sabgil.bbuckkugi.model.Message
 import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
+import com.sabgil.bbuckkugi.ui.send.SendActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -56,7 +58,10 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
     }
 
     companion object {
-        fun start(context: Context) =
-            context.startActivity(Intent(context, ReceiveActivity::class.java))
+        fun startOnHome(context: Context) {
+            TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(Intent(context, ReceiveActivity::class.java))
+                .startActivities()
+        }
     }
 }
