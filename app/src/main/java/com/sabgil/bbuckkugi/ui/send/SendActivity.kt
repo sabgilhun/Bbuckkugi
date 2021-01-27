@@ -25,20 +25,12 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
 
     private fun setupViews() {
         with(binding) {
-            button1.setOnClickListener {
-                communicationChannel.sendTxData(Message.MessageCard(0))
+            selectMessageCardViewPager.adapter = MessageCardAdapter(this@SendActivity).apply {
+                notifyDataSetChanged()
             }
-            button2.setOnClickListener {
-                communicationChannel.sendTxData(Message.Accept)
-            }
-            button3.setOnClickListener {
-                communicationChannel.sendTxData(Message.Reject)
-            }
-            button4.setOnClickListener {
-                communicationChannel.sendTxData(Message.Progress(0x04))
-            }
-            button5.setOnClickListener {
-                communicationChannel.sendTxData(Message.Progress(0x08))
+            messageCardSendButton.setOnClickListener {
+                val index = selectMessageCardViewPager.currentItem
+                communicationChannel.sendTxData(Message.MessageCard(index))
             }
         }
     }

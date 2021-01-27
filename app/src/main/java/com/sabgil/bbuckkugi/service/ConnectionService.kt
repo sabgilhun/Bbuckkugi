@@ -15,7 +15,6 @@ import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_START
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_STOP
 import com.sabgil.bbuckkugi.ui.receive.ReceiveActivity
-import com.sabgil.bbuckkugi.ui.send.SendActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
