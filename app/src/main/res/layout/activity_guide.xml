@@ -4,6 +4,17 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:context=".ui.start.StartActivity">
 	
+	<data>
+		
+		<variable
+			name="viewModel"
+			type="com.sabgil.bbuckkugi.ui.guide.GuideViewModel" />
+		
+		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.ui.guide.GuideActivity.Handler" />
+	</data>
+	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
@@ -53,7 +64,8 @@
 			style="@style/BigButton"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:onClick="@{null}"
+			android:enabled="@{viewModel.canGoNext}"
+			android:onClick="@{() -> handler.goToLoginActivity()}"
 			android:text="확인하였습니다."
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

@@ -1,8 +1,10 @@
 package com.sabgil.bbuckkugi.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
+import com.sabgil.bbuckkugi.common.ext.startOnTop
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityLoginBinding
 import com.sabgil.bbuckkugi.ui.home.HomeActivity
@@ -27,5 +29,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 HomeActivity.startOnTop(this)
             }
         }
+    }
+
+    companion object {
+
+        fun startOnTop(context: Context) = context.startOnTop<LoginActivity>()
     }
 }

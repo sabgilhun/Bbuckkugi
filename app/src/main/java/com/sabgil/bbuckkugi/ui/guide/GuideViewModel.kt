@@ -1,35 +1,17 @@
 package com.sabgil.bbuckkugi.ui.guide
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sabgil.bbuckkugi.base.BaseViewModel
-import com.sabgil.bbuckkugi.common.SingleLiveEvent
-import com.sabgil.bbuckkugi.pref.AppSharedPreference
 
-class GuideViewModel @ViewModelInject constructor(
-    private val appSharedPreference: AppSharedPreference
-) : BaseViewModel() {
+class GuideViewModel @ViewModelInject constructor() : BaseViewModel() {
 
-    private val _isExistRequiredData = SingleLiveEvent<Boolean>()
-    val isExistRequiredData: LiveData<Boolean> get() = _isExistRequiredData
+    private val confirmedPageList = mutableSetOf<Int>()
 
-    fun checkRequiredUserData() {
-        if (appSharedPreference.id != null
-            && appSharedPreference.nickname != null
-            && appSharedPreference.gender != null
-            && appSharedPreference.loginWay != null
-        ) {
-            _isExistRequiredData.value = true
-        } else {
-            clearUserData()
-            _isExistRequiredData.value = false
-        }
-    }
+    val canGoNext = MutableLiveData(false)
 
-    private fun clearUserData() {
-        appSharedPreference.id = null
-        appSharedPreference.nickname = null
-        appSharedPreference.gender = null
-        appSharedPreference.loginWay = null
+    fun changePage(position: Int) {
+        confirmedPageList.add(position)
+        canGoNext.value = confirmedPageList.size >= 4
     }
 }
