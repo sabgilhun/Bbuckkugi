@@ -10,6 +10,7 @@ import com.sabgil.bbuckkugi.common.ext.checkSelfPermissionCompat
 import com.sabgil.bbuckkugi.common.ext.requestPermissionsCompat
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityStartBinding
+import com.sabgil.bbuckkugi.ui.guide.GuideActivity
 import com.sabgil.bbuckkugi.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +36,7 @@ class StartActivity : BaseActivity<ActivityStartBinding>(R.layout.activity_start
             if (it) {
                 HomeActivity.startOnTop(this)
             } else {
-                // TODO: go to guide
+                GuideActivity.startOnTop(this)
             }
         }
     }
@@ -53,6 +54,7 @@ class StartActivity : BaseActivity<ActivityStartBinding>(R.layout.activity_start
     }
 
     companion object {
+
         private const val PERMISSION_REQUEST_CODE = 1001
 
         private val needPermissionsUnderQ: Array<String> = arrayOf(
