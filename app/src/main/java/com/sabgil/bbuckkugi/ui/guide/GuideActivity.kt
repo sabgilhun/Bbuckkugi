@@ -29,7 +29,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding>(R.layout.activity_guide
 
         binding.viewModel = viewModel
         binding.handler = handler
-        
+
         setupViews()
     }
 

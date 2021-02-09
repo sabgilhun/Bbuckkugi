@@ -25,7 +25,7 @@ abstract class BaseViewModel : ViewModel() {
     val showErrorMessage: LiveData<String> = _showErrorMessage
 
     protected fun showErrorMessage(throwable: Throwable) {
-        _showErrorMessage.setValue(throwable.message ?: "일시적인 문제가 발생했습니다.")
+        _showErrorMessage.value = throwable.message ?: "일시적인 문제가 발생했습니다."
     }
 
     protected fun <T> Flow<Data<T>>.collectResult(
