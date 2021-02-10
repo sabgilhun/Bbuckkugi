@@ -23,6 +23,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "KAKAO_SDK_KEY", apiKeyProperties['KAKAO_SDK_KEY'])
+        resValue("string", "KAKAO_SDK_SCHEME", apiKeyProperties['KAKAO_SDK_SCHEME'])
     }
 
     buildTypes {
@@ -103,5 +104,9 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // Kakao login
-    implementation "com.kakao.sdk:v2-user:$kakaoSdkVersion"
+    implementation "com.kakao.sdk:v2-user-rx:$kakaoSdkVersion"
+
+    //
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesRxUtilVersion"
+
 }

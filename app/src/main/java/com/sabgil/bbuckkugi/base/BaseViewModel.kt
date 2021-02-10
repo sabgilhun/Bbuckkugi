@@ -16,7 +16,7 @@ abstract class BaseViewModel : ViewModel() {
         _showErrorMessage.setValue("일시적인 문제가 발생했습니다.")
     }
 
-    private val ioErrorHandler = errorHandler + Dispatchers.IO
+    protected val ioErrorHandler = errorHandler + Dispatchers.IO
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading

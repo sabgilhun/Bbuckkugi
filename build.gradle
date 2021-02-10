@@ -31,6 +31,7 @@ buildscript {
         multiViewTypeVersion = '1.0.2'
         timberVersion = '4.7.1'
         kakaoSdkVersion = '2.3.0'
+        coroutinesRxUtilVersion = '1.4.2'
     }
 
     repositories {
