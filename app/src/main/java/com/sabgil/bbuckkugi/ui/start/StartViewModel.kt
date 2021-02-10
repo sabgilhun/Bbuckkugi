@@ -19,11 +19,12 @@ class StartViewModel @ViewModelInject constructor(
     fun checkRequiredUserData() {
         viewModelScope.launch {
             delay(1000)
-            if (appSharedPreference.id != null
-                && appSharedPreference.name != null
-                && appSharedPreference.gender != null
-                && appSharedPreference.loginWay != null
-            ) {
+
+            val isExist = with(appSharedPreference) {
+                loginWay != null && id != null && gender != null && name != null
+            }
+
+            if (isExist) {
                 _isExistRequiredData.value = true
             } else {
                 clearUserData()
@@ -33,9 +34,12 @@ class StartViewModel @ViewModelInject constructor(
     }
 
     private fun clearUserData() {
-        appSharedPreference.id = null
-        appSharedPreference.name = null
-        appSharedPreference.gender = null
-        appSharedPreference.loginWay = null
+        with(appSharedPreference) {
+            loginWay = null
+            id = null
+            gender = null
+            name = null
+            profileImageUrl = null
+        }
     }
 }
