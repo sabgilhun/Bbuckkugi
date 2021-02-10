@@ -30,6 +30,7 @@ buildscript {
 
         multiViewTypeVersion = '1.0.2'
         timberVersion = '4.7.1'
+        kakaoSdkVersion = '2.3.0'
     }
 
     repositories {
@@ -51,6 +52,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
 
