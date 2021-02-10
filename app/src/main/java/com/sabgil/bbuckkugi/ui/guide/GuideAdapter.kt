@@ -1,7 +1,6 @@
 package com.sabgil.bbuckkugi.ui.guide
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -15,22 +14,22 @@ class GuideAdapter(context: Context) : RecyclerView.Adapter<BindViewHolder<ItemG
         Triple(
             "❤️",
             "이 앱은...",
-            ContextWrapper(context).getString(R.string.guide_detail_contents_1)
+            context.getString(R.string.guide_detail_contents_1)
         ),
         Triple(
             "❗️",
             "메시지가 옵니다.",
-            ContextWrapper(context).getString(R.string.guide_detail_contents_2)
+            context.getString(R.string.guide_detail_contents_2)
         ),
         Triple(
             "\uD83E\uDD1D",
             "신중한 판단을 해주세요.",
-            ContextWrapper(context).getString(R.string.guide_detail_contents_3)
+            context.getString(R.string.guide_detail_contents_3)
         ),
         Triple(
             "❌",
             "로그인을 하는 이유는...",
-            ContextWrapper(context).getString(R.string.guide_detail_contents_4)
+            context.getString(R.string.guide_detail_contents_4)
         )
     )
 
