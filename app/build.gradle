@@ -23,6 +23,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "KAKAO_SDK_KEY", apiKeyProperties['KAKAO_SDK_KEY'])
+        buildConfigField("String", "NAVER_API_CLIENTS_ID", apiKeyProperties['NAVER_API_CLIENTS_ID'])
+        buildConfigField("String", "NAVER_API_CLIENTS_SECRET", apiKeyProperties['NAVER_API_CLIENTS_SECRET'])
+
         resValue("string", "KAKAO_SDK_SCHEME", apiKeyProperties['KAKAO_SDK_SCHEME'])
     }
 
@@ -106,7 +109,9 @@ dependencies {
     // Kakao login
     implementation "com.kakao.sdk:v2-user-rx:$kakaoSdkVersion"
 
-    //
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesRxUtilVersion"
+    // Naver login
+    implementation "com.naver.nid:naveridlogin-android-sdk:$naverSdkVersion"
 
+    // Coroutine Rx Utils
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesRxUtilVersion"
 }
