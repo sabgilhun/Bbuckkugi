@@ -3,7 +3,6 @@
 	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="android:colorAccent">@color/pink</item>
 		<item name="android:colorControlActivated">@color/pink</item>
-		<item name="android:colorControlHighlight">@color/pink</item>
 		<item name="android:windowBackground">@color/white</item>
 		<item name="android:windowTranslucentStatus">false</item>
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
