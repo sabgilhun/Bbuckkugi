@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
+	
+	<merge
+		tools:layout_height="?android:actionBarSize"
+		tools:layout_width="match_parent"
+		tools:orientation="horizontal"
+		tools:parentTag="LinearLayout">
+		
+		<ImageView
+			android:id="@+id/leftButton"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_gravity="center_vertical"
+			android:layout_marginStart="12dp"
+			android:src="@drawable/ic_back_arrow_24" />
+		
+		<TextView
+			android:id="@+id/titleTextView"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginStart="16dp"
+			android:layout_weight="1"
+			android:textColor="@color/black"
+			android:textSize="18dp"
+			tools:ignore="SpUsage"
+			tools:text="화면" />
+		
+		<ImageView
+			android:id="@+id/rightButton"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_gravity="center_vertical"
+			android:layout_marginStart="12dp"
+			android:layout_marginEnd="12dp" />
+	</merge>
+</layout>

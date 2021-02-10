@@ -8,9 +8,9 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 
 val Context.layoutInflater get() = requireNotNull(LayoutInflater.from(this))
 
-fun Context.dpToPx(dp: Float) = dp * (resources.displayMetrics.densityDpi / 160f)
+fun Context.dpToPx(dp: Int) = dp * (resources.displayMetrics.densityDpi / 160f)
 
-fun Context.pxToDp(px: Float) = px / (resources.displayMetrics.densityDpi / 160f)
+fun Context.pxToDp(px: Int) = px / (resources.displayMetrics.densityDpi / 160f)
 
 inline fun <reified T : BaseActivity<*>> Context.startWith(vararg pairs: Pair<String, Any?>) =
     startActivity(intentFor(T::class.java, *pairs))
