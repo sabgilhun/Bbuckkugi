@@ -3,7 +3,7 @@ package com.sabgil.bbuckkugi.service.channel
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.sabgil.bbuckkugi.common.Data
-import com.sabgil.bbuckkugi.model.DiscoveredEndpoint
+import com.sabgil.bbuckkugi.data.model.DiscoveredEndpoint
 import javax.inject.Inject
 
 class DiscoveryChannel @Inject constructor(context: Context) : BaseChannel(context) {

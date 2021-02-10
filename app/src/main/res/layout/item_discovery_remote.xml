@@ -6,7 +6,7 @@
 		
 		<variable
 			name="item"
-			type="com.sabgil.bbuckkugi.ui.discovery.DiscoveryRemoteItem" />
+			type="com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryRemoteItem" />
 	</data>
 	
 	<TextView

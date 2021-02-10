@@ -1,6 +1,6 @@
 package com.sabgil.bbuckkugi.di
 
-import com.sabgil.bbuckkugi.api.NaverLoginApi
+import com.sabgil.bbuckkugi.data.api.NaverLoginApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

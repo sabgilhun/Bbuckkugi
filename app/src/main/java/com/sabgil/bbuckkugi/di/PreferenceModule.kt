@@ -1,7 +1,7 @@
 package com.sabgil.bbuckkugi.di
 
-import com.sabgil.bbuckkugi.pref.AppSharedPreference
-import com.sabgil.bbuckkugi.pref.AppSharedPreferenceImpl
+import com.sabgil.bbuckkugi.data.pref.AppSharedPreference
+import com.sabgil.bbuckkugi.data.pref.AppSharedPreferenceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

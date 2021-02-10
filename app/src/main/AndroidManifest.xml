@@ -19,18 +19,18 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 		
-		<activity android:name=".ui.login.LoginActivity" />
+		<activity android:name="com.sabgil.bbuckkugi.presentation.ui.login.LoginActivity" />
 		
 		<activity android:name=".TestActivity" />
 		
-		<activity android:name=".ui.start.StartActivity">
+		<activity android:name="com.sabgil.bbuckkugi.presentation.ui.start.StartActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".ui.guide.GuideActivity" />
+		<activity android:name="com.sabgil.bbuckkugi.presentation.ui.guide.GuideActivity" />
 		
 		<activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
 			<intent-filter>
@@ -46,19 +46,19 @@
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".ui.home.HomeActivity" />
+		<activity android:name="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity" />
 		
-		<activity android:name=".ui.discovery.DiscoveryActivity" />
+		<activity android:name="com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryActivity" />
 		
-		<activity android:name=".ui.namesetting.NameSettingActivity" />
-		
-		<activity
-			android:name=".ui.send.SendActivity"
-			android:parentActivityName="com.sabgil.bbuckkugi.ui.home.HomeActivity" />
+		<activity android:name="com.sabgil.bbuckkugi.presentation.ui.namesetting.NameSettingActivity" />
 		
 		<activity
-			android:name=".ui.receive.ReceiveActivity"
-			android:parentActivityName="com.sabgil.bbuckkugi.ui.home.HomeActivity" />
+			android:name="com.sabgil.bbuckkugi.presentation.ui.send.SendActivity"
+			android:parentActivityName="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity" />
+		
+		<activity
+			android:name="com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveActivity"
+			android:parentActivityName="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity" />
 		
 		<service android:name=".service.ConnectionService" />
 	

@@ -1,9 +1,9 @@
 package com.sabgil.bbuckkugi.di
 
-import com.sabgil.bbuckkugi.repository.KakaoLoginRepository
-import com.sabgil.bbuckkugi.repository.KakaoLoginRepositoryImpl
-import com.sabgil.bbuckkugi.repository.NaverLoginRepository
-import com.sabgil.bbuckkugi.repository.NaverLoginRepositoryImpl
+import com.sabgil.bbuckkugi.data.repository.KakaoLoginRepository
+import com.sabgil.bbuckkugi.data.repository.KakaoLoginRepositoryImpl
+import com.sabgil.bbuckkugi.data.repository.NaverLoginRepository
+import com.sabgil.bbuckkugi.data.repository.NaverLoginRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

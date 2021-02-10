@@ -1,7 +1,7 @@
 package com.sabgil.bbuckkugi.di
 
-import com.sabgil.bbuckkugi.repository.ConnectionManager
-import com.sabgil.bbuckkugi.repository.ConnectionManagerImpl
+import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import com.sabgil.bbuckkugi.data.repository.ConnectionManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

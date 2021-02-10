@@ -7,7 +7,7 @@
 		
 		<variable
 			name="viewModel"
-			type="com.sabgil.bbuckkugi.ui.login.LoginViewModel" />
+			type="com.sabgil.bbuckkugi.presentation.ui.login.LoginViewModel" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout

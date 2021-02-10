@@ -3,7 +3,7 @@ package com.sabgil.bbuckkugi.service.channel
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.sabgil.bbuckkugi.common.Data
-import com.sabgil.bbuckkugi.model.Message
+import com.sabgil.bbuckkugi.data.model.Message
 import javax.inject.Inject
 
 class CommunicationChannel @Inject constructor(context: Context) : BaseChannel(context) {

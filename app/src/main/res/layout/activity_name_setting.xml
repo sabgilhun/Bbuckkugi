@@ -6,7 +6,7 @@
 		
 		<variable
 			name="viewModel"
-			type="com.sabgil.bbuckkugi.ui.namesetting.NameSettingViewModel" />
+			type="com.sabgil.bbuckkugi.presentation.ui.namesetting.NameSettingViewModel" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout

@@ -2,17 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:context=".ui.start.StartActivity">
+	tools:context=".presentation.ui.start.StartActivity">
 	
 	<data>
 		
 		<variable
 			name="viewModel"
-			type="com.sabgil.bbuckkugi.ui.guide.GuideViewModel" />
+			type="com.sabgil.bbuckkugi.presentation.ui.guide.GuideViewModel" />
 		
 		<variable
 			name="handler"
-			type="com.sabgil.bbuckkugi.ui.guide.GuideActivity.Handler" />
+			type="com.sabgil.bbuckkugi.presentation.ui.guide.GuideActivity.Handler" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout

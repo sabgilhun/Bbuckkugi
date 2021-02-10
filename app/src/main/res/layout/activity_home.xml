@@ -7,13 +7,13 @@
 		
 		<variable
 			name="viewModel"
-			type="com.sabgil.bbuckkugi.ui.home.HomeViewModel" />
+			type="com.sabgil.bbuckkugi.presentation.ui.home.HomeViewModel" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".ui.home.HomeActivity">
+		tools:context=".presentation.ui.home.HomeActivity">
 		
 		<EditText
 			android:id="@+id/nickName"
