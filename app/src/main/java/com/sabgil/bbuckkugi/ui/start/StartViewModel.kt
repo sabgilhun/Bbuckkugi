@@ -20,7 +20,7 @@ class StartViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             delay(1000)
             if (appSharedPreference.id != null
-                && appSharedPreference.nickname != null
+                && appSharedPreference.name != null
                 && appSharedPreference.gender != null
                 && appSharedPreference.loginWay != null
             ) {
@@ -34,7 +34,7 @@ class StartViewModel @ViewModelInject constructor(
 
     private fun clearUserData() {
         appSharedPreference.id = null
-        appSharedPreference.nickname = null
+        appSharedPreference.name = null
         appSharedPreference.gender = null
         appSharedPreference.loginWay = null
     }

@@ -8,6 +8,7 @@ import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import com.sabgil.bbuckkugi.model.UserInfo
 import com.sabgil.bbuckkugi.model.enums.Gender
+import com.sabgil.bbuckkugi.model.enums.LoginWay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.rx2.await
@@ -48,19 +49,19 @@ class KakaoLoginRepositoryImpl @Inject constructor(
         .observeOn(AndroidSchedulers.mainThread())
         .await()
 
-    private fun User.toUserInfo() =
-        UserInfo(
-            id = id.toString(),
-            gender = when (kakaoAccount?.gender) {
-                KakaoGender.FEMALE -> {
-                    Gender.FEMALE
-                }
-                KakaoGender.MALE -> {
-                    Gender.MALE
-                }
-                else -> null
-            },
-            name = kakaoAccount?.profile?.nickname,
-            profileImageUrl = kakaoAccount?.profile?.profileImageUrl
-        )
+    private fun User.toUserInfo() = UserInfo(
+        loginWay = LoginWay.KAKAO,
+        id = id.toString(),
+        gender = when (kakaoAccount?.gender) {
+            KakaoGender.FEMALE -> {
+                Gender.FEMALE
+            }
+            KakaoGender.MALE -> {
+                Gender.MALE
+            }
+            else -> null
+        },
+        name = kakaoAccount?.profile?.nickname,
+        profileImageUrl = kakaoAccount?.profile?.profileImageUrl
+    )
 }

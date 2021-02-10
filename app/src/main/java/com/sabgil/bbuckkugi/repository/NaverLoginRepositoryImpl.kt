@@ -10,6 +10,7 @@ import com.sabgil.bbuckkugi.api.NaverLoginUserInfoResponse
 import com.sabgil.bbuckkugi.common.doNotAnything
 import com.sabgil.bbuckkugi.model.UserInfo
 import com.sabgil.bbuckkugi.model.enums.Gender
+import com.sabgil.bbuckkugi.model.enums.LoginWay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -55,6 +56,7 @@ class NaverLoginRepositoryImpl @Inject constructor(
     }
 
     private fun NaverLoginUserInfoResponse.Response.toUserInfo() = UserInfo(
+        loginWay = LoginWay.NAVER,
         id = id,
         gender = when (gender) {
             "F" -> Gender.FEMALE

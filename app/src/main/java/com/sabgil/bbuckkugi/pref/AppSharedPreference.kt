@@ -1,15 +1,17 @@
 package com.sabgil.bbuckkugi.pref
 
-import com.sabgil.bbuckkugi.model.enums.LoginWay
 import com.sabgil.bbuckkugi.model.enums.Gender
+import com.sabgil.bbuckkugi.model.enums.LoginWay
 
 interface AppSharedPreference {
 
-    var id: String?
+    var loginWay: LoginWay?
 
-    var nickname: String?
+    var id: String?
 
     var gender: Gender?
 
-    var loginWay: LoginWay?
+    var name: String?
+
+    var profileImageUrl: String?
 }

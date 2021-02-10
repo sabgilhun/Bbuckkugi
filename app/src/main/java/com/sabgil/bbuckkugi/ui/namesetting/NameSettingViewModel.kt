@@ -18,7 +18,7 @@ class NameSettingViewModel @ViewModelInject constructor(
 
     fun storeNickname() {
         val inputtedName = inputName.value
-        appSharedPreference.nickname = inputtedName
+        appSharedPreference.name = inputtedName
         _nicknameStoreSuccess.call()
     }
 }

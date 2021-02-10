@@ -7,6 +7,7 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.startOnTop
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityLoginBinding
+import com.sabgil.bbuckkugi.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -19,6 +20,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
+
+        viewModel.doneSaveUserInfo.observe {
+            HomeActivity.startOnTop(this)
+        }
     }
 
     override fun onDestroy() {

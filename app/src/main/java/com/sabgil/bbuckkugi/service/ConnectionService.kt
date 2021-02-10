@@ -72,7 +72,7 @@ class ConnectionService : LifecycleService() {
 
     private fun startAdvertising() {
         lifecycleScope.launch(backgroundDispatcher) {
-            connectionManager.startAdvertising(requireNotNull(appSharedPreference.nickname))
+            connectionManager.startAdvertising(requireNotNull(appSharedPreference.name))
                 .collectOnMain {
                     when (it) {
                         is Success -> (it.data as? AdvertisingResult.ConnectionInitiated)?.let { data ->
