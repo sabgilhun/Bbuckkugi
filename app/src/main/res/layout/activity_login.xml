@@ -34,6 +34,7 @@
 			android:layout_marginTop="14dp"
 			android:background="@drawable/login_button_kakao"
 			android:foreground="?attr/selectableItemBackground"
+			android:onClick="@{() -> viewModel.loginWithKakao()}"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/snsLoginTextView" />
@@ -82,6 +83,7 @@
 			android:text="SNS 로그인을 먼저 진행해주세요."
 			android:textColor="@color/design_default_color_error"
 			android:textSize="14dp"
+			app:isVisible="@{!viewModel.loginSuccess}"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/modifyUserDataTextView"
@@ -117,14 +119,16 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:enabled="false"
+				android:checked="@={viewModel.isSelectedMale}"
+				android:enabled="@{viewModel.loginSuccess}"
 				android:text="남자" />
 			
 			<RadioButton
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:enabled="false"
+				android:checked="@={viewModel.isSelectedFemale}"
+				android:enabled="@{viewModel.loginSuccess}"
 				android:text="여자" />
 		</RadioGroup>
 		
@@ -147,8 +151,9 @@
 				android:id="@+id/userNameEditText"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:enabled="false"
+				android:enabled="@{viewModel.loginSuccess}"
 				android:hint="이름을 적어주세요. (최대 10자)"
+				android:text="@={viewModel.userName}"
 				android:textColor="@color/black"
 				android:textColorHint="@color/gray"
 				android:textSize="14sp"
@@ -161,6 +166,7 @@
 			style="@style/BigButton"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:enabled="@{viewModel.canGoNext}"
 			android:text="확인"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

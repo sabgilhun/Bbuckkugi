@@ -19,10 +19,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
-
-        binding.loginWithKakao.setOnClickListener {
-            viewModel.loginWithKakao()
-        }
     }
 
     override fun onDestroy() {
