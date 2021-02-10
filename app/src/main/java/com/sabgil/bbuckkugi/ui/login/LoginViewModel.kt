@@ -2,21 +2,21 @@ package com.sabgil.bbuckkugi.ui.login
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.kakao.sdk.user.model.User
 import com.sabgil.bbuckkugi.base.BaseViewModel
-import com.sabgil.bbuckkugi.common.doNotAnything
+import com.sabgil.bbuckkugi.model.UserInfo
+import com.sabgil.bbuckkugi.model.enums.Gender
 import com.sabgil.bbuckkugi.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.repository.KakaoLoginRepository
+import com.sabgil.bbuckkugi.repository.NaverLoginRepository
 import kotlinx.coroutines.launch
-
-typealias KakaoGender = com.kakao.sdk.user.model.Gender
 
 class LoginViewModel @ViewModelInject constructor(
     private val appSharedPreference: AppSharedPreference,
-    private val kakaoLoginRepository: KakaoLoginRepository
+    private val kakaoLoginRepository: KakaoLoginRepository,
+    private val naverLoginRepository: NaverLoginRepository
 ) : BaseViewModel() {
 
-    private val _userInfo = MutableLiveData<User>()
+    private val _userInfo = MutableLiveData<UserInfo>()
 
     private val _canGoNext = MediatorLiveData<Boolean>()
     val canGoNext: LiveData<Boolean> get() = _canGoNext
@@ -40,37 +40,35 @@ class LoginViewModel @ViewModelInject constructor(
             } else {
                 kakaoLoginRepository.loginWithKakaoAccount()
             }
+            setupWithUserInfo(kakaoLoginRepository.loadUserInfo())
+        }
+    }
 
-            val userInfo = requireNotNull(kakaoLoginRepository.loadUserInfo())
-            _userInfo.value = userInfo
-
-            when (userInfo.kakaoAccount?.gender) {
-                KakaoGender.FEMALE -> {
-                    isSelectedFemale.value = true
-                    isSelectedMale.value = false
-                }
-                KakaoGender.MALE -> {
-                    isSelectedFemale.value = false
-                    isSelectedMale.value = true
-                }
-                else -> doNotAnything()
-            }
-
-            userName.value = userInfo.kakaoAccount?.profile?.nickname
+    fun loginWithNaver() {
+        viewModelScope.launch(errorHandler) {
+            naverLoginRepository.login()
+            setupWithUserInfo(naverLoginRepository.loadUserInfo())
         }
     }
 
     private fun initCnaGoNextObserver() {
         val observer = Observer<Any> {
-            val userName = userName.value
-            _canGoNext.value = _userInfo.value != null &&
-                    isSelectedFemale.value != null &&
-                    isSelectedMale.value != null &&
-                    userName != null && userName.length <= 10
+            _canGoNext.value = checkCanGoNext()
         }
         _canGoNext.addSource(_userInfo, observer)
         _canGoNext.addSource(isSelectedFemale, observer)
         _canGoNext.addSource(isSelectedMale, observer)
         _canGoNext.addSource(userName, observer)
+    }
+
+    private fun checkCanGoNext() = _userInfo.value != null &&
+            (isSelectedFemale.value == true || isSelectedMale.value == true) &&
+            userName.value.let { it != null && it.length <= 10 }
+
+    private fun setupWithUserInfo(userInfo: UserInfo) {
+        _userInfo.value = userInfo
+        isSelectedFemale.value = userInfo.gender == Gender.FEMALE
+        isSelectedMale.value = userInfo.gender == Gender.MALE
+        userName.value = userInfo.name
     }
 }

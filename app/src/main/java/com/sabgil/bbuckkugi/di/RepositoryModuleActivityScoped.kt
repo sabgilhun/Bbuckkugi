@@ -2,6 +2,8 @@ package com.sabgil.bbuckkugi.di
 
 import com.sabgil.bbuckkugi.repository.KakaoLoginRepository
 import com.sabgil.bbuckkugi.repository.KakaoLoginRepositoryImpl
+import com.sabgil.bbuckkugi.repository.NaverLoginRepository
+import com.sabgil.bbuckkugi.repository.NaverLoginRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,9 @@ abstract class RepositoryModuleActivityScoped {
     abstract fun provideKakaoLoginRepository(
         kakaoLoginRepositoryImpl: KakaoLoginRepositoryImpl
     ): KakaoLoginRepository
+
+    @Binds
+    abstract fun provideNaverLoginRepository(
+        naverLoginRepositoryImpl: NaverLoginRepositoryImpl
+    ): NaverLoginRepository
 }
