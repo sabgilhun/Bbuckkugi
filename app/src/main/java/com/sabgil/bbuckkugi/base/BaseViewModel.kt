@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val errorHandler = CoroutineExceptionHandler { _, _ ->
+    protected val errorHandler = CoroutineExceptionHandler { _, _ ->
         _showErrorMessage.setValue("일시적인 문제가 발생했습니다.")
     }
 
