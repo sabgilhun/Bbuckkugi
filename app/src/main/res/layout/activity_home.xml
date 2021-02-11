@@ -10,61 +10,165 @@
 			type="com.sabgil.bbuckkugi.presentation.ui.home.HomeViewModel" />
 	</data>
 	
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:background="@color/light_gray"
+		android:orientation="vertical"
 		tools:context=".presentation.ui.home.HomeActivity">
 		
-		<EditText
-			android:id="@+id/nickName"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:text="@={viewModel.inputData}"
-			app:layout_constraintBottom_toTopOf="@id/advertise"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_chainStyle="packed" />
+		<com.sabgil.bbuckkugi.presentation.widget.CommonAppBarLayout
+			android:id="@+id/appBarLayout"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:title="뻐꾸기" />
 		
-		<Button
-			android:id="@+id/advertise"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="advertise"
-			app:layout_constraintBottom_toTopOf="@id/discovery"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/nickName" />
-		
-		<Button
-			android:id="@+id/discovery"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="discovery"
-			app:layout_constraintBottom_toTopOf="@id/send"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/advertise" />
-		
-		<Button
-			android:id="@+id/send"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="send"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/discovery" />
-		
-		<TextView
-			android:id="@+id/receiveData"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@{viewModel.receiveData}"
-			android:layout_marginBottom="60dp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent" />
-	
-	</androidx.constraintlayout.widget.ConstraintLayout>
+		<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:fillViewport="true">
+			
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+				
+				<LinearLayout
+					android:id="@+id/searchLayout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginTop="16dp"
+					android:layout_marginEnd="8dp"
+					android:background="@drawable/shape_r8_background_white"
+					android:orientation="vertical"
+					android:padding="4dp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+					
+					<TextView
+						android:id="@+id/searchTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="8dp"
+						android:layout_marginTop="16dp"
+						android:layout_marginEnd="8dp"
+						android:text="상대를 찾아보세요."
+						android:textColor="@color/black"
+						android:textSize="14sp" />
+					
+					<TextView
+						android:id="@+id/searchDescTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="8dp"
+						android:layout_marginTop="4dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginBottom="4dp"
+						android:text='상대가 근처에 뻐꾸기를 사용하고 있어야 찾을 수 있습니다!'
+						android:textColor="@color/gray"
+						android:textSize="12sp" />
+					
+					<TextView
+						style="@style/MediumButton"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="찾기" />
+				</LinearLayout>
+				
+				<androidx.constraintlayout.widget.ConstraintLayout
+					android:id="@+id/messageSummaryLayout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginTop="16dp"
+					android:layout_marginEnd="8dp"
+					android:background="@drawable/shape_r8_background_white"
+					android:padding="4dp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/searchLayout">
+					
+					<TextView
+						android:id="@+id/messageSummaryTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="8dp"
+						android:layout_marginTop="8dp"
+						android:text="동의 기록"
+						android:textColor="@color/black"
+						android:textSize="14sp"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toTopOf="parent" />
+					
+					<TextView
+						android:id="@+id/moreMessageTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:text="더보기"
+						android:textColor="@color/gray"
+						android:textSize="12sp"
+						app:layout_constraintBottom_toBottomOf="@id/messageSummaryTextView"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintTop_toTopOf="@id/messageSummaryTextView" />
+					
+					<View
+						android:id="@+id/divider"
+						android:layout_width="0dp"
+						android:layout_height="0.5dp"
+						android:layout_marginStart="8dp"
+						android:layout_marginTop="12dp"
+						android:layout_marginEnd="8dp"
+						android:background="@color/gray"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/moreMessageTextView" />
+					
+					<TextView
+						android:id="@+id/noMessageTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="32dp"
+						android:layout_marginBottom="32dp"
+						android:text="이전에 남긴 동의 기록이 없습니다."
+						android:textColor="@color/gray"
+						app:layout_constraintBottom_toBottomOf="parent"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/divider" />
+				</androidx.constraintlayout.widget.ConstraintLayout>
+				
+				<LinearLayout
+					android:id="@+id/bannerLayout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginTop="16dp"
+					android:layout_marginEnd="8dp"
+					android:layout_marginBottom="16dp"
+					android:background="@drawable/shape_r8_background_white"
+					android:orientation="vertical"
+					android:padding="4dp"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+					
+					<TextView
+						android:id="@+id/bannerTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:layout_marginStart="8dp"
+						android:layout_marginTop="32dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginBottom="32dp"
+						android:text="광고 넣을 자리"
+						android:textColor="@color/gray"
+						android:textSize="14sp" />
+				</LinearLayout>
+			</LinearLayout>
+		</ScrollView>
+	</LinearLayout>
 </layout>
