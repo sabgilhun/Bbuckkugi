@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		
+		<ProgressBar
+			android:id="@+id/loadingView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
+			android:indeterminateTint="@color/black"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+		
+		<TextView
+			android:id="@+id/discoveringTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:textColor="@color/black"
+			android:textSize="16dp"
+			android:textStyle="bold"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/loadingView"
+			tools:ignore="SpUsage"
+			tools:text="근처 사용자들을 찾고 있습니다..." />
+		
+		<TextView
+			android:id="@+id/discoveringDescTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:layout_marginBottom="24dp"
+			android:gravity="center"
+			android:text="근처에서 뻐꾸기 앱을 사용하고 있는 사용자들을 찾습니다.\n찾아지지 않는다면 더 가까이서 시도해 보세요."
+			android:textColor="@color/gray"
+			android:textSize="12dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/discoveringTextView"
+			tools:ignore="SpUsage" />
+		
+		<View
+			android:id="@+id/divider"
+			android:layout_width="0dp"
+			android:layout_height="0.5dp"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:background="@color/gray"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

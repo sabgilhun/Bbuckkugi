@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+	
+	<data>
+		
+		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryActivity.Handler" />
+		
+		<variable
+			name="item"
+			type="com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryItem.Endpoint" />
+	</data>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:onClick="@{() -> handler.connectEndpoint(item)}">
+		
+		<ImageView
+			android:id="@+id/profileImageView"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginBottom="8dp"
+			app:image="@{item.profileImageUrl}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:src="@drawable/ic_account_circle_24" />
+		
+		<TextView
+			android:id="@+id/nameTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:textColor="@color/black"
+			android:textSize="14dp"
+			app:layout_constraintBottom_toBottomOf="@id/profileImageView"
+			app:layout_constraintStart_toEndOf="@id/profileImageView"
+			app:layout_constraintTop_toTopOf="@id/profileImageView"
+			tools:ignore="SpUsage"
+			tools:text="홍길동️" />
+		
+		<TextView
+			android:id="@+id/genderTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="@{item.genderSign}"
+			android:textColor="@color/black"
+			android:textSize="18dp"
+			app:layout_constraintBottom_toBottomOf="@id/nameTextView"
+			app:layout_constraintStart_toEndOf="@id/nameTextView"
+			app:layout_constraintTop_toTopOf="@id/nameTextView"
+			tools:ignore="SpUsage"
+			tools:text="♂️" />
+		
+		<ImageView
+			android:id="@+id/arrowImageView"
+			android:layout_width="28dp"
+			android:layout_height="28dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			android:layout_marginBottom="8dp"
+			android:src="@drawable/ic_arrow_right_24"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+		
+		<View
+			android:id="@+id/divider"
+			android:layout_width="0dp"
+			android:layout_height="0.5dp"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:background="@color/gray"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

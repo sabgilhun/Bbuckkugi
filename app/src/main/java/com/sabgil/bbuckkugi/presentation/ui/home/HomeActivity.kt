@@ -8,6 +8,7 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.startOnTop
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityHomeBinding
+import com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryActivity
 import com.sabgil.bbuckkugi.service.ConnectionService
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,9 +32,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
             TODO()
         }
 
-        fun goToDiscovery() {
-            TODO()
-        }
+        fun goToDiscovery() = DiscoveryActivity.start(this@HomeActivity)
 
         fun goToMoreMessage() {
             TODO()

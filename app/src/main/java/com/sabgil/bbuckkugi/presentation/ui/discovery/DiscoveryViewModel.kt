@@ -8,15 +8,10 @@ import com.sabgil.bbuckkugi.data.model.DiscoveredEndpoint
 
 class DiscoveryViewModel @ViewModelInject constructor() : BaseViewModel() {
 
-    private val _discoveredRemotes = MutableLiveData<List<DiscoveryRemoteItem>>(listOf())
-    val discoveredRemotes: LiveData<List<DiscoveryRemoteItem>> get() = _discoveredRemotes
+    private val _discoveredRemotes = MutableLiveData<List<DiscoveryItem>>(listOf())
+    val discoveredRemotes: LiveData<List<DiscoveryItem>> get() = _discoveredRemotes
 
     fun discoveryRemote(discoveredEndpoint: DiscoveredEndpoint) {
-        val oldList = requireNotNull(_discoveredRemotes.value)
-        _discoveredRemotes.value =
-            oldList + DiscoveryRemoteItem(
-                discoveredEndpoint.endpointName,
-                discoveredEndpoint.endpointId
-            )
+
     }
 }
