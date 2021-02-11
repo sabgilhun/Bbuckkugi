@@ -9,12 +9,12 @@ import com.sabgil.bbuckkugi.data.model.AdvertisingResult
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.data.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveActivity
 import com.sabgil.bbuckkugi.service.channel.CommunicationChannel
 import com.sabgil.bbuckkugi.service.channel.ConnectionRequestChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_START
 import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel.Action.DISCOVERY_STOP
-import com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -72,7 +72,7 @@ class ConnectionService : LifecycleService() {
 
     private fun startAdvertising() {
         lifecycleScope.launch(backgroundDispatcher) {
-            connectionManager.startAdvertising(requireNotNull(appSharedPreference.name))
+            connectionManager.startAdvertising(buildAdvertisingName())
                 .collectOnMain {
                     when (it) {
                         is Success -> (it.data as? AdvertisingResult.ConnectionInitiated)?.let { data ->
@@ -81,6 +81,18 @@ class ConnectionService : LifecycleService() {
                         is Failure -> startAdvertising()
                     }
                 }
+        }
+    }
+
+    private fun buildAdvertisingName(): String {
+        val name = requireNotNull(appSharedPreference.name)
+        val gender = requireNotNull(appSharedPreference.gender).desc
+        val profileImageUrl = appSharedPreference.profileImageUrl
+
+        return if (profileImageUrl == null) {
+            "$name|$gender"
+        } else {
+            "$name|$gender|$profileImageUrl"
         }
     }
 
