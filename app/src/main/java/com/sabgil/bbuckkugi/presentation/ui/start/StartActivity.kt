@@ -2,6 +2,7 @@ package com.sabgil.bbuckkugi.presentation.ui.start
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.os.Build
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
@@ -28,9 +29,9 @@ class StartActivity : BaseActivity<ActivityStartBinding>(R.layout.activity_start
 
         if (!hasPermissions()) {
             requestPermissionsCompat(needsPermissions, PERMISSION_REQUEST_CODE)
+        } else {
+            viewModel.checkRequiredUserData()
         }
-
-        viewModel.checkRequiredUserData()
 
         viewModel.isExistRequiredData.observeNonNull {
             if (it) {
@@ -38,6 +39,19 @@ class StartActivity : BaseActivity<ActivityStartBinding>(R.layout.activity_start
             } else {
                 GuideActivity.startOnTop(this)
             }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.any { it == PERMISSION_DENIED }) {
+            finish()
+        } else {
+            viewModel.checkRequiredUserData()
         }
     }
 
