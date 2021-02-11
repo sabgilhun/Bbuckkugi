@@ -2,6 +2,7 @@ package com.sabgil.bbuckkugi.presentation.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isInvisible
@@ -33,6 +34,7 @@ class CommonAppBarLayout @JvmOverloads constructor(
         val array = context.obtainStyledAttributes(attrs, R.styleable.CommonAppBarLayout)
 
         val title = array.getString(R.styleable.CommonAppBarLayout_title).orEmpty()
+        val isTitleCenter = array.getBoolean(R.styleable.CommonAppBarLayout_titleCenter, false)
 
         val isShowLeftButton =
             array.getBoolean(R.styleable.CommonAppBarLayout_showLeftButton, false)
@@ -44,14 +46,15 @@ class CommonAppBarLayout @JvmOverloads constructor(
 
         with(binding) {
             titleTextView.text = title
+            if (isTitleCenter) {
+                titleTextView.gravity = Gravity.CENTER
+            }
 
             leftButton.isInvisible = !isShowLeftButton
             leftButtonSrc?.let { leftButton.setImageDrawable(it) }
 
             rightButton.isInvisible = !isShowRightButton
             rightButtonSrc?.let { rightButton.setImageDrawable(it) }
-
-
         }
 
         elevation = context.dpToPx(8)

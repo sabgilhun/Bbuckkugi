@@ -19,9 +19,25 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding.handler = Handler()
         binding.viewModel = viewModel
 
         startService(Intent(this, ConnectionService::class.java))
+    }
+
+    inner class Handler {
+
+        fun goToSettings() {
+            TODO()
+        }
+
+        fun goToDiscovery() {
+            TODO()
+        }
+
+        fun goToMoreMessage() {
+            TODO()
+        }
     }
 
     companion object {

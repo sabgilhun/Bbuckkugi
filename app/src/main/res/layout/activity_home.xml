@@ -6,6 +6,10 @@
 	<data>
 		
 		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity.Handler" />
+		
+		<variable
 			name="viewModel"
 			type="com.sabgil.bbuckkugi.presentation.ui.home.HomeViewModel" />
 	</data>
@@ -21,7 +25,11 @@
 			android:id="@+id/appBarLayout"
 			android:layout_width="match_parent"
 			android:layout_height="?attr/actionBarSize"
-			app:title="뻐꾸기" />
+			app:onClickRightButton="@{() -> handler.goToSettings()}"
+			app:rightButtonSrc="@drawable/ic_settings_24"
+			app:showRightButton="true"
+			app:title="뻐꾸기"
+			app:titleCenter="true" />
 		
 		<ScrollView
 			android:layout_width="match_parent"
@@ -74,6 +82,7 @@
 						style="@style/MediumButton"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:onClick="@{() -> handler.goToDiscovery()}"
 						android:text="찾기" />
 				</LinearLayout>
 				
@@ -107,6 +116,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginEnd="8dp"
+						android:onClick="@{() -> handler.goToMoreMessage()}"
 						android:text="더보기"
 						android:textColor="@color/gray"
 						android:textSize="12sp"
