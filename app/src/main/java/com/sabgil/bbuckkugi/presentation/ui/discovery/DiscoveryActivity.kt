@@ -71,7 +71,7 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         fun activityFinish() = finish()
 
         fun connectEndpoint(endpoint: DiscoveryItem.Endpoint) {
-
+            TODO()
         }
     }
 
