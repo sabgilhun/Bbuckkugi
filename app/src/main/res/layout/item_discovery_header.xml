@@ -22,14 +22,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="8dp"
+			android:text="근처 사용자들을 찾고 있습니다..."
 			android:textColor="@color/black"
 			android:textSize="16dp"
 			android:textStyle="bold"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/loadingView"
-			tools:ignore="SpUsage"
-			tools:text="근처 사용자들을 찾고 있습니다..." />
+			tools:ignore="SpUsage" />
 		
 		<TextView
 			android:id="@+id/discoveringDescTextView"

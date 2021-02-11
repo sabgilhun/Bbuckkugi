@@ -10,11 +10,12 @@
 		
 		<ImageView
 			android:id="@+id/leftButton"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
+			android:layout_width="32dp"
+			android:layout_height="32dp"
 			android:layout_gravity="center_vertical"
 			android:layout_marginStart="12dp"
 			android:background="?attr/selectableItemBackgroundBorderless"
+			android:padding="4dp"
 			android:src="@drawable/ic_back_arrow_24" />
 		
 		<TextView
@@ -31,11 +32,12 @@
 		
 		<ImageView
 			android:id="@+id/rightButton"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
+			android:layout_width="32dp"
+			android:layout_height="32dp"
 			android:layout_gravity="center_vertical"
 			android:layout_marginStart="12dp"
 			android:layout_marginEnd="12dp"
-			android:background="?attr/selectableItemBackgroundBorderless" />
+			android:background="?attr/selectableItemBackgroundBorderless"
+			android:padding="4dp" />
 	</merge>
 </layout>
