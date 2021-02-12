@@ -4,6 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sabgil.bbuckkugi.base.BaseViewModel
+import com.sabgil.bbuckkugi.common.ext.toMutableList
 import com.sabgil.bbuckkugi.data.model.DiscoveredEndpoint
 import com.sabgil.bbuckkugi.data.model.enums.Gender
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
@@ -33,9 +34,10 @@ class DiscoveryViewModel @ViewModelInject constructor(
     }
 
     private fun updateList(discoveredEndpoint: DiscoveredEndpoint) {
+        val old = _discoveredList.value.toMutableList()
         val parsedData = discoveredEndpoint.endpointName.split("|")
+
         if (parsedData.size >= 2) {
-            val old = _discoveredList.value
             val name = parsedData[0]
             val gender = Gender.from(parsedData[1]) ?: return
             val profileImageUrl = if (parsedData.size == 2) null else parsedData[2]
@@ -47,7 +49,16 @@ class DiscoveryViewModel @ViewModelInject constructor(
                 profileImageUrl = profileImageUrl
             )
 
-            _discoveredList.value = old.orEmpty() + item
+            val indexOfAlreadyExist = old
+                .filterIsInstance<DiscoveryItem.Endpoint>()
+                .indexOfFirst { it.endpointId == discoveredEndpoint.endpointId }
+
+            if (indexOfAlreadyExist == -1) {
+                _discoveredList.value = old + item
+            } else {
+                old[indexOfAlreadyExist] = item
+                _discoveredList.value = old
+            }
         }
     }
 }
