@@ -1,13 +1,13 @@
 package com.sabgil.bbuckkugi.presentation.ui.receive
 
-import android.app.TaskStackBuilder
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
+import com.sabgil.bbuckkugi.common.ext.startOnHome
 import com.sabgil.bbuckkugi.databinding.ActivityReceiveBinding
+import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -28,6 +28,8 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
         R.drawable.message_card11,
         R.drawable.message_card12
     )
+
+    private val endpointId: String by extra()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +58,9 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
         private const val COUNT_DOWN_INTERVAL = 1000L
         private const val TIMER_FINISH_DELAY = 5 * 60 * COUNT_DOWN_INTERVAL
 
-        fun startOnHome(context: Context) {
-            TaskStackBuilder.create(context)
-                .addNextIntentWithParentStack(Intent(context, ReceiveActivity::class.java))
-                .startActivities()
-        }
+        fun startOnHome(
+            context: Context,
+            endpointId: String
+        ) = context.startOnHome<ReceiveActivity>("endpointId" to endpointId)
     }
 }

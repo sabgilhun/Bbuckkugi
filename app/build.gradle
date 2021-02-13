@@ -103,6 +103,9 @@ dependencies {
     // MultiViewType
     implementation "com.sabgil.mutiviewtype:mutiviewtype:$multiViewTypeVersion"
 
+    // Extra
+    implementation "cwd.sabgil.extra:extra:$extraVersion"
+
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
 

@@ -24,6 +24,7 @@ buildscript {
         hiltCoreVersion = '2.30.1-alpha'
         hiltVersion = '1.0.0-alpha02'
         multiViewTypeVersion = '1.0.2'
+        extraVersion = '1.1.0'
         timberVersion = '4.7.1'
         kakaoSdkVersion = '2.3.0'
         naverSdkVersion = '4.2.6'

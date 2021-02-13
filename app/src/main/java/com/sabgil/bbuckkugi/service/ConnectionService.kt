@@ -6,8 +6,8 @@ import com.sabgil.bbuckkugi.common.Data.Failure
 import com.sabgil.bbuckkugi.common.Data.Success
 import com.sabgil.bbuckkugi.data.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -28,20 +28,20 @@ class ConnectionService : LifecycleService() {
     }
 
     private fun startAdvertising() {
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             connectionManager.startAdvertising(buildAdvertisingName())
                 .collect {
                     when (it) {
-                        is Success -> TODO("go to receive")
-                        is Failure -> reStartAdvertising()
+                        is Success -> ReceiveActivity.startOnHome(this@ConnectionService, it.data)
+                        is Failure -> restartAdvertising()
                     }
                 }
         }
     }
 
-    private fun reStartAdvertising() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            delay(300)
+    private fun restartAdvertising() {
+        lifecycleScope.launch {
+            delay(RESTART_DELAY)
             startAdvertising()
         }
     }
@@ -56,5 +56,10 @@ class ConnectionService : LifecycleService() {
         } else {
             "$name|$gender|$profileImageUrl"
         }
+    }
+
+    companion object {
+
+        private const val RESTART_DELAY = 300L
     }
 }
