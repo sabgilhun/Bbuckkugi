@@ -4,25 +4,26 @@ import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.common.ext.offerFailure
 import com.sabgil.bbuckkugi.common.ext.offerSuccess
-import com.sabgil.bbuckkugi.data.model.AdvertisingResult
+import com.sabgil.bbuckkugi.data.exception.ConnectionException
+import com.sabgil.bbuckkugi.data.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
 class AdvertisingResultEmitter(
-    private val hostName: String,
     private val serviceId: String,
     private val connectionsClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Data<AdvertisingResult>>
 ) {
+
+    private var advertisingResultProducer: ProducerScope<Data<String>>? = null
+    private var connectionResultProducer: ProducerScope<Data<Message>>? = null
+
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(
             endpointId: String,
             connectionInfo: ConnectionInfo
         ) {
             Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
-            producerScope.offerSuccess(
-                AdvertisingResult.ConnectionInitiated(endpointId, connectionInfo)
-            )
+            advertisingResultProducer?.offerSuccess(endpointId)
         }
 
         override fun onConnectionResult(
@@ -30,20 +31,16 @@ class AdvertisingResultEmitter(
             resolution: ConnectionResolution
         ) {
             Timber.i("nearby: onConnectionResult $endpointId, ${resolution.status}")
-            producerScope.offerSuccess(
-                AdvertisingResult.ConnectionResult(endpointId, resolution)
-            )
         }
 
         override fun onDisconnected(endpointId: String) {
             Timber.i("nearby: onDisconnected $endpointId")
-            producerScope.offerSuccess(
-                AdvertisingResult.Disconnected(endpointId)
-            )
+            connectionResultProducer?.offerFailure(ConnectionException())
+            detachConnectionResultProducer()
         }
     }
 
-    fun emit() {
+    fun emit(hostName: String) {
         connectionsClient.startAdvertising(
             hostName,
             serviceId,
@@ -53,12 +50,31 @@ class AdvertisingResultEmitter(
             Timber.i("nearby: addOnSuccessListener")
         }.addOnFailureListener {
             Timber.i("nearby: addOnFailureListener $it")
-            producerScope.offerFailure(it)
-            producerScope.close()
+            advertisingResultProducer?.offerFailure(it)
+            advertisingResultProducer?.close()
         }
     }
 
+    fun attachAdvertisingResultProducer(producerScope: ProducerScope<Data<String>>) {
+        advertisingResultProducer = producerScope
+    }
+
+    fun detachAdvertisingResultProducer() {
+        advertisingResultProducer?.close()
+        advertisingResultProducer = null
+    }
+
+    fun attachConnectionResultProducer(producerScope: ProducerScope<Data<Message>>) {
+        connectionResultProducer = producerScope
+    }
+
+    fun detachConnectionResultProducer() {
+        connectionResultProducer?.close()
+        connectionResultProducer = null
+    }
+
     companion object {
+
         private val advertisingOptions = AdvertisingOptions
             .Builder()
             .setStrategy(Strategy.P2P_POINT_TO_POINT)

@@ -46,6 +46,7 @@ class DiscoveryResultEmitter(
     }
 
     companion object {
+
         private val discoveryOptions = DiscoveryOptions.Builder()
             .setStrategy(Strategy.P2P_POINT_TO_POINT)
             .build()

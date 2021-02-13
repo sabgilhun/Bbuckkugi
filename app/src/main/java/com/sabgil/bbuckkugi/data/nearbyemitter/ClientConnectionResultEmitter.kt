@@ -2,8 +2,9 @@ package com.sabgil.bbuckkugi.data.nearbyemitter
 
 import com.google.android.gms.nearby.connection.*
 import com.sabgil.bbuckkugi.common.Data
-import com.sabgil.bbuckkugi.common.ext.offerEmptySuccess
 import com.sabgil.bbuckkugi.common.ext.offerFailure
+import com.sabgil.bbuckkugi.common.ext.offerSuccess
+import com.sabgil.bbuckkugi.data.model.Message
 import kotlinx.coroutines.channels.ProducerScope
 import timber.log.Timber
 
@@ -11,9 +12,23 @@ class ClientConnectionResultEmitter(
     private val endpointId: String,
     private val serviceId: String,
     private val connectionClient: ConnectionsClient,
-    private val producerScope: ProducerScope<Data<Nothing>>
+    private val producerScope: ProducerScope<Data<Message>>
 ) {
-    private val payloadEmitter = PayloadEmitter()
+
+    private val payloadCallback = object : PayloadCallback() {
+        override fun onPayloadReceived(endpointId: String, payload: Payload) {
+            Timber.i("nearby: onPayloadReceived $endpointId, $payload")
+            val receivedBytes = payload.asBytes() ?: return
+            producerScope.offerSuccess(Message.fromBytes(receivedBytes))
+        }
+
+        override fun onPayloadTransferUpdate(
+            endpointId: String,
+            update: PayloadTransferUpdate
+        ) {
+            Timber.i("nearby: onPayloadTransferUpdate $endpointId, $update")
+        }
+    }
 
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(
@@ -21,10 +36,10 @@ class ClientConnectionResultEmitter(
             connectionInfo: ConnectionInfo
         ) {
             Timber.i("nearby: onConnectionInitiated $endpointId, $connectionInfo")
-            connectionClient.acceptConnection(endpointId, payloadEmitter)
+            connectionClient.acceptConnection(endpointId, payloadCallback)
                 .addOnSuccessListener {
                     Timber.i("nearby: addOnSuccessListener")
-                    producerScope.offerEmptySuccess()
+                    producerScope.offerSuccess(Message.Start)
                 }
                 .addOnFailureListener {
                     Timber.i("nearby: addOnFailureListener $it")
@@ -38,9 +53,6 @@ class ClientConnectionResultEmitter(
             resolution: ConnectionResolution
         ) {
             Timber.i("nearby: onConnectionResult $endpointId, ${resolution.status}")
-            if (resolution.status.statusCode != ConnectionsStatusCodes.STATUS_OK) {
-                producerScope.close()
-            }
         }
 
         override fun onDisconnected(endpointId: String) {
@@ -49,7 +61,7 @@ class ClientConnectionResultEmitter(
         }
     }
 
-    fun emit(): PayloadEmitter {
+    fun emit() {
         connectionClient.requestConnection(
             serviceId,
             endpointId,
@@ -61,6 +73,5 @@ class ClientConnectionResultEmitter(
             producerScope.offerFailure(it)
             producerScope.close()
         }
-        return payloadEmitter
     }
 }
