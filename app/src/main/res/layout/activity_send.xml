@@ -6,13 +6,30 @@
 	<data>
 		
 		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.presentation.ui.send.SendActivity.Handler" />
+		
+		<variable
 			name="viewModel"
 			type="com.sabgil.bbuckkugi.presentation.ui.send.SendViewModel" />
 	</data>
 	
-	<FrameLayout
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+		
+		<com.sabgil.bbuckkugi.presentation.widget.CommonAppBarLayout
+			android:id="@+id/appBarLayout"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:leftButtonSrc="@drawable/ic_back_arrow_24"
+			app:onClickLeftButton="@{() -> handler.activityFinish()}"
+			app:showLeftButton="true"
+			app:title="메시지 카드 선택" />
 		
 		<LinearLayout
 			android:id="@+id/loadingLayout"
@@ -20,7 +37,8 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:orientation="vertical"
-			app:isVisible="@{!viewModel.isConnected()}">
+			app:isVisible="@{!viewModel.isConnected()}"
+			tools:visibility="gone">
 			
 			<ProgressBar
 				android:id="@+id/loadingView"
@@ -49,26 +67,61 @@
 			android:layout_height="match_parent"
 			app:isVisible="@{viewModel.isConnected()}">
 			
+			<TextView
+				android:id="@+id/titleTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="40dp"
+				android:gravity="center"
+				android:text="상대방에게 전달할\n메시지 카드를 선택해주세요."
+				android:textColor="@color/black"
+				android:textSize="16dp"
+				app:layout_constraintBottom_toTopOf="@id/selectMessageCardViewPager"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintVertical_chainStyle="packed"
+				tools:ignore="SpUsage" />
+			
 			<androidx.viewpager2.widget.ViewPager2
 				android:id="@+id/selectMessageCardViewPager"
 				android:layout_width="0dp"
-				android:layout_height="360dp"
-				android:layout_marginStart="12dp"
-				android:layout_marginEnd="12dp"
+				android:layout_height="0dp"
+				android:layout_marginStart="48dp"
+				android:layout_marginEnd="48dp"
 				android:orientation="horizontal"
-				app:layout_constraintBottom_toTopOf="@id/messageCardSendButton"
+				app:layout_constraintBottom_toTopOf="@id/messageViewPagerTabLayout"
+				app:layout_constraintDimensionRatio="1:1"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent" />
+				app:layout_constraintHorizontal_bias="0.0"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 			
-			<Button
-				android:id="@+id/messageCardSendButton"
+			<com.google.android.material.tabs.TabLayout
+				android:id="@+id/messageViewPagerTabLayout"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="12dp"
-				android:text="send"
+				android:clickable="true"
+				android:focusable="true"
+				app:layout_constraintBottom_toTopOf="@id/confirmButton"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/selectMessageCardViewPager"
+				app:tabBackground="@drawable/tab_selector"
+				app:tabGravity="center"
+				app:tabIndicatorHeight="0dp"
+				app:tabMaxWidth="12dp" />
+			
+			<TextView
+				android:id="@+id/confirmButton"
+				style="@style/BigButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="전송"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent" />
+		
 		</androidx.constraintlayout.widget.ConstraintLayout>
-	</FrameLayout>
+	</LinearLayout>
 </layout>

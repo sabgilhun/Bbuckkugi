@@ -14,21 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_receive) {
 
-    private val messageCards = listOf(
-        R.drawable.message_card1,
-        R.drawable.message_card2,
-        R.drawable.message_card3,
-        R.drawable.message_card4,
-        R.drawable.message_card5,
-        R.drawable.message_card6,
-        R.drawable.message_card7,
-        R.drawable.message_card8,
-        R.drawable.message_card9,
-        R.drawable.message_card10,
-        R.drawable.message_card11,
-        R.drawable.message_card12
-    )
-
     private val endpointId: String by extra()
 
     override fun onCreate(savedInstanceState: Bundle?) {

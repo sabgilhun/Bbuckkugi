@@ -14,18 +14,10 @@ class MessageCardAdapter(
 ) : RecyclerView.Adapter<BindViewHolder<ItemSelectMessageCardBinding>>() {
 
     private val items = listOf(
-        R.drawable.message_card1,
-        R.drawable.message_card2,
-        R.drawable.message_card3,
-        R.drawable.message_card4,
-        R.drawable.message_card5,
-        R.drawable.message_card6,
-        R.drawable.message_card7,
-        R.drawable.message_card8,
-        R.drawable.message_card9,
-        R.drawable.message_card10,
-        R.drawable.message_card11,
-        R.drawable.message_card12
+        R.drawable.send_message_card1,
+        R.drawable.send_message_card2,
+        R.drawable.send_message_card3,
+        R.drawable.send_message_card4
     )
 
     override fun onCreateViewHolder(
@@ -39,8 +31,12 @@ class MessageCardAdapter(
         holder: BindViewHolder<ItemSelectMessageCardBinding>,
         position: Int
     ) {
-        val image = ContextCompat.getDrawable(context, items[position])
-        holder.binding.messageCardImageView.setImageDrawable(image)
+        holder.binding.messageCardImageView.setImageDrawable(
+            ContextCompat.getDrawable(
+                context,
+                items[position]
+            )
+        )
     }
 
     override fun getItemCount() = items.size

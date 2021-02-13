@@ -2,6 +2,7 @@ package com.sabgil.bbuckkugi.presentation.ui.send
 
 import android.content.Context
 import android.os.Bundle
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.startOnHome
@@ -30,10 +31,23 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
             selectMessageCardViewPager.adapter = MessageCardAdapter(this@SendActivity).apply {
                 notifyDataSetChanged()
             }
-            messageCardSendButton.setOnClickListener {
-                val index = selectMessageCardViewPager.currentItem
-            }
+
+            TabLayoutMediator(
+                messageViewPagerTabLayout,
+                selectMessageCardViewPager
+            ) { _, _ ->
+
+            }.attach()
+
+//            messageCardSendButton.setOnClickListener {
+//                val index = selectMessageCardViewPager.currentItem
+//            }
         }
+    }
+
+    inner class Handler {
+
+        fun activityFinish() = finish()
     }
 
     companion object {
