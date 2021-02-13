@@ -15,15 +15,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
 
     private val endpointId: String by extra()
-
     private val viewModel by viewModelOf<SendViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding.handler = Handler()
         binding.viewModel = viewModel
 
         setupViews()
         viewModel.connect(endpointId)
+
+        viewModel.sendSuccessEvent.observe {
+            TODO("go to result page")
+        }
     }
 
     private fun setupViews() {
@@ -38,16 +43,17 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
             ) { _, _ ->
 
             }.attach()
-
-//            messageCardSendButton.setOnClickListener {
-//                val index = selectMessageCardViewPager.currentItem
-//            }
         }
     }
 
     inner class Handler {
 
         fun activityFinish() = finish()
+
+        fun sendMessage() {
+            val index = binding.selectMessageCardViewPager.currentItem
+            viewModel.sendMessage(endpointId, index)
+        }
     }
 
     companion object {

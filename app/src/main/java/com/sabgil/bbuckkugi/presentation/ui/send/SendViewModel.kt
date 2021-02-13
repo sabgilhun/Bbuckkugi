@@ -4,6 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sabgil.bbuckkugi.base.BaseViewModel
+import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
 
@@ -14,6 +15,9 @@ class SendViewModel @ViewModelInject constructor(
     private val _isConnected = MutableLiveData(false)
     val isConnected: LiveData<Boolean> get() = _isConnected
 
+    private val _sendSuccessEvent = SingleLiveEvent<Nothing>()
+    val sendSuccessEvent: LiveData<Nothing> get() = _sendSuccessEvent
+
     fun connect(endpointId: String) {
         connectionManager.connectRemote(endpointId)
             .collectResult {
@@ -23,7 +27,19 @@ class SendViewModel @ViewModelInject constructor(
                     }
                 }
                 error {
+                    showErrorMessage(it)
+                }
+            }
+    }
 
+    fun sendMessage(endpointId: String, cardType: Int) {
+        connectionManager.sendMessage(endpointId, Message.MessageCard(cardType))
+            .collectResult {
+                success {
+                    _sendSuccessEvent.call()
+                }
+                error {
+                    showErrorMessage(it)
                 }
             }
     }
