@@ -1,20 +1,28 @@
 package com.sabgil.bbuckkugi.presentation.ui.send
 
-import android.app.TaskStackBuilder
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
+import com.sabgil.bbuckkugi.common.ext.startOnHome
+import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivitySendBinding
+import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
 
+    private val endpointId: String by extra()
+
+    private val viewModel by viewModelOf<SendViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding.viewModel = viewModel
+
         setupViews()
+        viewModel.connect(endpointId)
     }
 
     private fun setupViews() {
@@ -29,10 +37,8 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
     }
 
     companion object {
-        fun startOnHome(context: Context) {
-            TaskStackBuilder.create(context)
-                .addNextIntentWithParentStack(Intent(context, SendActivity::class.java))
-                .startActivities()
-        }
+
+        fun startOnHome(context: Context, endpointId: String) =
+            context.startOnHome<SendActivity>("endpointId" to endpointId)
     }
 }

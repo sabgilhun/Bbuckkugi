@@ -7,6 +7,7 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.startWith
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
+import com.sabgil.bbuckkugi.presentation.ui.send.SendActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,9 +57,8 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
 
         fun activityFinish() = finish()
 
-        fun connectEndpoint(endpoint: DiscoveryItem.Endpoint) {
-            TODO()
-        }
+        fun connectEndpoint(endpoint: DiscoveryItem.Endpoint) =
+            SendActivity.startOnHome(this@DiscoveryActivity, endpoint.endpointId)
     }
 
     companion object {

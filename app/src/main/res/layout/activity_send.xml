@@ -3,31 +3,72 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 	
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<data>
+		
+		<variable
+			name="viewModel"
+			type="com.sabgil.bbuckkugi.presentation.ui.send.SendViewModel" />
+	</data>
+	
+	<FrameLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		tools:context=".MainActivity">
+		android:layout_height="match_parent">
 		
-		<androidx.viewpager2.widget.ViewPager2
-			android:id="@+id/selectMessageCardViewPager"
-			android:layout_width="0dp"
-			android:layout_height="360dp"
-			android:layout_marginStart="12dp"
-			android:layout_marginEnd="12dp"
-			android:orientation="horizontal"
-			app:layout_constraintBottom_toTopOf="@id/messageCardSendButton"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent" />
-		
-		<Button
-			android:id="@+id/messageCardSendButton"
+		<LinearLayout
+			android:id="@+id/loadingLayout"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="12dp"
-			android:text="send"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent" />
-	
-	</androidx.constraintlayout.widget.ConstraintLayout>
+			android:layout_gravity="center"
+			android:orientation="vertical"
+			app:isVisible="@{!viewModel.isConnected()}">
+			
+			<ProgressBar
+				android:id="@+id/loadingView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginTop="16dp"
+				android:indeterminateTint="@color/black" />
+			
+			<TextView
+				android:id="@+id/discoveringTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginTop="8dp"
+				android:text="상대방 연결을 기다리는 중입니다."
+				android:textColor="@color/black"
+				android:textSize="16dp"
+				android:textStyle="bold"
+				tools:ignore="SpUsage" />
+		</LinearLayout>
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/contentsLayout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:isVisible="@{viewModel.isConnected()}">
+			
+			<androidx.viewpager2.widget.ViewPager2
+				android:id="@+id/selectMessageCardViewPager"
+				android:layout_width="0dp"
+				android:layout_height="360dp"
+				android:layout_marginStart="12dp"
+				android:layout_marginEnd="12dp"
+				android:orientation="horizontal"
+				app:layout_constraintBottom_toTopOf="@id/messageCardSendButton"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
+			
+			<Button
+				android:id="@+id/messageCardSendButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="12dp"
+				android:text="send"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</FrameLayout>
 </layout>
