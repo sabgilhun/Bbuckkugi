@@ -7,19 +7,10 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.startWith
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
-import com.sabgil.bbuckkugi.service.channel.ConnectionRequestChannel
-import com.sabgil.bbuckkugi.service.channel.DiscoveryChannel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activity_discovery) {
-
-    @Inject
-    lateinit var discoveryChannel: DiscoveryChannel
-
-    @Inject
-    lateinit var connectionRequestChannel: ConnectionRequestChannel
 
     private val handler = Handler()
     private val viewModel by viewModelOf<DiscoveryViewModel>()
@@ -33,11 +24,6 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         setupObserver()
 
         viewModel.startDiscovery()
-    }
-
-    override fun onDestroy() {
-        discoveryChannel.sendActionForStopDiscovery()
-        super.onDestroy()
     }
 
     private fun setupViews() {
