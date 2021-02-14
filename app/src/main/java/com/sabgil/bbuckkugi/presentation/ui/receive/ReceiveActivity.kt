@@ -42,6 +42,10 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
             isReceived.observeNonNull {
                 binding.cardImageView.setImageResource(receiveCardList[it.messageCardIndex])
             }
+
+            replyDone.observe {
+                finish()
+            }
         }
     }
 
@@ -68,11 +72,14 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
     inner class Handler {
 
         fun activityFinish() = finish()
+
+        fun agreeMessage() = viewModel.replayMessage(endpointId, true)
+
+        fun rejectMessage() = viewModel.replayMessage(endpointId, false)
     }
 
     companion object {
         private const val TIMER_SECOND = 5 * 60
-
         private const val COUNT_DOWN_INTERVAL = 100L
         private const val TIMER_FINISH_DELAY = TIMER_SECOND * (10 * COUNT_DOWN_INTERVAL)
 

@@ -9,7 +9,7 @@ sealed class Message : Serializable {
         override val byteValue: ByteArray = byteArrayOf(0x00, 0x00)
     }
 
-    object Accept : Message() {
+    object Agree : Message() {
         override val byteValue: ByteArray = byteArrayOf(0x00, 0x01)
     }
 
@@ -34,7 +34,7 @@ sealed class Message : Serializable {
 
         fun fromBytes(byteArray: ByteArray) =
             when {
-                byteArray contentEquals Accept.byteValue -> Accept
+                byteArray contentEquals Agree.byteValue -> Agree
                 byteArray contentEquals Reject.byteValue -> Reject
                 byteArray.size == 2 && byteArray[0] == MESSAGE_PREFIX_BYTE ->
                     MessageCard(byteArray[1].toInt())
