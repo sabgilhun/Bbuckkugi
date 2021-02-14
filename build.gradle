@@ -30,11 +30,13 @@ buildscript {
         naverSdkVersion = '4.2.6'
         coroutinesRxUtilVersion = '1.4.2'
         glideVersion = '4.11.0'
+        progressBarVersion = '1.0.1'
     }
 
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
@@ -51,6 +53,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
         maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }

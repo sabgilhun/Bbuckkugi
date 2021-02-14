@@ -27,7 +27,7 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
         viewModel.connect(endpointId)
 
         viewModel.sendSuccessEvent.observe {
-            TODO("go to result page")
+
         }
     }
 

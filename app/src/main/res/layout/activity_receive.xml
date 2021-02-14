@@ -3,30 +3,145 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 	
+	<data>
+		
+		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveActivity.Handler" />
+		
+		<variable
+			name="viewModel"
+			type="com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveViewModel" />
+	</data>
+	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		tools:context=".MainActivity">
 		
-		<ImageView
-			android:id="@+id/imageView"
-			android:layout_width="0dp"
-			android:layout_height="360dp"
-			android:layout_marginStart="12dp"
-			android:layout_marginEnd="12dp"
+		<com.sabgil.bbuckkugi.presentation.widget.CommonAppBarLayout
+			android:id="@+id/appBarLayout"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:leftButtonSrc="@drawable/ic_back_arrow_24"
+			app:onClickLeftButton="@{() -> handler.activityFinish()}"
+			app:showLeftButton="true"
+			app:title="답장" />
+		
+		<LinearLayout
+			android:id="@+id/loadingLayout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:orientation="vertical"
+			app:isVisible="@{viewModel.isReceived == null}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+			tools:visibility="visible">
+			
+			<ProgressBar
+				android:id="@+id/loadingView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginTop="16dp"
+				android:indeterminateTint="@color/black" />
+			
+			<TextView
+				android:id="@+id/discoveringTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginTop="8dp"
+				android:text="상대방이 메시지를 보내고 있어요."
+				android:textColor="@color/black"
+				android:textSize="16dp"
+				tools:ignore="SpUsage" />
+		</LinearLayout>
 		
-		<ProgressBar
-			android:id="@+id/progressBar"
-			style="@android:style/Widget.ProgressBar.Horizontal"
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/contentsLayout"
 			android:layout_width="0dp"
-			android:layout_height="wrap_content"
+			android:layout_height="0dp"
+			app:isVisible="@{viewModel.isReceived != null}"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
-	
+			app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+			
+			<TextView
+				android:id="@+id/titleTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="48dp"
+				android:layout_marginBottom="40dp"
+				android:gravity="center"
+				android:text="상대방에게 메시지가 왔어요!!\n답장 해주세요."
+				android:textColor="@color/black"
+				android:textSize="16dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:ignore="SpUsage" />
+			
+			<TextView
+				android:id="@+id/titleDescTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="4dp"
+				android:layout_marginBottom="40dp"
+				android:gravity="center"
+				android:text="5분 이내로 답장하지 않으면 자동 거잘됩니다."
+				android:textColor="@color/gray"
+				android:textSize="12dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/titleTextView"
+				app:layout_constraintVertical_chainStyle="packed"
+				tools:ignore="SpUsage" />
+			
+			<com.mackhartley.roundedprogressbar.RoundedProgressBar
+				android:id="@+id/progressBar"
+				android:layout_width="match_parent"
+				android:layout_height="16dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="32dp"
+				android:layout_marginEnd="16dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/titleDescTextView"
+				app:rpbProgressBgColor="@color/light_pink"
+				app:rpbProgressColor="@color/pink"
+				app:rpbShowProgressText="false" />
+			
+			<ImageView
+				android:id="@+id/cardImageView"
+				android:layout_width="240dp"
+				android:layout_height="0dp"
+				android:layout_marginTop="32dp"
+				android:orientation="horizontal"
+				app:layout_constraintBottom_toTopOf="@id/confirmButton"
+				app:layout_constraintDimensionRatio="1:1"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/progressBar" />
+			
+			<TextView
+				android:id="@+id/confirmButton"
+				style="@style/BigButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:onClick="@{ () -> handler.reply()}"
+				android:text="답장하기"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

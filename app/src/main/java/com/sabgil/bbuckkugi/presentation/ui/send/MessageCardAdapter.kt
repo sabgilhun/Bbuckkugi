@@ -5,20 +5,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.common.BindViewHolder
+import com.sabgil.bbuckkugi.common.MessageCardList
 import com.sabgil.bbuckkugi.databinding.ItemSelectMessageCardBinding
 
 class MessageCardAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<BindViewHolder<ItemSelectMessageCardBinding>>() {
 
-    private val items = listOf(
-        R.drawable.send_message_card1,
-        R.drawable.send_message_card2,
-        R.drawable.send_message_card3,
-        R.drawable.send_message_card4
-    )
+    private val items = MessageCardList.sendMessageCards
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

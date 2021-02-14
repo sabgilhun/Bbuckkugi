@@ -7,6 +7,7 @@ import com.sabgil.bbuckkugi.base.BaseViewModel
 import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import kotlinx.coroutines.Dispatchers
 
 class SendViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager
@@ -20,7 +21,7 @@ class SendViewModel @ViewModelInject constructor(
 
     fun connect(endpointId: String) {
         connectionManager.connectRemote(endpointId)
-            .collectResult {
+            .collectResult(Dispatchers.Main) {
                 success {
                     if (it is Message.Start) {
                         _isConnected.value = true
@@ -34,7 +35,7 @@ class SendViewModel @ViewModelInject constructor(
 
     fun sendMessage(endpointId: String, cardType: Int) {
         connectionManager.sendMessage(endpointId, Message.MessageCard(cardType))
-            .collectComplete {
+            .collectComplete(Dispatchers.Main) {
                 complete {
                     _sendSuccessEvent.call()
                 }

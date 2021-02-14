@@ -14,7 +14,7 @@
 			type="com.sabgil.bbuckkugi.presentation.ui.send.SendViewModel" />
 	</data>
 	
-	<LinearLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical">
@@ -38,6 +38,10 @@
 			android:layout_gravity="center"
 			android:orientation="vertical"
 			app:isVisible="@{!viewModel.isConnected()}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/appBarLayout"
 			tools:visibility="visible">
 			
 			<ProgressBar
@@ -57,18 +61,20 @@
 				android:text="상대방 연결을 기다리는 중입니다."
 				android:textColor="@color/black"
 				android:textSize="16dp"
-				android:textStyle="bold"
 				tools:ignore="SpUsage" />
 		</LinearLayout>
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/contentsLayout"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			app:isVisible="@{viewModel.isConnected()}">
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:isVisible="@{viewModel.isConnected()}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 			
 			<TextView
-				
 				android:id="@+id/titleTextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -86,15 +92,12 @@
 			
 			<androidx.viewpager2.widget.ViewPager2
 				android:id="@+id/selectMessageCardViewPager"
-				android:layout_width="0dp"
+				android:layout_width="240dp"
 				android:layout_height="0dp"
-				android:layout_marginStart="48dp"
-				android:layout_marginEnd="48dp"
 				android:orientation="horizontal"
 				app:layout_constraintBottom_toTopOf="@id/messageViewPagerTabLayout"
 				app:layout_constraintDimensionRatio="1:1"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintHorizontal_bias="0.0"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 			
@@ -125,5 +128,5 @@
 				app:layout_constraintStart_toStartOf="parent" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
-	</LinearLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

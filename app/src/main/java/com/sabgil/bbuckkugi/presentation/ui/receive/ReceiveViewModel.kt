@@ -1,4 +1,4 @@
-package com.sabgil.bbuckkugi.presentation.ui.send
+package com.sabgil.bbuckkugi.presentation.ui.receive
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -7,36 +7,26 @@ import com.sabgil.bbuckkugi.base.BaseViewModel
 import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import kotlinx.coroutines.Dispatchers
 
-class SendViewModel @ViewModelInject constructor(
+class ReceiveViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager
 ) : BaseViewModel() {
 
-    private val _isConnected = MutableLiveData(false)
-    val isConnected: LiveData<Boolean> get() = _isConnected
+    private val _startTimer = SingleLiveEvent<Nothing>()
+    val startTimer: LiveData<Nothing> get() = _startTimer
 
-    private val _sendSuccessEvent = SingleLiveEvent<Nothing>()
-    val sendSuccessEvent: LiveData<Nothing> get() = _sendSuccessEvent
+    private val _isReceived = MutableLiveData<Message.MessageCard>()
+    val isReceived: LiveData<Message.MessageCard> get() = _isReceived
 
-    fun connect(endpointId: String) {
-        connectionManager.connectRemote(endpointId)
-            .collectResult {
+    fun acceptRemote(endpointId: String) {
+        connectionManager.acceptRemote(endpointId)
+            .collectResult(Dispatchers.Main) {
                 success {
-                    if (it is Message.Start) {
-                        _isConnected.value = true
+                    if (it is Message.MessageCard) {
+                        _startTimer.call()
+                        _isReceived.value = it
                     }
-                }
-                error {
-                    showErrorMessage(it)
-                }
-            }
-    }
-
-    fun sendMessage(endpointId: String, cardType: Int) {
-        connectionManager.sendMessage(endpointId, Message.MessageCard(cardType))
-            .collectResult {
-                success {
-                    _sendSuccessEvent.call()
                 }
                 error {
                     showErrorMessage(it)
