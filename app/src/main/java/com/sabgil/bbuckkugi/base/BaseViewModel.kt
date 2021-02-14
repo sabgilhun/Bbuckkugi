@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.sabgil.bbuckkugi.common.Data
 import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel() {
@@ -43,6 +44,21 @@ abstract class BaseViewModel : ViewModel() {
         }
     }
 
+    protected fun Flow<Data<Nothing>>.collectComplete(
+        context: CoroutineContext = ioErrorHandler,
+        block: FlowCompleteScope.() -> Unit
+    ): Job {
+        val flowCompleteScope = FlowCompleteScope()
+        flowCompleteScope.block()
+
+        return collectOnMain(context) {
+            when (it) {
+                is Data.Success -> flowCompleteScope.onComplete()
+                is Data.Failure -> flowCompleteScope.onError(it.exception)
+            }
+        }
+    }
+
     private fun <T> Flow<T>.collectOnMain(
         context: CoroutineContext,
         block: suspend CoroutineScope.(T) -> Unit
@@ -58,6 +74,19 @@ abstract class BaseViewModel : ViewModel() {
 
         fun success(onSuccess: suspend (T) -> Unit) {
             this.onSuccess = onSuccess
+        }
+
+        fun error(onError: suspend (Throwable) -> Unit) {
+            this.onError = onError
+        }
+    }
+
+    class FlowCompleteScope {
+        var onComplete: suspend () -> Unit = {}
+        var onError: suspend (Throwable) -> Unit = {}
+
+        fun complete(onComplete: suspend () -> Unit) {
+            this.onComplete = onComplete
         }
 
         fun error(onError: suspend (Throwable) -> Unit) {

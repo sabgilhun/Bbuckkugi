@@ -34,8 +34,8 @@ class SendViewModel @ViewModelInject constructor(
 
     fun sendMessage(endpointId: String, cardType: Int) {
         connectionManager.sendMessage(endpointId, Message.MessageCard(cardType))
-            .collectComplete {
-                complete {
+            .collectResult {
+                success {
                     _sendSuccessEvent.call()
                 }
                 error {

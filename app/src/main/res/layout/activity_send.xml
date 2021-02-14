@@ -35,9 +35,10 @@
 			android:id="@+id/loadingLayout"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_gravity="center"
 			android:orientation="vertical"
 			app:isVisible="@{!viewModel.isConnected()}"
-			tools:visibility="gone">
+			tools:visibility="visible">
 			
 			<ProgressBar
 				android:id="@+id/loadingView"
