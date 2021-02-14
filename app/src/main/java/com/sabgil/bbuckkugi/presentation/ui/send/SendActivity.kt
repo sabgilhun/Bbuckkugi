@@ -26,7 +26,7 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
         setupViews()
         viewModel.connect(endpointId)
 
-        viewModel.sendSuccessEvent.observe {
+        viewModel.receivedReply.observeNonNull {
 
         }
     }

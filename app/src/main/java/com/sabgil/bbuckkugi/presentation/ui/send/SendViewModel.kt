@@ -13,18 +13,20 @@ class SendViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager
 ) : BaseViewModel() {
 
-    private val _isConnected = MutableLiveData(false)
-    val isConnected: LiveData<Boolean> get() = _isConnected
+    private val _state = MutableLiveData(State.AWAIT_CONNECTION)
+    val state: LiveData<State> get() = _state
 
-    private val _sendSuccessEvent = SingleLiveEvent<Nothing>()
-    val sendSuccessEvent: LiveData<Nothing> get() = _sendSuccessEvent
+    private val _receivedReply = SingleLiveEvent<Message>()
+    val receivedReply: LiveData<Message> get() = _receivedReply
 
     fun connect(endpointId: String) {
         connectionManager.connectRemote(endpointId)
             .collectResult(Dispatchers.Main) {
                 success {
                     if (it is Message.Start) {
-                        _isConnected.value = true
+                        _state.value = State.COMPLETE_CONNECTION
+                    } else if (it is Message.Agree || it is Message.Reject) {
+                        _receivedReply.call()
                     }
                 }
                 error {
@@ -34,14 +36,21 @@ class SendViewModel @ViewModelInject constructor(
     }
 
     fun sendMessage(endpointId: String, cardType: Int) {
+        _state.value = State.AWAIT_REPLY
         connectionManager.sendMessage(endpointId, Message.MessageCard(cardType))
             .collectComplete(Dispatchers.Main) {
-                complete {
-                    _sendSuccessEvent.call()
-                }
                 error {
                     showErrorMessage(it)
                 }
             }
+    }
+
+    enum class State(val desc: String?) {
+
+        AWAIT_CONNECTION("상대방 연결을 기다리는 중입니다."),
+
+        COMPLETE_CONNECTION(null),
+
+        AWAIT_REPLY("상대방 답장을 기다리는 중입니다.")
     }
 }

@@ -5,6 +5,8 @@
 	
 	<data>
 		
+		<import type="com.sabgil.bbuckkugi.presentation.ui.send.SendViewModel.State" />
+		
 		<variable
 			name="handler"
 			type="com.sabgil.bbuckkugi.presentation.ui.send.SendActivity.Handler" />
@@ -37,12 +39,12 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:orientation="vertical"
-			app:isVisible="@{!viewModel.isConnected()}"
+			app:isVisible="@{viewModel.state == State.AWAIT_CONNECTION || viewModel.state == State.AWAIT_REPLY}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-			tools:visibility="visible">
+			tools:visibility="gone">
 			
 			<ProgressBar
 				android:id="@+id/loadingView"
@@ -58,7 +60,7 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
 				android:layout_marginTop="8dp"
-				android:text="상대방 연결을 기다리는 중입니다."
+				android:text="@{viewModel.state.desc}"
 				android:textColor="@color/black"
 				android:textSize="16dp"
 				tools:ignore="SpUsage" />
@@ -68,7 +70,7 @@
 			android:id="@+id/contentsLayout"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			app:isVisible="@{viewModel.isConnected()}"
+			app:isVisible="@{viewModel.state == State.COMPLETE_CONNECTION}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +109,7 @@
 				android:layout_height="wrap_content"
 				android:clickable="true"
 				android:focusable="true"
-				app:layout_constraintBottom_toTopOf="@id/confirmButton"
+				app:layout_constraintBottom_toTopOf="@id/transmitButton"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/selectMessageCardViewPager"
@@ -117,7 +119,7 @@
 				app:tabMaxWidth="12dp" />
 			
 			<TextView
-				android:id="@+id/confirmButton"
+				android:id="@+id/transmitButton"
 				style="@style/BigButton"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
@@ -126,7 +128,6 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent" />
-		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
