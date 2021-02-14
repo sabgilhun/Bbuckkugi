@@ -33,4 +33,12 @@ class ReceiveViewModel @ViewModelInject constructor(
                 }
             }
     }
+
+    fun agree() {
+
+    }
+
+    fun reject() {
+
+    }
 }

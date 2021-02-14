@@ -11,6 +11,8 @@ import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityReceiveBinding
 import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -47,29 +49,32 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
         object : CountDownTimer(TIMER_FINISH_DELAY, COUNT_DOWN_INTERVAL) {
 
             override fun onTick(millisUntilFinished: Long) {
-                val percent = (TIMER_FINISH_DELAY - millisUntilFinished) / TIMER_FINISH_DELAY
-                binding.progressBar.setProgressPercentage(percent.toDouble(), true)
+                val percent =
+                    (TIMER_FINISH_DELAY - millisUntilFinished) * 100.0 / TIMER_FINISH_DELAY
+                val format =
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(millisUntilFinished)
+
+                binding.progressBar.setProgressPercentage(percent, true)
+                binding.remainTimeTextView.text = format
             }
 
             override fun onFinish() {
                 finish()
             }
-            
+
         }.start()
     }
 
     inner class Handler {
 
         fun activityFinish() = finish()
-
-        fun reply() {
-
-        }
     }
 
     companion object {
+        private const val TIMER_SECOND = 5 * 60
+
         private const val COUNT_DOWN_INTERVAL = 100L
-        private const val TIMER_FINISH_DELAY = 5 * 60 * (10 * COUNT_DOWN_INTERVAL)
+        private const val TIMER_FINISH_DELAY = TIMER_SECOND * (10 * COUNT_DOWN_INTERVAL)
 
         fun startOnHome(
             context: Context,

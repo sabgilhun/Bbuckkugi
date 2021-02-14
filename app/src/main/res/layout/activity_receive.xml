@@ -119,28 +119,51 @@
 				app:rpbProgressColor="@color/pink"
 				app:rpbShowProgressText="false" />
 			
+			<TextView
+				android:id="@+id/remainTimeTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="4dp"
+				android:layout_marginEnd="4dp"
+				android:textColor="@color/gray"
+				android:textSize="12dp"
+				app:layout_constraintEnd_toEndOf="@id/progressBar"
+				app:layout_constraintTop_toBottomOf="@id/progressBar"
+				tools:ignore="SpUsage"
+				tools:text="3:50" />
+			
 			<ImageView
 				android:id="@+id/cardImageView"
 				android:layout_width="240dp"
 				android:layout_height="0dp"
 				android:layout_marginTop="32dp"
 				android:orientation="horizontal"
-				app:layout_constraintBottom_toTopOf="@id/confirmButton"
 				app:layout_constraintDimensionRatio="1:1"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/progressBar" />
 			
 			<TextView
-				android:id="@+id/confirmButton"
-				style="@style/BigButton"
+				android:id="@+id/agreeButton"
+				style="@style/MediumButton"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:onClick="@{ () -> handler.reply()}"
-				android:text="답장하기"
+				android:onClick="@{ () -> viewModel.agree()}"
+				android:text="수락하기"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/rejectButton"
+				app:layout_constraintStart_toStartOf="parent" />
+			
+			<TextView
+				android:id="@+id/rejectButton"
+				style="@style/MediumButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:onClick="@{ () -> viewModel.reject()}"
+				android:text="거절하기"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent" />
+				app:layout_constraintStart_toEndOf="@id/agreeButton" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.constraintlayout.widget.ConstraintLayout>
