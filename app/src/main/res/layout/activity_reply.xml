@@ -7,13 +7,12 @@
 		
 		<variable
 			name="handler"
-			type="com.sabgil.bbuckkugi.presentation.ui.send.ReplyDialogFragment.Handler" />
+			type="com.sabgil.bbuckkugi.presentation.ui.reply.ReplyActivity.Handler" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/blackTransparent">
+		android:layout_height="match_parent">
 		
 		<TextView
 			android:id="@+id/emojiTextView"
@@ -34,7 +33,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="4dp"
 			android:gravity="center"
-			android:textColor="@color/white"
+			android:textColor="@color/black"
 			android:textSize="16dp"
 			app:layout_constraintBottom_toTopOf="@id/descTextView"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +48,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="4dp"
 			android:gravity="center"
-			android:textColor="@color/light_gray"
+			android:textColor="@color/gray"
 			android:textSize="14sp"
 			app:layout_constraintBottom_toTopOf="@id/messageCardImageView"
 			app:layout_constraintEnd_toEndOf="parent"

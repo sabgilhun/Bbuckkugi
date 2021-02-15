@@ -1,14 +1,17 @@
 package com.sabgil.bbuckkugi.presentation.ui.send
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
-import com.sabgil.bbuckkugi.common.ext.startOnHome
+import com.sabgil.bbuckkugi.common.BACK_TO_HOME_REQUEST_CODE
+import com.sabgil.bbuckkugi.common.ext.startForResult
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.databinding.ActivitySendBinding
+import com.sabgil.bbuckkugi.presentation.ui.reply.ReplyActivity
 import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,10 +31,20 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
         viewModel.connect(endpointId)
 
         viewModel.receivedReply.observeNonNull {
-            ReplyDialogFragment.newInstance(
+            ReplyActivity.startForResult(
+                this,
+                BACK_TO_HOME_REQUEST_CODE,
                 it is Message.Agree,
                 binding.selectMessageCardViewPager.currentItem
-            ).ifNotAddedShow(supportFragmentManager)
+            )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == BACK_TO_HOME_REQUEST_CODE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK)
+            finish()
         }
     }
 
@@ -52,7 +65,10 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
 
     inner class Handler {
 
-        fun activityFinish() = finish()
+        fun activityFinish() {
+            setResult(RESULT_OK)
+            finish()
+        }
 
         fun sendMessage() {
             val index = binding.selectMessageCardViewPager.currentItem
@@ -62,7 +78,7 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
 
     companion object {
 
-        fun startOnHome(context: Context, endpointId: String) =
-            context.startOnHome<SendActivity>("endpointId" to endpointId)
+        fun startForResult(activity: Activity, requestCode: Int, endpointId: String) =
+            activity.startForResult<SendActivity>(requestCode, "endpointId" to endpointId)
     }
 }

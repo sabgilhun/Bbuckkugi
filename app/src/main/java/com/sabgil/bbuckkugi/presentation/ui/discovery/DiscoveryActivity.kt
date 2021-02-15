@@ -1,9 +1,11 @@
 package com.sabgil.bbuckkugi.presentation.ui.discovery
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
+import com.sabgil.bbuckkugi.common.BACK_TO_HOME_REQUEST_CODE
 import com.sabgil.bbuckkugi.common.ext.startWith
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
@@ -27,6 +29,14 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         viewModel.startDiscovery()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == BACK_TO_HOME_REQUEST_CODE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK)
+            finish()
+        }
+    }
+
     private fun setupViews() {
         binding.discoveredRemoteRecyclerView.adapter = adapter
     }
@@ -37,28 +47,15 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
         }
     }
 
-//    private fun setupChannel() {
-//        discoveryChannel.registerClient(this) {
-//            when (it) {
-//                is Data.Success -> viewModel.discoveryRemote(it.data)
-//                is Data.Failure -> showErrorMessage(it.exception.message.orEmpty())
-//            }
-//        }
-//
-//        connectionRequestChannel.registerClient(this) {
-//            when (it) {
-//                is Data.Success -> SendActivity.startOnHome(this)
-//                is Data.Failure -> finish() // TODO error popup
-//            }
-//        }
-//    }
-
     inner class Handler {
 
         fun activityFinish() = finish()
 
-        fun connectEndpoint(endpoint: DiscoveryItem.Endpoint) =
-            SendActivity.startOnHome(this@DiscoveryActivity, endpoint.endpointId)
+        fun connectEndpoint(endpoint: DiscoveryItem.Endpoint) = SendActivity.startForResult(
+            this@DiscoveryActivity,
+            BACK_TO_HOME_REQUEST_CODE,
+            endpoint.endpointId
+        )
     }
 
     companion object {
