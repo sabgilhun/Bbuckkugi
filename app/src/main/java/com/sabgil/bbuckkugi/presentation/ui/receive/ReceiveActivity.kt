@@ -20,7 +20,8 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
 
     private val endpointId: String by extra()
     private val viewModel by viewModelOf<ReceiveViewModel>()
-    private val receiveCardList = MessageCardList.sendMessageCards
+
+    private val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,9 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
             }
 
             isReceived.observeNonNull {
-                binding.cardImageView.setImageResource(receiveCardList[it.messageCardIndex])
+                binding.cardImageView.setImageResource(
+                    MessageCardList.sendMessageCards[it.messageCardIndex]
+                )
             }
 
             replyDone.observe {
@@ -55,8 +58,7 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
             override fun onTick(millisUntilFinished: Long) {
                 val percent =
                     (TIMER_FINISH_DELAY - millisUntilFinished) * 100.0 / TIMER_FINISH_DELAY
-                val format =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(millisUntilFinished)
+                val format = timeFormat.format(millisUntilFinished)
 
                 binding.progressBar.setProgressPercentage(percent, true)
                 binding.remainTimeTextView.text = format
@@ -65,7 +67,6 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
             override fun onFinish() {
                 finish()
             }
-
         }.start()
     }
 
@@ -79,6 +80,7 @@ class ReceiveActivity : BaseActivity<ActivityReceiveBinding>(R.layout.activity_r
     }
 
     companion object {
+
         private const val TIMER_SECOND = 5 * 60
         private const val COUNT_DOWN_INTERVAL = 100L
         private const val TIMER_FINISH_DELAY = TIMER_SECOND * (10 * COUNT_DOWN_INTERVAL)
