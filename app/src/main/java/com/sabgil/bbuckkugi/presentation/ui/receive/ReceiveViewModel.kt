@@ -16,8 +16,8 @@ class ReceiveViewModel @ViewModelInject constructor(
     private val _startTimer = SingleLiveEvent<Nothing>()
     val startTimer: LiveData<Nothing> get() = _startTimer
 
-    private val _isReceived = MutableLiveData<Message.MessageCard>()
-    val isReceived: LiveData<Message.MessageCard> get() = _isReceived
+    private val _isReceived = MutableLiveData<Message.Send>()
+    val isReceived: LiveData<Message.Send> get() = _isReceived
 
     private val _replyDone = SingleLiveEvent<Nothing>()
     val replyDone: LiveData<Nothing> get() = _replyDone
@@ -26,7 +26,7 @@ class ReceiveViewModel @ViewModelInject constructor(
         connectionManager.acceptRemote(endpointId)
             .collectResult(Dispatchers.Main) {
                 success {
-                    if (it is Message.MessageCard) {
+                    if (it is Message.Send) {
                         _startTimer.call()
                         _isReceived.value = it
                     }
@@ -38,14 +38,14 @@ class ReceiveViewModel @ViewModelInject constructor(
     }
 
     fun replayMessage(endpointId: String, isAgreed: Boolean) {
-        connectionManager.sendMessage(endpointId, if (isAgreed) Message.Agree else Message.Reject)
-            .collectComplete {
-                complete {
-                    _replyDone.call()
-                }
-                error {
-                    showErrorMessage(it)
-                }
-            }
+//        connectionManager.sendMessage(endpointId, if (isAgreed) Message.Agree else Message.Reject)
+//            .collectComplete {
+//                complete {
+//                    _replyDone.call()
+//                }
+//                error {
+//                    showErrorMessage(it)
+//                }
+//            }
     }
 }

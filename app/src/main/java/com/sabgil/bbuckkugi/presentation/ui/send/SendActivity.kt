@@ -9,7 +9,6 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.BACK_TO_HOME_REQUEST_CODE
 import com.sabgil.bbuckkugi.common.ext.startForResult
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
-import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.databinding.ActivitySendBinding
 import com.sabgil.bbuckkugi.presentation.ui.reply.ReplyActivity
 import com.sabgil.extra.extra
@@ -34,8 +33,8 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
             ReplyActivity.startForResult(
                 this,
                 BACK_TO_HOME_REQUEST_CODE,
-                it is Message.Agree,
-                binding.selectMessageCardViewPager.currentItem
+                it.isAgreed,
+                it.messageType
             )
         }
     }
