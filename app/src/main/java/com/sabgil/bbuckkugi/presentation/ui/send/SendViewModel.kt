@@ -26,7 +26,8 @@ class SendViewModel @ViewModelInject constructor(
                     if (it is Message.Start) {
                         _state.value = State.COMPLETE_CONNECTION
                     } else if (it is Message.Agree || it is Message.Reject) {
-                        _receivedReply.call()
+                        _receivedReply.value = it
+                        _state.value = State.COMPLETE_REPLY
                     }
                 }
                 error {
@@ -45,12 +46,14 @@ class SendViewModel @ViewModelInject constructor(
             }
     }
 
-    enum class State(val desc: String?) {
+    enum class State(val desc: String? = null) {
 
         AWAIT_CONNECTION("상대방 연결을 기다리는 중입니다."),
 
-        COMPLETE_CONNECTION(null),
+        COMPLETE_CONNECTION,
 
-        AWAIT_REPLY("상대방 답장을 기다리는 중입니다.")
+        AWAIT_REPLY("상대방 답장을 기다리는 중입니다."),
+
+        COMPLETE_REPLY
     }
 }

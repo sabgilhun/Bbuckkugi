@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+	
+	<data>
+		
+		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.presentation.ui.send.ReplyDialogFragment.Handler" />
+	</data>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/blackTransparent">
+		
+		<TextView
+			android:id="@+id/emojiTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="58dp"
+			app:layout_constraintBottom_toTopOf="@id/titleTextView"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_chainStyle="packed"
+			tools:ignore="SpUsage"
+			tools:text="이모지" />
+		
+		<TextView
+			android:id="@+id/titleTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			android:gravity="center"
+			android:textColor="@color/white"
+			android:textSize="16dp"
+			app:layout_constraintBottom_toTopOf="@id/descTextView"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/emojiTextView"
+			tools:ignore="SpUsage"
+			tools:text="제목" />
+		
+		<TextView
+			android:id="@+id/descTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			android:gravity="center"
+			android:textColor="@color/light_gray"
+			android:textSize="14sp"
+			app:layout_constraintBottom_toTopOf="@id/messageCardImageView"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/titleTextView"
+			tools:text="설명" />
+		
+		<ImageView
+			android:id="@+id/messageCardImageView"
+			android:layout_width="240dp"
+			android:layout_height="0dp"
+			android:layout_marginTop="24dp"
+			android:orientation="horizontal"
+			app:layout_constraintBottom_toTopOf="@id/confirmButton"
+			app:layout_constraintDimensionRatio="1:1"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/descTextView" />
+		
+		<TextView
+			android:id="@+id/confirmButton"
+			style="@style/BigButton"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:onClick="@{ () -> handler.activityFinish()}"
+			android:text="확인"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

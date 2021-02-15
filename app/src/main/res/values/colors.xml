@@ -7,6 +7,8 @@
 	<color name="gray">#C3C3C3</color>
 	<color name="light_gray">#E1E1E1</color>
 	<color name="black">#000000</color>
+	<color name="transparent">@android:color/transparent</color>
+	<color name="blackTransparent">#AA000000</color>
 	
 	<color name="ripple_color">#FFC3C3C3</color>
 	

@@ -7,6 +7,7 @@ import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.ext.startOnHome
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
+import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.databinding.ActivitySendBinding
 import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,10 @@ class SendActivity : BaseActivity<ActivitySendBinding>(R.layout.activity_send) {
         viewModel.connect(endpointId)
 
         viewModel.receivedReply.observeNonNull {
-
+            ReplyDialogFragment.newInstance(
+                it is Message.Agree,
+                binding.selectMessageCardViewPager.currentItem
+            ).ifNotAddedShow(supportFragmentManager)
         }
     }
 
