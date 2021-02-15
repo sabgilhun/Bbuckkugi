@@ -49,8 +49,8 @@ sealed class Message : Serializable {
             bytes[64] = if (gender == Gender.MALE) 0x00 else 0x01
 
             val timeBytes = time.toBytes()
-            if (timeBytes.size > 4) throw IllegalArgumentException()
-            nameBytes.copyInto(bytes, 65)
+            if (timeBytes.size > 8) throw IllegalArgumentException()
+            timeBytes.copyInto(bytes, 65)
 
             return bytes
         }
@@ -70,12 +70,12 @@ sealed class Message : Serializable {
         private const val MESSAGE_PREFIX_BYTE: Byte = 0x02
 
         private const val UTF_8_BLANK_BYTE: Byte = 0x20
-        private const val REPLY_MESSAGE_SIZE = 72
+        private const val REPLY_MESSAGE_SIZE = 73
 
         fun fromBytes(byteArray: ByteArray) =
             when (byteArray[0]) {
-                REPLY_PREFIX_BYTE -> parseSend(byteArray)
-                MESSAGE_PREFIX_BYTE -> parseReply(byteArray)
+                MESSAGE_PREFIX_BYTE -> parseSend(byteArray)
+                REPLY_PREFIX_BYTE -> parseReply(byteArray)
                 else -> throw IllegalArgumentException()
             }
 
@@ -88,7 +88,7 @@ sealed class Message : Serializable {
             String(byteArray.copyOfRange(4, 34)).trim(),
             String(byteArray.copyOfRange(34, 64)).trim(),
             if (byteArray[64] == 0x00.toByte()) Gender.MALE else Gender.FEMALE,
-            byteArray.copyOfRange(65, 72).toLong()
+            byteArray.copyOfRange(65, 73).toLong()
         )
     }
 }

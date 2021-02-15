@@ -6,7 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import androidx.core.os.bundleOf
 import com.sabgil.bbuckkugi.base.BaseActivity
-import com.sabgil.bbuckkugi.presentation.ui.receive.ReceiveActivity
 
 val Context.layoutInflater get() = requireNotNull(LayoutInflater.from(this))
 

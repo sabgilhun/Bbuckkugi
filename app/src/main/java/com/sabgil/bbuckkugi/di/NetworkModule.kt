@@ -17,7 +17,7 @@ import javax.inject.Named
 object NetworkModule {
 
     private const val NAVER_LOGIN_BASE_URL = "https://openapi.naver.com/v1/nid/"
-    private const val SERVER_TIME_BASE_URL = "http://worldtimeapi.org/"
+    private const val SERVER_TIME_BASE_URL = "https://worldtimeapi.org/"
 
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
