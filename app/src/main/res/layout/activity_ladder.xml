@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.sabgil.bbuckkugi.presentation.ui.ladder.LadderViewModel" />
+
+        <variable
+            name="handler"
+            type="com.sabgil.bbuckkugi.presentation.ui.ladder.LadderActivity.Handler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray">
+
+        <com.sabgil.bbuckkugi.presentation.widget.CommonAppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onClickLeftButton="@{() -> handler.activityFinish()}"
+            app:showLeftButton="true"
+            app:title="사다리 타기"
+            app:titleCenter="true" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_ladder_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="btn_ladder_finish, btn_restart, ladder_scroll_view, tv_game_result"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/btn_ladder_finish"
+            style="@style/MediumButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="전체 결과"
+            android:onClick="@{() -> vm.onClickGameFinish()}"
+            app:layout_constraintEnd_toStartOf="@id/btn_restart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+        <TextView
+            android:id="@+id/btn_restart"
+            style="@style/MediumButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> vm.onClickRestart()}"
+            android:text="다시 하기"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_ladder_finish"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+        <com.sabgil.bbuckkugi.presentation.widget.ladder.LadderScrollView
+            android:id="@+id/ladder_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_ladder_finish">
+
+            <com.sabgil.bbuckkugi.presentation.widget.ladder.LadderView
+                android:id="@+id/ladder_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:onPlayerResultListener="@{(player, reword) -> vm.addPlayerResult(player, reword)}" />
+
+        </com.sabgil.bbuckkugi.presentation.widget.ladder.LadderScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_game_setting"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/rv_ladder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="참여할 인원을 입력해주세요."
+                android:textColor="@color/black"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/btn_minus_player"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/btn_minus_player"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_selector_player_count"
+                android:clickable="true"
+                android:enabled="@{vm.playerCount > 2}"
+                android:focusable="true"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:onClick="@{() -> vm.onClickMinusPlayer()}"
+                android:text="-"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/guideline_setting"
+                app:layout_constraintEnd_toStartOf="@id/tv_player_count"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/tv_player_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:ems="3"
+                android:gravity="center"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:text="@{Integer.toString(vm.playerCount)}"
+                android:textColor="@color/black"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/guideline_setting"
+                app:layout_constraintEnd_toStartOf="@id/btn_plus_player"
+                app:layout_constraintStart_toEndOf="@id/btn_minus_player"
+                app:layout_constraintTop_toTopOf="@id/btn_plus_player"
+                tools:ignore="SpUsage"
+                tools:text="12" />
+
+            <TextView
+                android:id="@+id/btn_plus_player"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_selector_player_count"
+                android:clickable="true"
+                android:enabled="@{vm.playerCount &lt; 12}"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onClickPlusPlayer()}"
+                android:text="+"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/guideline_setting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_player_count"
+                tools:ignore="SpUsage" />
+
+            <Button
+                style="@style/BigButton"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:onClick="@{() -> vm.onClickGameStart()}"
+                android:text="시작하기"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guideline_setting" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_game_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="게임 결과"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline"
+            tools:ignore="SpUsage" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_ladder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_game_result"
+            app:spanCount="2"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_ladder_result" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
