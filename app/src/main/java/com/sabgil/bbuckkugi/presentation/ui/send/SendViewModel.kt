@@ -8,13 +8,15 @@ import com.sabgil.bbuckkugi.base.BaseViewModel
 import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import com.sabgil.bbuckkugi.data.repository.MessageRepository
 import com.sabgil.bbuckkugi.data.repository.ServerTimeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SendViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager,
-    private val serverTimeRepository: ServerTimeRepository
+    private val serverTimeRepository: ServerTimeRepository,
+    private val messageRepository: MessageRepository
 ) : BaseViewModel() {
 
     private val _state = MutableLiveData(State.AWAIT_CONNECTION)
@@ -32,6 +34,7 @@ class SendViewModel @ViewModelInject constructor(
                     } else if (it is Message.Reply) {
                         _receivedReply.value = it
                         _state.value = State.COMPLETE_REPLY
+                        messageRepository.saveMessage(it)
                     }
                 }
                 error {
@@ -43,7 +46,6 @@ class SendViewModel @ViewModelInject constructor(
     fun sendMessage(endpointId: String, cardType: Int) {
         _state.value = State.AWAIT_REPLY
         viewModelScope.launch {
-            val times = serverTimeRepository.getSeoulTime()
             connectionManager.sendMessage(endpointId, Message.Send(cardType))
                 .collectComplete(Dispatchers.Main) {
                     error {

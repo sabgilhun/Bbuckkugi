@@ -1,9 +1,6 @@
 package com.sabgil.bbuckkugi.di
 
-import com.sabgil.bbuckkugi.data.repository.ConnectionManager
-import com.sabgil.bbuckkugi.data.repository.ConnectionManagerImpl
-import com.sabgil.bbuckkugi.data.repository.ServerTimeRepository
-import com.sabgil.bbuckkugi.data.repository.ServerTimeRepositoryImpl
+import com.sabgil.bbuckkugi.data.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,4 +19,9 @@ abstract class RepositoryModule {
     abstract fun provideServerTimeRepository(
         serverTimeRepositoryImpl: ServerTimeRepositoryImpl
     ): ServerTimeRepository
+
+    @Binds
+    abstract fun provideMessageRepository(
+        messageRepositoryImpl: MessageRepositoryImpl
+    ): MessageRepository
 }

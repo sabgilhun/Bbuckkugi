@@ -2,6 +2,7 @@ package com.sabgil.bbuckkugi.data.model
 
 import com.sabgil.bbuckkugi.common.ext.toBytes
 import com.sabgil.bbuckkugi.common.ext.toLong
+import com.sabgil.bbuckkugi.data.entities.MessageEntity
 import com.sabgil.bbuckkugi.data.model.enums.Gender
 import com.sabgil.bbuckkugi.data.model.enums.LoginWay
 import java.io.Serializable
@@ -53,6 +54,18 @@ sealed class Message : Serializable {
             timeBytes.copyInto(bytes, 65)
 
             return bytes
+        }
+
+        companion object {
+            fun from(from: MessageEntity) = Reply(
+                from.messageType,
+                from.loginWay,
+                from.isAgreed,
+                from.userId,
+                from.name,
+                from.gender,
+                from.time
+            )
         }
     }
 

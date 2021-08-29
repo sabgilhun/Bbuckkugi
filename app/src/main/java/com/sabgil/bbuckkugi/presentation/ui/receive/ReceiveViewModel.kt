@@ -9,6 +9,7 @@ import com.sabgil.bbuckkugi.common.SingleLiveEvent
 import com.sabgil.bbuckkugi.data.model.Message
 import com.sabgil.bbuckkugi.data.pref.AppSharedPreference
 import com.sabgil.bbuckkugi.data.repository.ConnectionManager
+import com.sabgil.bbuckkugi.data.repository.MessageRepository
 import com.sabgil.bbuckkugi.data.repository.ServerTimeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 class ReceiveViewModel @ViewModelInject constructor(
     private val connectionManager: ConnectionManager,
     private val serverTimeRepository: ServerTimeRepository,
-    private val appSharedPreference: AppSharedPreference
+    private val appSharedPreference: AppSharedPreference,
+    private val messageRepository: MessageRepository
 ) : BaseViewModel() {
 
     private val _startTimer = SingleLiveEvent<Nothing>()
@@ -65,6 +67,7 @@ class ReceiveViewModel @ViewModelInject constructor(
             connectionManager.sendMessage(endpointId, reply)
                 .collectComplete {
                     complete {
+                        messageRepository.saveMessage(reply)
                         _replyDone.call()
                     }
                     error {
