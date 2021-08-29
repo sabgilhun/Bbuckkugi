@@ -6,4 +6,7 @@
 	<string name="guide_detail_contents_2"><![CDATA[이 확인 절차를 거친 후 부터<br>이 앱을 실행하면 <font color="#FF195E"><b>상대방에게 메시지가 올 수 있습니다.</b></font>]]></string>
 	<string name="guide_detail_contents_3"><![CDATA[이 앱에서 상대방의 메시지를 수락하는 것은<br><font color="#FF195E"><b>성관계를 동의하는 것을 의미</b></font>합니다.신중한 판단을 해주세요.]]></string>
 	<string name="guide_detail_contents_4"><![CDATA[이 앱에서 로그인을 하는 이유는<br>성관계 동의에 대한 신뢰성을 위함입니다.<br>당사자를 제외한 다른 곳으로 <font color="#FF195E"><b>개인 정보를 전달하지 않습니다.</b></font>]]></string>
+	
+	<!-- Home -->
+	<string name="home_name_format">%s님이…</string>
 </resources>

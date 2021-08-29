@@ -5,6 +5,8 @@
 	
 	<data>
 		
+		<import type="java.util.List" />
+		
 		<variable
 			name="handler"
 			type="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity.Handler" />
@@ -12,6 +14,7 @@
 		<variable
 			name="viewModel"
 			type="com.sabgil.bbuckkugi.presentation.ui.home.HomeViewModel" />
+	
 	</data>
 	
 	<LinearLayout
@@ -25,16 +28,16 @@
 			android:id="@+id/appBarLayout"
 			android:layout_width="match_parent"
 			android:layout_height="?attr/actionBarSize"
-			app:onClickRightButton="@{() -> handler.goToSettings()}"
-			app:rightButtonSrc="@drawable/ic_settings_24"
 			app:showRightButton="true"
 			app:title="뻐꾸기"
 			app:titleCenter="true" />
 		
-		<ScrollView
+		<androidx.core.widget.NestedScrollView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:fillViewport="true">
+			android:fillViewport="true"
+			android:overScrollMode="never"
+			android:scrollbars="none">
 			
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -144,40 +147,23 @@
 						android:layout_marginBottom="32dp"
 						android:text="이전에 남긴 동의 기록이 없습니다."
 						android:textColor="@color/gray"
+						app:isVisible="@{viewModel.items == null || viewModel.items.size() == 0}"
+						app:layout_constraintBottom_toBottomOf="parent"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/divider" />
+					
+					<androidx.recyclerview.widget.RecyclerView
+						android:id="@+id/recyclerView"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 						app:layout_constraintBottom_toBottomOf="parent"
 						app:layout_constraintEnd_toEndOf="parent"
 						app:layout_constraintStart_toStartOf="parent"
 						app:layout_constraintTop_toBottomOf="@id/divider" />
 				</androidx.constraintlayout.widget.ConstraintLayout>
 				
-				<LinearLayout
-					android:id="@+id/bannerLayout"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="8dp"
-					android:layout_marginTop="16dp"
-					android:layout_marginEnd="8dp"
-					android:background="@drawable/shape_r8_background_white"
-					android:orientation="vertical"
-					android:padding="4dp"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/appBarLayout">
-					
-					<TextView
-						android:id="@+id/bannerTextView"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="center"
-						android:layout_marginStart="8dp"
-						android:layout_marginTop="32dp"
-						android:layout_marginEnd="8dp"
-						android:layout_marginBottom="32dp"
-						android:text="광고 넣을 자리"
-						android:textColor="@color/gray"
-						android:textSize="14sp" />
-				</LinearLayout>
-
 				<LinearLayout
 					android:id="@+id/gameLayout"
 					android:layout_width="match_parent"
@@ -192,7 +178,7 @@
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/appBarLayout">
-
+					
 					<TextView
 						android:id="@+id/gameTextView"
 						android:layout_width="wrap_content"
@@ -203,7 +189,7 @@
 						android:text="🎮 게임을 즐겨보세요."
 						android:textColor="@color/black"
 						android:textSize="14sp" />
-
+					
 					<TextView
 						android:id="@+id/gameDescTextView"
 						android:layout_width="wrap_content"
@@ -215,7 +201,7 @@
 						android:text='친구들과 함께 간단한 미니게임에 도전하세요!'
 						android:textColor="@color/gray"
 						android:textSize="12sp" />
-
+					
 					<TextView
 						style="@style/MediumButton"
 						android:layout_width="match_parent"
@@ -223,8 +209,8 @@
 						android:onClick="@{() -> handler.goToLadderGame()}"
 						android:text="사다리 타기" />
 				</LinearLayout>
-
+			
 			</LinearLayout>
-		</ScrollView>
+		</androidx.core.widget.NestedScrollView>
 	</LinearLayout>
 </layout>

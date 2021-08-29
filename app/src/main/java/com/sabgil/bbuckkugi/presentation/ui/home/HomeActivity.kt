@@ -12,26 +12,30 @@ import com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryActivity
 import com.sabgil.bbuckkugi.presentation.ui.ladder.LadderActivity
 import com.sabgil.bbuckkugi.service.ConnectionService
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
     private val viewModel: HomeViewModel by viewModelOf()
+    private val adapter = MessageLogAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding.handler = Handler()
         binding.viewModel = viewModel
+        binding.recyclerView.adapter = adapter
 
+        viewModel.loadMessages()
         startService(Intent(this, ConnectionService::class.java))
+
+        viewModel.items.observeNonNull {
+            adapter.replaceAll(it)
+        }
     }
 
     inner class Handler {
-
-        fun goToSettings() {
-            TODO()
-        }
 
         fun goToDiscovery() = DiscoveryActivity.start(this@HomeActivity)
 
