@@ -15,6 +15,7 @@ import com.sabgil.bbuckkugi.service.ConnectionService
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+
 @AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
@@ -29,11 +30,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         binding.recyclerView.adapter = adapter
 
         viewModel.loadMessages()
-        startService(Intent(this, ConnectionService::class.java))
 
         viewModel.items.observeNonNull {
             adapter.replaceAll(it)
         }
+
+        ConnectionService.service?.restartAdvertising()
     }
 
     inner class Handler {

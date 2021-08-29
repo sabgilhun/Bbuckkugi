@@ -9,7 +9,7 @@ import com.sabgil.bbuckkugi.data.entities.MessageEntity
 @Dao
 abstract class MessageDao {
 
-    @Query("SELECT * FROM MESSAGE")
+    @Query("SELECT * FROM MESSAGE ORDER BY time DESC")
     abstract suspend fun selectAllMessage(): List<MessageEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

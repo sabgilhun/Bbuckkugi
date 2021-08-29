@@ -1,6 +1,7 @@
 package com.sabgil.bbuckkugi.presentation.ui.start
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.os.Build
@@ -13,6 +14,7 @@ import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityStartBinding
 import com.sabgil.bbuckkugi.presentation.ui.guide.GuideActivity
 import com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity
+import com.sabgil.bbuckkugi.service.ConnectionService
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,6 +42,8 @@ class StartActivity : BaseActivity<ActivityStartBinding>(R.layout.activity_start
                 GuideActivity.startOnTop(this)
             }
         }
+
+        startService(Intent(this, ConnectionService::class.java))
     }
 
     override fun onRequestPermissionsResult(

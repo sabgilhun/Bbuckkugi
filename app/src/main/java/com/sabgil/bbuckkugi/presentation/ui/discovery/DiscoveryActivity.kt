@@ -10,6 +10,7 @@ import com.sabgil.bbuckkugi.common.ext.startWith
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityDiscoveryBinding
 import com.sabgil.bbuckkugi.presentation.ui.send.SendActivity
+import com.sabgil.bbuckkugi.service.ConnectionService
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +33,7 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == BACK_TO_HOME_REQUEST_CODE && resultCode == RESULT_OK) {
+            ConnectionService.service?.restartAdvertising()
             setResult(RESULT_OK)
             finish()
         }

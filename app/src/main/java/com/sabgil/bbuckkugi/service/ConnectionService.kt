@@ -24,6 +24,7 @@ class ConnectionService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+        service = this
         startAdvertising()
     }
 
@@ -39,7 +40,7 @@ class ConnectionService : LifecycleService() {
         }
     }
 
-    private fun restartAdvertising() {
+    fun restartAdvertising() {
         lifecycleScope.launch {
             delay(RESTART_DELAY)
             startAdvertising()
@@ -61,5 +62,6 @@ class ConnectionService : LifecycleService() {
     companion object {
 
         private const val RESTART_DELAY = 300L
+        var service: ConnectionService? = null
     }
 }

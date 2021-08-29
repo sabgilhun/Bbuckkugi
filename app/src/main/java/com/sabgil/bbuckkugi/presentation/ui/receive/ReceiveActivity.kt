@@ -1,6 +1,7 @@
 package com.sabgil.bbuckkugi.presentation.ui.receive
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import com.sabgil.bbuckkugi.R
@@ -9,6 +10,7 @@ import com.sabgil.bbuckkugi.common.MessageCardList
 import com.sabgil.bbuckkugi.common.ext.startOnHome
 import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityReceiveBinding
+import com.sabgil.bbuckkugi.service.ConnectionService
 import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
