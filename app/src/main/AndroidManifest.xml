@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	package="com.sabgil.bbuckkugi">
-
+	
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -10,7 +10,7 @@
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+	
 	<application
 		android:name=".BbuckkugiApplication"
 		android:allowBackup="true"
@@ -19,51 +19,72 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
-
+		
 		<activity android:name=".presentation.ui.login.LoginActivity" />
-
+		
 		<activity android:name=".presentation.ui.start.StartActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-
+		
 		<activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
-
+				
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-
+				
 				<data
 					android:host="oauth"
 					android:scheme="@string/KAKAO_SDK_SCHEME" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".presentation.ui.guide.GuideActivity" />
-
-		<activity android:name=".presentation.ui.home.HomeActivity" />
-
-		<activity android:name=".presentation.ui.discovery.DiscoveryActivity" />
-
-		<activity android:name=".presentation.ui.reply.ReplyActivity" />
-
-		<activity android:name=".presentation.ui.send.SendActivity" />
-
+		
+		<activity
+			android:name=".presentation.ui.guide.GuideActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
+		<activity
+			android:name=".presentation.ui.home.HomeActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
+		<activity
+			android:name=".presentation.ui.discovery.DiscoveryActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
+		<activity
+			android:name=".presentation.ui.reply.ReplyActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
+		<activity
+			android:name=".presentation.ui.send.SendActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
 		<activity
 			android:name=".presentation.ui.receive.ReceiveActivity"
-			android:parentActivityName="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity" />
-
+			android:parentActivityName="com.sabgil.bbuckkugi.presentation.ui.home.HomeActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
 		<activity
 			android:name=".presentation.ui.ladder.LadderActivity"
 			android:screenOrientation="portrait"
-			tools:ignore="LockedOrientationActivity"
-			/>
-
+			tools:ignore="LockedOrientationActivity" />
+		
+		<activity
+			android:name=".presentation.ui.log.MessageLogActivity"
+			android:screenOrientation="portrait"
+			tools:ignore="LockedOrientationActivity" />
+		
 		<service android:name=".service.ConnectionService" />
-
+	
 	</application>
 
 </manifest>

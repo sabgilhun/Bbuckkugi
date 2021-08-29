@@ -10,6 +10,7 @@ import com.sabgil.bbuckkugi.common.ext.viewModelOf
 import com.sabgil.bbuckkugi.databinding.ActivityHomeBinding
 import com.sabgil.bbuckkugi.presentation.ui.discovery.DiscoveryActivity
 import com.sabgil.bbuckkugi.presentation.ui.ladder.LadderActivity
+import com.sabgil.bbuckkugi.presentation.ui.log.MessageLogActivity
 import com.sabgil.bbuckkugi.service.ConnectionService
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -39,9 +40,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
         fun goToDiscovery() = DiscoveryActivity.start(this@HomeActivity)
 
-        fun goToMoreMessage() {
-            TODO()
-        }
+        fun goToMoreMessage() = MessageLogActivity.start(this@HomeActivity)
 
         fun goToLadderGame() = LadderActivity.start(this@HomeActivity)
     }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+	
+	<data>
+		
+		<variable
+			name="viewModel"
+			type="com.sabgil.bbuckkugi.presentation.ui.log.MessageLogViewModel" />
+		
+		<variable
+			name="handler"
+			type="com.sabgil.bbuckkugi.presentation.ui.log.MessageLogActivity.Handler" />
+	</data>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+		
+		<com.sabgil.bbuckkugi.presentation.widget.CommonAppBarLayout
+			android:id="@+id/appBarLayout"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:leftButtonSrc="@drawable/ic_back_arrow_24"
+			app:onClickLeftButton="@{() -> handler.finish()}"
+			app:showLeftButton="true"
+			app:title="동의 기록" />
+		
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerView"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:clipToPadding="false"
+			android:overScrollMode="never"
+			android:paddingTop="12dp"
+			android:paddingBottom="12dp"
+			android:scrollbars="none"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
