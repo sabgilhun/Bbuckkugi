@@ -2,8 +2,8 @@
 <resources>
 	
 	<color name="white">#FFFFFF</color>
-	<color name="pink">#FF195E</color>
-	<color name="light_pink">#F3DFEC</color>
+	<color name="pastel_yellow">#F9DD80</color>
+	<color name="pastel_light_yellow">#FFF9DD</color>
 	<color name="gray">#C3C3C3</color>
 	<color name="light_gray">#E1E1E1</color>
 	<color name="black">#000000</color>
@@ -11,5 +11,5 @@
 	<color name="blackTransparent">#AA000000</color>
 	
 	<color name="ripple_color">#FFC3C3C3</color>
-	
+
 </resources>

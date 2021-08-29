@@ -115,8 +115,8 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/titleDescTextView"
-				app:rpbProgressBgColor="@color/light_pink"
-				app:rpbProgressColor="@color/pink"
+				app:rpbProgressBgColor="@color/pastel_light_yellow"
+				app:rpbProgressColor="@color/pastel_yellow"
 				app:rpbShowProgressText="false" />
 			
 			<TextView

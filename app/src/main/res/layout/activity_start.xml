@@ -10,25 +10,41 @@
 		
 		<ImageView
 			android:id="@+id/logoImageView"
-			android:layout_width="200dp"
-			android:layout_height="200dp"
-			android:layout_marginBottom="60dp"
-			android:src="@drawable/vertical_align_logo"
-			app:layout_constraintBottom_toTopOf="@id/loadingView"
+			android:layout_width="100dp"
+			android:layout_height="100dp"
+			android:layout_marginBottom="20dp"
+			android:src="@drawable/icons8_bird_100"
+			app:layout_constraintBottom_toTopOf="@id/title"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_chainStyle="packed" />
 		
-		<ProgressBar
-			android:id="@+id/loadingView"
+		<TextView
+			android:id="@+id/title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="12dp"
+			android:layout_marginBottom="40dp"
+			android:text="뻐꾸기"
+			android:textColor="@color/black"
+			android:textSize="28dp"
+			android:textStyle="bold"
+			app:layout_constraintBottom_toTopOf="@id/loadingView"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/logoImageView"
+			tools:ignore="SpUsage" />
+		
+		<ProgressBar
+			android:id="@+id/loadingView"
+			android:layout_width="28dp"
+			android:layout_height="28dp"
 			android:indeterminateTint="@color/black"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/logoImageView" />
+			app:layout_constraintTop_toBottomOf="@id/title" />
 		
 		<TextView
 			android:layout_width="wrap_content"

@@ -55,7 +55,7 @@
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:background="@color/pink"
+				android:background="@color/pastel_yellow"
 				android:gravity="center"
 				android:textColor="@color/white"
 				android:textSize="18sp"

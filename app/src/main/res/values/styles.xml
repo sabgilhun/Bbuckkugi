@@ -30,7 +30,7 @@
 	</style>
 	
 	<style name="HintText" parent="TextAppearance.Design.Hint">
-		<item name="android:textColor">@color/pink</item>
+		<item name="android:textColor">@color/pastel_yellow</item>
 		<item name="android:textSize" tools:ignore="SpUsage">12dp</item>
 	</style>
 	
