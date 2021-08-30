@@ -32,7 +32,7 @@ class BbuckkugiApplication : Application() {
             this,
             BuildConfig.NAVER_API_CLIENTS_ID,
             BuildConfig.NAVER_API_CLIENTS_SECRET,
-            "뻐꾸기"
+            "법무법인 동광"
         )
     }
 }

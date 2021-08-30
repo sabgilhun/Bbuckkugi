@@ -33,7 +33,6 @@ class DiscoveryActivity : BaseActivity<ActivityDiscoveryBinding>(R.layout.activi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == BACK_TO_HOME_REQUEST_CODE && resultCode == RESULT_OK) {
-            ConnectionService.service?.restartAdvertising()
             setResult(RESULT_OK)
             finish()
         }

@@ -1,7 +1,6 @@
 package com.sabgil.bbuckkugi.presentation.ui.home
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import com.sabgil.bbuckkugi.R
 import com.sabgil.bbuckkugi.base.BaseActivity
@@ -29,13 +28,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         binding.viewModel = viewModel
         binding.recyclerView.adapter = adapter
 
-        viewModel.loadMessages()
-
         viewModel.items.observeNonNull {
             adapter.replaceAll(it)
         }
 
         ConnectionService.service?.restartAdvertising()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadMessages()
     }
 
     inner class Handler {
@@ -45,6 +47,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
         fun goToMoreMessage() = MessageLogActivity.start(this@HomeActivity)
 
         fun goToLadderGame() = LadderActivity.start(this@HomeActivity)
+
+        fun refresh() = ConnectionService.service?.restartAdvertising()
     }
 
     companion object {

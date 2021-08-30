@@ -56,9 +56,9 @@ class MessageLogAdapter : RecyclerView.Adapter<BindingViewHolder>() {
         }
 
         binding.text3.text = if (item.isAgreed) {
-            "했습니다. \uD83D\uDE2D"
-        } else {
             "했습니다. \uD83E\uDD73"
+        } else {
+            "했습니다. \uD83D\uDE2D"
         }
 
         binding.date.text = item.time.yy_MM_dd_HH_mm()

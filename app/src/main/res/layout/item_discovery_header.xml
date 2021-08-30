@@ -38,7 +38,7 @@
 			android:layout_marginTop="8dp"
 			android:layout_marginBottom="24dp"
 			android:gravity="center"
-			android:text="근처에서 뻐꾸기 앱을 사용하고 있는 사용자들을 찾습니다.\n찾아지지 않는다면 더 가까이서 시도해 보세요."
+			android:text="근처에서 법무법인 동광 앱을 사용하고 있는 사용자들을 찾습니다.\n찾아지지 않는다면 더 가까이서 시도해 보세요."
 			android:textColor="@color/gray"
 			android:textSize="12dp"
 			app:layout_constraintBottom_toBottomOf="parent"

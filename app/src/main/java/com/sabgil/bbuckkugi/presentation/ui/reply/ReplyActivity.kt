@@ -7,6 +7,7 @@ import com.sabgil.bbuckkugi.base.BaseActivity
 import com.sabgil.bbuckkugi.common.MessageCardList
 import com.sabgil.bbuckkugi.common.ext.startForResult
 import com.sabgil.bbuckkugi.databinding.ActivityReplyBinding
+import com.sabgil.bbuckkugi.service.ConnectionService
 import com.sabgil.extra.extra
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,6 +41,7 @@ class ReplyActivity : BaseActivity<ActivityReplyBinding>(R.layout.activity_reply
     inner class Handler {
 
         fun activityFinish() {
+            ConnectionService.service?.restartAdvertising()
             setResult(RESULT_OK)
             finish()
         }

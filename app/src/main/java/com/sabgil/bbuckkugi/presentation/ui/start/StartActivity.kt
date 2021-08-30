@@ -37,13 +37,12 @@ class StartActivity : BaseActivity<ActivityStartBinding>(R.layout.activity_start
 
         viewModel.isExistRequiredData.observeNonNull {
             if (it) {
+                startService(Intent(this, ConnectionService::class.java))
                 HomeActivity.startOnTop(this)
             } else {
                 GuideActivity.startOnTop(this)
             }
         }
-
-        startService(Intent(this, ConnectionService::class.java))
     }
 
     override fun onRequestPermissionsResult(
